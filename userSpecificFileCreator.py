@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# The goal of this csrip is to generate user specific data files
+
 import sys
 import json
 import os
@@ -15,14 +17,22 @@ config = {
 'database': 'test',
 'raise_on_warnings': True,
 }
+
+
 def loadGivenEndUser(file, cursor, userId):
+    result = ''
     query = "select *  from RAWDATA where hashid like '"+userId+"';"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     for row in results:
+        for column in row:
+            result = result +  column + ';'
         #file.writelines(row)
         print (row)
+        file.write(result + '\n')
+        result = ''    
     return
+    file.flush()
 
 def loadUserList():
     cnx = mysql.connector.connect(**config)
@@ -32,24 +42,14 @@ def loadUserList():
     results = cursor.fetchall()
     for row in results:
         fname = row[0]
-        tmp = base64.standard_b64encode(fname)
+        hashOfTheUser = base64.standard_b64encode(fname)
         # Now print fetched result
-        print tmp
-        file = open('./details/'+tmp+".imp", "w")
+
+        file = open('./results/userLog/'+hashOfTheUser+".imp", "w")
         loadGivenEndUser(file, cursor, fname)
         file.close()      
     print cursor.rowcount
     cnx.commit()
-    return
-
-def uploadFile(name):
-    cnx = mysql.connector.connect(**config)
-    cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE RAWDATA FIELDS TERMINATED BY ';'"
-    ret = cursor.execute( query )
-    print cursor.rowcount
-    cnx.commit()
-    
     return
       
 import glob
