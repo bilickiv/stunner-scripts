@@ -14,8 +14,7 @@ config = {
 'user': 'root',
 'password': '',
 'host': '10.6.14.36',
-'database': 'test',
-'raise_on_warnings': True,
+'database': 'test'
 }
 
 
