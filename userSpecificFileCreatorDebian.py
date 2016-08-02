@@ -20,17 +20,20 @@ config = {
 
 def loadGivenEndUser(file, cursor, userId):
     result = ''
+    counter = 0
     query = "select *  from RAWDATA where hashid like '"+userId+"';"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     for row in results:
+        counter++
         for column in row:
             result = result +  column + ';'
         #file.writelines(row)
-        print (row)
+        #print (row)
         file.write(result + '\n')
         result = ''    
     return
+    print 'Saved lines:' + str(counter)
     file.flush()
 
 def loadUserList():
@@ -43,7 +46,7 @@ def loadUserList():
         fname = row[0]
         hashOfTheUser = base64.standard_b64encode(fname)
         # Now print fetched result
-
+        print 'Creating log for user:' + hashOfTheUser
         file = open('./results/userLog/'+hashOfTheUser+".imp", "w")
         loadGivenEndUser(file, cursor, fname)
         file.close()      
