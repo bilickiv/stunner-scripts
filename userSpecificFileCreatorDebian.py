@@ -32,9 +32,9 @@ def loadGivenEndUser(file, cursor, userId):
         #print (row)
         file.write(result + '\n')
         result = ''    
-    return
     print 'Saved lines:' + str(counter)
     file.flush()
+    return
 
 def loadUserList():
     cnx = pymysql.connect(**config)
