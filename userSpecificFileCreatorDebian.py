@@ -25,7 +25,7 @@ def loadGivenEndUser(file, cursor, userId):
     ret = cursor.execute( query )
     results = cursor.fetchall()
     for row in results:
-        counter++
+        counter = counter + 1 
         for column in row:
             result = result +  column + ';'
         #file.writelines(row)
