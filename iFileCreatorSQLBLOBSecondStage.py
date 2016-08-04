@@ -24,12 +24,12 @@ def loadBlobData(name):
            niceString = replaceProblematicChars(splittedString[1])
            if(niceString.find('timeStamp') != -1):
                 jsonRep = parseAndroidJson(niceString)
+                file.write(splittedString[0] + ';' + jsonRep + '\n')          
            else:
                 correctedWPString = correctWPJSon(niceString)
                 jsonRep = parseWPJson(correctedWPString)
                 #print('WINDOWS')
            #print(jsonRep)
-           file.write(splittedString[0] + ';' + jsonRep)          
     file.close()
     return
 def correctWPJSon(inputString):
