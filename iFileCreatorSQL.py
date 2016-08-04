@@ -159,19 +159,18 @@ def loadFile(name):
                     output = output.replace('\n','')
                     output = output.replace('\t','')
                     output = output.replace("\'",'')
-
+                    output = r''+output
+                    output = output.replace('\\','')
+                    if(output.find("\\") != -1):
+                        print 'It has backslash:' + output
+                    if(line.find('58334769') != -1):
+                        print 'Trensformed:' + output
                     
                     output = output.rstrip('\n')
-                    if(line.find('58334769') != -1):
-                        print 'AFTER FIRST REPLACEMENT:' + output
                     testTextArray = output.splitlines()
-                    if(line.find('58334769') != -1):
-                        print 'SPLITTED:' + str(testTextArray)
                     testConcat = str(testTextArray).replace('\\n','').replace("']",'').replace("['",'')
                     testConcat = testConcat.replace('\\x','')
                     testConcat = testConcat.replace('\\"','"')
-                    if(line.find('58334769') != -1):
-                        print 'FINAL:' + testConcat
                     importString = fname + ';' + parseAndroidLog(testConcat)
                     file.write(importString+'\n');
                     importString = ''

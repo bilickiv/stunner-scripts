@@ -22,7 +22,7 @@ def uploadFile(name):
     return
       
 import glob
-path = "*.imp"
+path = "./sample-data/*.imp"
 cnx = pymysql.connect(**config)
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
