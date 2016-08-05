@@ -59,6 +59,9 @@ def parseWindowsPhoneLog(unifiedLine):
             importString = importString + ';' + getDeepJsonData(data,'mobileNetInfo','carrier')
             importString = importString + ';' + getDeepJsonData(data,'mobileNetInfo','netType') 
             importString = importString + ';' + getDeepJsonData(data,'mobileNetInfo','roaming')
+            importString = importString + ';' + getDeepJsonData(data,'uptimeInfoDTO','shutDownTimestamp')
+            importString = importString + ';' + getDeepJsonData(data,'uptimeInfoDTO','turnOnTimestamp') 
+            importString = importString + ';' + getDeepJsonData(data,'uptimeInfoDTO','uptime')                  
             importString = importString + ';' + getJsonData(data,'triggerCode')
             importString = importString + ';' + getJsonData(data,'appVersion')
             importString = importString + ';' + getJsonData(data,'timeZone')                                                                                                                                                                                                                                           
@@ -102,6 +105,7 @@ def parseAndroidLog(unifiedLine):
             importString = importString + ';' + getDeepJsonData(data,'wifiDTO','macAddress')
             importString = importString + ';' + getDeepJsonData(data,'wifiDTO','rssi')
             importString = importString + ';' + getDeepJsonData(data,'mobileDTO','carrier')
+            importString = importString + ';' + getDeepJsonData(data,'mobileDTO','simCountryIso')
             importString = importString + ';' + getDeepJsonData(data,'mobileDTO','networkType')                                                                                                                                                                                                            
             importString = importString + ';' + getDeepJsonData(data,'mobileDTO','roaming')
             importString = importString + ';' + getJsonData(data,'triggerCode')
@@ -119,7 +123,20 @@ def parseAndroidLog(unifiedLine):
 
 
 
-
+def replaceProblematicChars(inputString):
+    inputString = inputString.replace('=\n','=')
+    inputString = inputString.replace('=\\n','=')
+    inputString = inputString.replace('=\\\n','=')
+    inputString = inputString.replace('=\\\\n','=')
+    inputString = inputString.replace('=\\\\\\\\n','=')
+    inputString = inputString.replace('\n','')
+    inputString = inputString.replace('\t','')
+    inputString = inputString.replace("\'",'')
+    inputString = r''+inputString
+    niceString = inputString.replace('\\','')
+    niceString = inputString.replace('""O2 - UK""','"O2 - UK"')
+    
+    return niceString
 
 def loadFile(name):
       startTime = datetime.datetime.now()
@@ -148,15 +165,8 @@ def loadFile(name):
                 else:
                     counter = counter + 1
                     output = output + line
-                    output = output.replace('=\n','=')
-                    output = output.replace('=\\n','=')
-                    output = output.replace('\n','')
-                    output = output.rstrip('\n')
-                    testTextArray = output.splitlines()
-                    testConcat = str(testTextArray).replace('\\n','').replace("']",'').replace("['",'')
-                    testConcat = testConcat.replace('\\x','')
-                    testConcat = testConcat.replace('\\"','"')
-                    importString = fname + ';' + parseAndroidLog(testConcat)
+                    niceString = replaceProblematicChars(output)                    
+                    importString = fname + ';' + parseAndroidLog(niceString)
                     file.write(importString+'\n');
                     importString = ''
                     output = ''
@@ -171,7 +181,8 @@ def loadFile(name):
       return;
       
 import glob
-path = "*.csv"
+#path = "/Volumes/Backup/research/data/*.csv"
+path = "/home/bilickiv/unzipped_dataset/*.csv"
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
     loadFile(fname)
