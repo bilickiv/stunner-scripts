@@ -16,7 +16,7 @@ config = {
 def uploadFile(name):
     cnx = mysql.connector.connect(**config)
     cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE RAWDATA FIELDS TERMINATED BY ';'"
+    query = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE DATA FIELDS TERMINATED BY ';'"
     ret = cursor.execute( query )
     print cursor.rowcount
     cnx.commit()
@@ -24,7 +24,7 @@ def uploadFile(name):
     return
       
 import glob
-path = "*.imp"
+path = "/Volumes/Backup/research/Arch/new_data/*.imp"
 cnx = mysql.connector.connect(**config)
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
