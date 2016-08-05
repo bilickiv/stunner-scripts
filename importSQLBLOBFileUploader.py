@@ -16,29 +16,20 @@ config = {
 def uploadFile(name):
     cnx = mysql.connector.connect(**config)
     cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' IGNORE INTO TABLE TMPRAWDATA FIELDS TERMINATED BY ';'"
+    query = "LOAD DATA LOCAL INFILE '"+name+"' IGNORE INTO TABLE TMPDATA FIELDS TERMINATED BY ';'"
     ret = cursor.execute( query )
     print cursor.rowcount
     cnx.commit()
     
     return
-def uploadCSVFile(name):
-    cnx = mysql.connector.connect(**config)
-    cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' IGNORE INTO TABLE TMPDEVICES FIELDS TERMINATED BY ','"
-    ret = cursor.execute( query )
-    print cursor.rowcount
-    cnx.commit()
-    
-    return      
+      
 import glob
-path = "./sample-data/*.imp"
+path = "/Volumes/Backup/research/Arch/old_data/*.blobcsv"
+#path = "/home/bilickiv/raw_dataset/old_data/*.index"
 cnx = mysql.connector.connect(**config)
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
-#    uploadFile(fname)
-    print("Finished loading file:" + fname + "----" + unicode(datetime.datetime.now()))
-uploadCSVFile('./sample-data/devices-measurements.csv')
+    uploadFile(fname)
 cnx.close()
           
 
