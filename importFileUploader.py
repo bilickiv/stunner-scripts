@@ -19,6 +19,7 @@ connection = pymysql.connect(host='10.6.14.37',
                              password='',
                              db='stunner',
                              charset='utf8mb4',
+                             local-infile = 'true',
                              cursorclass=pymysql.cursors.Cursor)
 def uploadWithOtherDriver(name):
     try:
