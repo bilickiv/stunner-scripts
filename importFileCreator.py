@@ -135,6 +135,9 @@ def replaceProblematicChars(inputString):
     inputString = inputString.replace('\n','')
     inputString = inputString.replace('\t','')
     inputString = inputString.replace("\'",'')
+    inputString = inputString.replace('ZAIN IQ\\n','ZAIN IQ')
+
+    
     inputString = r''+inputString
     niceString = inputString.replace('\\','')
     niceString = inputString.replace('""O2 - UK""','"O2 - UK"')
@@ -156,7 +159,7 @@ def loadFile(name):
                 output = line.replace('=\n','=')
                 importString = fname + ';' +parseWindowsPhoneLog(output)
                 counter = counter + 1
-                file.write(importString+'\n')
+                #file.write(importString+'\n')
                 importString = ''
                 output = ''
                 first = 'true'                               
