@@ -1,2 +1,2 @@
 use test;
-select * from DATA where pubIP is not null limit 10
+select d.*, l.country, l.stateprov, l.city from  DATA d left JOIN dbip_lookup l on d.pubIP BETWEEN l.ipStart AND l.ipEnd 
