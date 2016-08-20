@@ -21,7 +21,7 @@ config = {
 def loadGivenEndUser(file, cursor, userId):
     result = ''
     counter = 0
-    query = "select *  from DATA where hashid like '"+userId+"';"
+    query = "select *  from DATA where hashid like '"+userId+"' order by CAST(mdate as DATETIME);"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     for row in results:
