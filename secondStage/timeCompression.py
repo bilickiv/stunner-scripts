@@ -13,7 +13,7 @@ sys.setdefaultencoding('utf8')
 config = {
 'user': 'root',
 'password': '',
-'host': '10.6.14.37',
+'host': '10.6.14.36',
 'database': 'stunner'
 }
 
