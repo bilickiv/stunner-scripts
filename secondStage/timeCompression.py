@@ -32,33 +32,40 @@ def loadGivenEndUser(file, cursor, userId):
     ret = cursor.execute( query )
     results = cursor.fetchall()
     count = 1
-    for row in results:
-        if(startDate is None):
-            startDate = row[0]
-        if(endDate is None):
-            endDate = row[0]            
-        if(discoveryResult == int(row[1])):
-            if(firstInGroup is True):
-                 firstInGroup = False
+    if(len(results) == 1):
+        startDate = row[0]
+        endDate = row[0] 
+        discoveryResult = int(row[1])
+        result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
+        file.write(result + '\n')
+    else:
+        for row in results:
+            if(startDate is None):
+                startDate = row[0]
+            if(endDate is None):
+                endDate = row[0]            
+            if(discoveryResult == int(row[1])):
+                if(firstInGroup is True):
+                    firstInGroup = False
+                else:
+                    endDate = row[0]
+                endDate = row[0]                  
+                count = count + 1
             else:
-                  endDate = row[0]
-            endDate = row[0]                  
-            count = count + 1
-        else:
-            firstInGroup = True
-            if(not first):
-                result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
-                file.write(result + '\n')
-                coutner = counter + 1
-            else:
-                first = False
-            result = ''
-            discoveryResult = int(row[1])
-            startDate = row[0]
-            endDate = row[0]
-           # for column in row:
-           #     result = result +  str(column) + ';'
-            count = 1 
+                firstInGroup = True
+                if(not first):
+                    result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
+                    file.write(result + '\n')
+                    coutner = counter + 1
+                else:
+                    first = False
+                result = ''
+                discoveryResult = int(row[1])
+                startDate = row[0]
+                endDate = row[0]
+            # for column in row:
+            #     result = result +  str(column) + ';'
+                count = 1 
   
     print 'Saved lines:' + str(counter)
     file.flush()
