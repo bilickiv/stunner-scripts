@@ -46,7 +46,7 @@ def loadGivenEndUser(file, cursor, userId):
         else:
             firstInGroup = True
             if(not first):
-                result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + discoveryResult            
+                result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
                 file.write(result + '\n')
             else:
                 first = False
