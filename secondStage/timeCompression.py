@@ -32,6 +32,7 @@ def loadGivenEndUser(file, cursor, userId):
     ret = cursor.execute( query )
     results = cursor.fetchall()
     count = 1
+    print "The count of total rows" + str(len(results))
     if(len(results) == 0):
         print "Zero length:" + userId
     if(len(results) == 1):
