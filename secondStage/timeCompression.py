@@ -32,12 +32,15 @@ def loadGivenEndUser(file, cursor, userId):
     ret = cursor.execute( query )
     results = cursor.fetchall()
     count = 1
+    if(len(results) == 0):
+        print "Zero length:" + userId
     if(len(results) == 1):
         startDate = row[0]
         endDate = row[0] 
         discoveryResult = int(row[1])
         result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
         file.write(result + '\n')
+        print "One row" + userId
     else:
         for row in results:
             if(startDate is None):
