@@ -113,6 +113,7 @@ def loadUserList():
     results = cursor.fetchall()
     for row in results:
         fname = row[0]
+        print fname + row[0]
         hashOfTheUser = base64.standard_b64encode(fname)
         # Now print fetched result
       #  print 'Creating log for user:' + hashOfTheUser
