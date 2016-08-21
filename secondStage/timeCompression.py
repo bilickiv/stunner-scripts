@@ -113,8 +113,13 @@ def loadUserList():
     query = "select distinct hashid from DATA"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
     ret = cursor.execute( query )
     results = cursor.fetchall()
+    index1 = 0
+    print "Starting to save total of " + str(len(results)) + " files"
     for row in results:
+        index1 = index1 + 1
         fname = row[0]
+        print "//////////////////////////////////////////////////////////////////////////////"
+        print "The file: " + str(index1)
         print fname + row[0]
         hashOfTheUser = base64.standard_b64encode(fname)
         # Now print fetched result
