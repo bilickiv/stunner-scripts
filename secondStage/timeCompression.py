@@ -118,16 +118,19 @@ def loadUserList():
     for row in results:
         index1 = index1 + 1
         fname = row[0]
-        print "//////////////////////////////////////////////////////////////////////////////"
-        print "The file: " + str(index1)
-        print fname + row[0]
-        hashOfTheUser = base64.standard_b64encode(fname)
-        # Now print fetched result
-      #  print 'Creating log for user:' + hashOfTheUser
-        file = open('../results/userLog/'+hashOfTheUser+".imp", "w")
-        loadGivenEndUser(file, cursor, fname, hashOfTheUser)
-        file.close()      
-    print cursor.rowcount
+        if(fname is not None):
+            print "//////////////////////////////////////////////////////////////////////////////"
+            print "The file: " + str(index1)
+            print fname + row[0]
+            hashOfTheUser = base64.standard_b64encode(fname)
+            # Now print fetched result
+        #  print 'Creating log for user:' + hashOfTheUser
+            file = open('../results/userLog/'+hashOfTheUser+".imp", "w")
+            loadGivenEndUser(file, cursor, fname, hashOfTheUser)
+            file.close()
+        else:
+            print "Raw with none" + str(index1)
+
     cnx.commit()
     return
       
