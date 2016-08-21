@@ -18,7 +18,7 @@ config = {
 }
 
 
-def loadGivenEndUser(file, cursor, userId):
+def loadGivenEndUser(file, cursor, userId, hashOfTheUser):
     result = ''
     counter = 0
     discoveryResult = -8
@@ -35,7 +35,8 @@ def loadGivenEndUser(file, cursor, userId):
     results = cursor.fetchall()
     count = 1
     print "---------------------------------------------------------------------"
-    print "The count of total rows" + str(len(results)) + " For user: " + userId
+    print "The count of total rows" + str(len(results)) + " For user: " + userId 
+    print "The filename: " + str(hashOfTheUser)
     totalRows = len(results)
     index = 0
     file.write("First row;" + userId + ";" + str(len(results))  +'\n')
@@ -88,6 +89,7 @@ def loadGivenEndUser(file, cursor, userId):
                         result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
                         checkRows = checkRows + count            
                         file.write(result + '\n')
+                        counter = counter + 1
             # for column in row:
             #     result = result +  str(column) + ';'
                 count = 1
@@ -115,7 +117,7 @@ def loadUserList():
         # Now print fetched result
       #  print 'Creating log for user:' + hashOfTheUser
         file = open('../results/userLog/'+hashOfTheUser+".imp", "w")
-        loadGivenEndUser(file, cursor, fname)
+        loadGivenEndUser(file, cursor, fname, hashOfTheUser)
         file.close()      
     print cursor.rowcount
     cnx.commit()
