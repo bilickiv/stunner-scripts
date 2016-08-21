@@ -66,7 +66,7 @@ def loadGivenEndUser(file, cursor, userId):
 def loadUserList():
     cnx = pymysql.connect(**config)
     cursor = cnx.cursor()
-    query = "select distinct hashid from DATA where hashid like '%SDb4mR9XVlq0jBPLE/hUHC8T/GVaRaxnscXuDJA9VUw=%'"
+    query = "select distinct hashid from DATA"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     for row in results:
