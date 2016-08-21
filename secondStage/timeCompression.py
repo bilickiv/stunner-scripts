@@ -46,14 +46,14 @@ def loadGivenEndUser(file, cursor, userId):
         else:
             firstInGroup = True
             if(not first):
-                result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + result            
+                result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + discoveryResult            
                 file.write(result + '\n')
             result = ''
             discoveryResult = int(row[1])
             startDate = row[0]
             endDate = row[0]
-            for column in row:
-                result = result +  str(column) + ';'
+            #for column in row:
+             #   result = result +  str(column) + ';'
             else:
                 first = False
                     #file.writelines(row)
