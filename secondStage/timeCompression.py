@@ -42,6 +42,7 @@ def loadGivenEndUser(file, cursor, userId):
                  firstInGroup = False
             else:
                   endDate = row[0]
+            endDate = row[0]                  
             count = count + 1
         else:
             firstInGroup = True
