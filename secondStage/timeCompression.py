@@ -48,16 +48,14 @@ def loadGivenEndUser(file, cursor, userId):
             if(not first):
                 result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + discoveryResult            
                 file.write(result + '\n')
+            else:
+                first = False
             result = ''
             discoveryResult = int(row[1])
             startDate = row[0]
             endDate = row[0]
-            #for column in row:
-             #   result = result +  str(column) + ';'
-            else:
-                first = False
-                    #file.writelines(row)
-                    #print (row)
+           # for column in row:
+           #     result = result +  str(column) + ';'
             count = 1 
   
     print 'Saved lines:' + str(counter)
