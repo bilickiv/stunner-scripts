@@ -49,6 +49,7 @@ def loadGivenEndUser(file, cursor, userId):
             if(not first):
                 result = str(count) + ";" + str(endDate-startDate) + ";" + str(startDate) + ";" + str(endDate) + ";" + str(discoveryResult)            
                 file.write(result + '\n')
+                couner = counter + 1
             else:
                 first = False
             result = ''
