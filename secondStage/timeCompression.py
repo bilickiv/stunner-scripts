@@ -102,6 +102,8 @@ def loadGivenEndUser(file, cursor, userId, hashOfTheUser):
 
         
     print 'Saved lines: ' + str(counter) + ' original rows: ' + str(totalRows) + ' countedRows' + str(checkRows)
+    if(totalRows != checkRows)
+        print "+++++++++++++++++++++++++ ERROR +++++++++++++++++++++++++++++++++++++++++++"
     file.flush()
     return
 
