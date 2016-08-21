@@ -9,6 +9,10 @@ update DATA
 set `aggDiscResult` = '0'
 WHERE discoveryResultCode = '1' OR discoveryResultCode = '-1' OR discoveryResultCode = '-2';
 
+update DATA
+set `aggDiscResult` = '0'
+WHERE discoveryResultCode = '0' AND `connectionMode` = '-1';
+
 #10:2
 #	/** Symmetric firewall is present. */
 #	SYMMETRIC_FIREWALL(2, R.string.symmetric_firewall),update DATA
