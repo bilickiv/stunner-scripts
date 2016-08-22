@@ -61,6 +61,9 @@ def parseWindowsPhoneLog(unifiedLine):
             importString = importString + ';' + getDeepJsonData(data,'mobileNetInfo','carrier')
             importString = importString + ';' + getDeepJsonData(data,'mobileNetInfo','netType') 
             importString = importString + ';' + getDeepJsonData(data,'mobileNetInfo','roaming')
+            importString = importString + ';' + getDeepJsonData(data,'uptimeInfoDTO','shutDownTimestamp')
+            importString = importString + ';' + getDeepJsonData(data,'uptimeInfoDTO','turnOnTimestamp') 
+            importString = importString + ';' + getDeepJsonData(data,'uptimeInfoDTO','uptime')             
             importString = importString + ';' + getJsonData(data,'triggerCode')
             importString = importString + ';' + getJsonData(data,'appVersion')
             importString = importString + ';' + getJsonData(data,'timeZone')                                                                                                                                                                                                                                           
@@ -186,7 +189,8 @@ def loadFile(name):
       return;
       
 import glob
-path = "*.csv"
+path = "/Volumes/Backup/research/data/*.csv"
+#path = "/home/bilickiv/raw_dataset/new_data/*.csv"
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
     loadFile(fname)

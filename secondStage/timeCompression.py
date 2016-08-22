@@ -40,6 +40,7 @@ def loadGivenEndUser(file, cursor, userId, hashOfTheUser):
     totalRows = len(results)
     index = 0
     file.write("First row;" + userId + ";" + str(len(results))  +'\n')
+
     if(len(results) == 0):
         print "Zero length:" + userId
     if(len(results) == 1):

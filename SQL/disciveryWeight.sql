@@ -55,3 +55,11 @@ WHERE discoveryResultCode = '3';
 update DATA
 set `aggDiscResult` = '100'
 WHERE discoveryResultCode = '0';
+
+update DATA
+set mdate = upload_date
+where mdate is null
+
+update DATA
+set `discoveryResultCode` = -2
+where discoveryResultCode is null

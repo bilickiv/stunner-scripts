@@ -16,7 +16,7 @@ config = {
 def uploadFile(name):
     cnx = mysql.connector.connect(**config)
     cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' IGNORE INTO TABLE TMPDATA FIELDS TERMINATED BY ';'"
+    query = "LOAD DATA LOCAL INFILE '"+name+"'  INTO TABLE TMPDATA FIELDS TERMINATED BY ';'"
     ret = cursor.execute( query )
     print cursor.rowcount
     cnx.commit()
