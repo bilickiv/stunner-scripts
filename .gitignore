@@ -1,5 +1,7 @@
 # Results #
 ###################
 *.imp
+*.csv
+*.json
 data/
 results/
