@@ -51,7 +51,7 @@ def saveToDb(ipAddress,data, cnx):
 def getMetainfoBasedOnIPs():
     cnx = pymysql.connect(**config)
     cursor = cnx.cursor()
-    query = "select  publicIP from TMPIP2DATA"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
+    query = "select  publicIP from TMPIP2DATA order by publicIP"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     index1 = 0
@@ -67,8 +67,11 @@ def getMetainfoBasedOnIPs():
             raise ApiError('GET /tasks/ {}'.format(resp.status_code))
         #print resp.json()
         data = resp.json()
-        print data['query_status']
-        saveToDb(str(row[0]),data, cnx)
+        if(data['query_status']['query_status_description'] == 'Query successfully performed.'):
+            saveToDb(str(row[0]),data, cnx)
+        else:
+            print data['query_status']
+            
     cnx.commit()
     return
       
