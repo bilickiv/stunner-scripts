@@ -25,7 +25,7 @@ def uploadWithOtherDriver(name):
     try:
         with connection.cursor() as cursor:
             # Create a new record
-            sql = "LOAD DATA LOCAL INFILE '"+name+"' INTO STUDYTABLE DATA FIELDS TERMINATED BY ';'"
+            sql = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE STUDYDATA FIELDS TERMINATED BY ';'"
             cursor.execute(sql)
 
         # connection is not autocommit by default. So you must commit to save
