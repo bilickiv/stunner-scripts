@@ -17,7 +17,7 @@ def loadFile(name):
       with open(name, "r") as ins:
         for line in ins:
             counter = counter + 1
-            file.write(str(counter)+';'+line+'\n');
+            file.write(str(counter)+';'+line);
       file.close()   
       return;
       
