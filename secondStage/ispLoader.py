@@ -57,7 +57,7 @@ def getMetainfoBasedOnIPs():
     index1 = 0
     print "Starting to save total of " + str(len(results)) + " files"
     for row in results:
-        time.sleep(1.1)
+        time.sleep(1)
         index1 = index1 + 1
         print "//////////////////////////////////////////////////////////////////////////////"
         print str(index1) + ". the IP: " + str(row[0]) 
