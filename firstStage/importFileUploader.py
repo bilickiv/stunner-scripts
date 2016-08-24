@@ -25,7 +25,7 @@ def uploadWithOtherDriver(name):
     try:
         with connection.cursor() as cursor:
             # Create a new record
-            sql = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE DATA FIELDS TERMINATED BY ';'"
+            sql = "LOAD DATA LOCAL INFILE '"+name+"' INTO STUDYTABLE DATA FIELDS TERMINATED BY ';'"
             cursor.execute(sql)
 
         # connection is not autocommit by default. So you must commit to save
@@ -37,7 +37,7 @@ def uploadWithOtherDriver(name):
 def uploadFile(name):
     cnx = mysql.connector.connect(**config)
     cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE DATA FIELDS TERMINATED BY ';'"
+    query = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE STUDYDATA FIELDS TERMINATED BY ';'"
     cursor.execute( query )
     print cursor.rowcount
     cnx.commit()
@@ -47,7 +47,7 @@ def uploadFile(name):
 import glob
 print (sys.version)
 #path = "/Users/bilickiv/developer/data/*.imp"
-path = "/home/bilickiv/data/raw_dataset/processed_data/*.imp"
+path = "/home/bilickiv/data/raw_dataset/processed_data/*.imp.up"
 #cnx = mysql.connector.connect(**config)
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
