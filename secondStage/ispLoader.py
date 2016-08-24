@@ -51,13 +51,13 @@ def saveToDb(ipAddress,data, cnx):
 def getMetainfoBasedOnIPs():
     cnx = pymysql.connect(**config)
     cursor = cnx.cursor()
-    query = "select  publicIP from TMPIP2DATA order by publicIP"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
+    query = "select  DISTINCT publicIP from TMPIP2DATA WHERE publicIP  NOT IN (SELECT DISTINCT ipAddress from IP2ISPDATA) order by publicIP"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     index1 = 0
     print "Starting to save total of " + str(len(results)) + " files"
     for row in results:
-        time.sleep(1.2)
+        time.sleep(1.1)
         index1 = index1 + 1
         print "//////////////////////////////////////////////////////////////////////////////"
         print str(index1) + ". the IP: " + str(row[0]) 

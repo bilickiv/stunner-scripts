@@ -23,3 +23,5 @@ update `DATA` set `pubIP` = INET_ATON(REPLACE(publicIP,'"',''))
 
 select * from (select * from DATA where pubIP is not null limit 10) d JOIN dbip_lookup l on d.pubIP BETWEEN l.ipStart AND l.ipEnd 
 SELECT `hashId`, CONCAT(EXTRACT(YEAR_MONTH from CAST(mdate as DATETIME)),EXTRACT(DAY from CAST(mdate as DATETIME))), `publicIP`, localIP,  count(*) from DATA group by hashId, CONCAT(EXTRACT(YEAR_MONTH from CAST(mdate as DATETIME)),EXTRACT(DAY from CAST(mdate as DATETIME))), publicIP order by hashId, CONCAT(EXTRACT(YEAR_MONTH from CAST(mdate as DATETIME)),EXTRACT(DAY from CAST(mdate as DATETIME))), publicIP
+
+SELECT DISTINCT localIP from DATA where  IS_IPV4(localIP) and (left(localIP,3) not like "10.") and (left(localIP,7) not like '192.168') and localIP not in (SELECT DISTINCT ipAddress from IP2ISPDATA) order by localIP
