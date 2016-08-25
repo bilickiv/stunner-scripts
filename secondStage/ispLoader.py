@@ -51,7 +51,7 @@ def saveToDb(ipAddress,data, cnx):
 def getMetainfoBasedOnIPs():
     cnx = pymysql.connect(**config)
     cursor = cnx.cursor()
-    query = "select  DISTINCT publicIP from TMPIP2DATA WHERE tested is  NULL OR tested = FALSE AND publicIP  NOT IN (SELECT DISTINCT ipAddress from IP2ISPDATA) order by publicIP"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
+    query = "select  DISTINCT publicIP from TMPIP2DATA WHERE (tested is  NULL OR tested = FALSE) AND publicIP  NOT IN (SELECT DISTINCT ipAddress from IP2ISPDATA) order by publicIP"#" where hashId like '%gqVdRgqBInW1CcUXXi%'"
     ret = cursor.execute( query )
     results = cursor.fetchall()
     updateCursor = cnx.cursor()    
