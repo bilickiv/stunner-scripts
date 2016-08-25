@@ -60,7 +60,7 @@ def getMetainfoBasedOnIPs():
     for row in results:
         time.sleep(0.9)
         index1 = index1 + 1
-        updateQuery = "UPDATE TMPIP2DATA SET tested = TRUE where publicIP like '" + str(row[0]) +" '"
+        updateQuery = "UPDATE TMPIP2DATA SET tested = TRUE where publicIP like '" + str(row[0]) +"'"
         updateCursor.execute( updateQuery )
         cnx.commit()         
         print "//////////////////////////////////////////////////////////////////////////////"
