@@ -61,7 +61,8 @@ def getMetainfoBasedOnIPs():
         time.sleep(0.9)
         index1 = index1 + 1
         updateQuery = "UPDATE TMPIP2DATA SET tested = TRUE where publicIP like '" + str(row[0]) +" '"
-        updateCursor.execute( updateQuery )        
+        updateCursor.execute( updateQuery )
+        cnx.commit()         
         print "//////////////////////////////////////////////////////////////////////////////"
         print str(index1) + ". the IP: " + str(row[0]) 
         resp = requests.get('http://api.eurekapi.com/iplocation/v1.8/locateip?key=SAKRY6E2G945EZ492VNZ&ip='+str(row[0])+'&format=JSON')
