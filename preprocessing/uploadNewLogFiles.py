@@ -43,7 +43,7 @@ def uploadedFilesLog():
 def loadListOfFiles():
     global filelistLocation
     global actualListOfFiles
-    for fname in glob.glob(filelistLocation+"*.*"):
+    for fname in glob.glob(filelistLocation+"*.bz2"):
         actualListOfFiles.append(fname)
 
 
