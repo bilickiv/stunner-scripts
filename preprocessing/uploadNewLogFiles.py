@@ -86,6 +86,7 @@ def findTheMissingFiles():
 
 
 #print 'Number of arguments:', len(sys.argv), 'arguments.'
+print("Upload script started ("+str(datetime.datetime.now())+")")
 print( 'Argument List:', str(sys.argv[1]))
 #print 'Argument List:', str(sys.argv[2])
 if(str(sys.argv[1]) == "osx"):
@@ -93,20 +94,29 @@ if(str(sys.argv[1]) == "osx"):
 else:
     actualEnvironment = "linux"        
 #Load the configuration file
+print("Load configuration ("+str(datetime.datetime.now())+")")
 loadConfiguration()
 #load the list of already uploaded feils from log file
+print("Load log ("+str(datetime.datetime.now())+")")
 uploadedFilesLog()
 
 #load the list of files from the directory
+print("Load filelist ("+str(datetime.datetime.now())+")")
 loadListOfFiles()
+print("Filelist:"+str(actualListOfFiles)+")")
+
 
 #select the fies which has not been uploaded
+print("Select missing files  ("+str(datetime.datetime.now())+")")
 findTheMissingFiles()
+print("Missing files:"+str(fileToBeUploaded)+")")
 
 #upload the missing files
+print("Upload missing files  ("+str(datetime.datetime.now())+")")
 uploadFiles()
 
 #add the newly uploaded files to the log
+print("Edit log file  ("+str(datetime.datetime.now())+")")
 appendFilesLog()
 
 #print( "Files in directory:" + str(actualListOfFiles))
