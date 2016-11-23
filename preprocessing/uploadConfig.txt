@@ -4,7 +4,7 @@ logFile = /Users/bilickiv/developer/stunner-scripts/preprocessing/uploadedFiles.
 serverAddress = bilickiv@10.6.14.37:/home/bilickiv/data/raw_dataset/new_data
 sshKey = /Users/bilickiv/.ssh/id_rsa
 [fict]
-filelistLocation = /home/berta
+filelistLocation = /home/berta/
 logFile = /home/wlab/uploader/uploadedFiles.txt
 serverAddress = bilickiv@10.6.14.37:/home/bilickiv/data/raw_dataset/new_data
 sshKey = /root/.ssh/fromFict_rsa 
