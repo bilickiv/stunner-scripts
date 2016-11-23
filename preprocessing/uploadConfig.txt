@@ -1,0 +1,8 @@
+[osx]
+filelistLocation = /Users/bilickiv/developer/stunner-scripts/
+logFile = /Users/bilickiv/developer/stunner-scripts/preprocessing/uploadedFiles.txt
+serverAddress = bilickiv@10.6.14.37:/home/bilickiv/data/raw_dataset/new_data
+[fict]
+filelistLocation = /home/berta
+logFile = /home/wlab/uploader/uploadedFiles.txt
+serverAddress = bilickiv@10.6.14.37:/home/bilickiv/data/raw_dataset/new_data

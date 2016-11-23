@@ -1,0 +1,3 @@
+/Users/bilickiv/developer/stunner-scripts/sqlIP2LocationAndMainDataExporterScript.sql
+/Users/bilickiv/developer/stunner-scripts/test.txt
+/Users/bilickiv/developer/stunner-scripts/userSpecificFileCreatorDebian.py
