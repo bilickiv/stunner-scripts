@@ -12,20 +12,24 @@ logFileLocation = ""
 filelistLocation = ""
 serverAddress = ""
 actualEnvironment = "osx"
+sshKey = ""
 def loadConfiguration():
     global logFileLocation
     global filelistLocation
     global serverAddress
+    global sshKey
     config = configparser.ConfigParser()
     config.read('uploadConfig.txt')
     if(actualEnvironment == "osx"):
         logFileLocation = config['osx']['logFile']
         filelistLocation = config['osx']['filelistLocation']
         serverAddress = config['osx']['serverAddress']
+        sshKey = config['osx']['sshKey']
     else:
         logFileLocation = config['fict']['logFile']
         filelistLocation = config['fict']['filelistLocation']
-        serverAddress = config['fict']['serverAddress']         
+        serverAddress = config['fict']['serverAddress']
+        sshKey = config['fict']['sshKey']         
     return;
 
 def uploadedFilesLog():
@@ -43,7 +47,7 @@ def uploadedFilesLog():
 def loadListOfFiles():
     global filelistLocation
     global actualListOfFiles
-    for fname in glob.glob(filelistLocation+"*.bz2"):
+    for fname in glob.glob(filelistLocation+"*.*"):
         actualListOfFiles.append(fname)
 
 
@@ -65,7 +69,7 @@ def uploadFiles():
     global serverAddress
     for line, value in enumerate(fileToBeUploaded):
         startTime = datetime.datetime.now()
-        os.system("scp "+value+" "+serverAddress)
+        os.system("scp -i" +sshKey+ " " +value+" "+serverAddress)
         print("Uploading ("+str(startTime)+"):"+value) 
     return;
 
