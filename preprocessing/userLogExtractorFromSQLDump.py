@@ -58,6 +58,7 @@ def saveWindowsLine(idString, content):
 def loadIndexFile():
     global indexFile
     index = 0
+    startTime = datetime.datetime.now()
     with open(indexFile, "r", encoding="utf-8") as ins:
         for line in ins:
             #print(line)
