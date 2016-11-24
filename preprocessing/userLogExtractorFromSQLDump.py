@@ -75,6 +75,7 @@ def loadBlobFile():
     global blobFile
     index = 0
     startTime = datetime.datetime.now()
+    otherPart = ""
     with open(blobFile, "r", encoding="utf-8") as ins:
         for line in ins:
             #print(line)
@@ -86,6 +87,9 @@ def loadBlobFile():
             try:
                 otherPart = indexEntries[tmpid]
                 tmpOtherPart = otherPart.split('\t')
+                print(otherPart)
+                print(tmpOtherPart)
+                print(replaceProblematicChars(csvData[1]))
                 #file;timestamp;id;op;json
                 dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
                 if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
