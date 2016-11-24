@@ -80,7 +80,7 @@ def loadBlobFile():
             #print(line)
             csvData = line.split(';')
             tmpid = csvData[0]
-            if(index % 10000 == 0):
+            if(index % 1000000 == 0):
                 print(index)
             index = index + 1    
             try:
