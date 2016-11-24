@@ -1,0 +1,7 @@
+[osx]
+rawFiles = /Users/bilickiv/tmpdata/rawUnzipped/
+userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
+[fict]
+rawFiles = /home/berta/
+userSpecificFiles = /home/wlab/uploader/uploadedFiles.txt
+
