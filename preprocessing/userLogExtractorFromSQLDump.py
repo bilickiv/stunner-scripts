@@ -99,7 +99,7 @@ def loadBlobFile():
              #   print(dataString)
             #   print(line)
             except:
-                 print("Error" + tmpid + sys.exc_info()[0])                
+                 print("Error" + tmpid + str(sys.exc_info()[0]))                
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
