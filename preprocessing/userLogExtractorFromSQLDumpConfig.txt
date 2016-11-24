@@ -1,12 +1,16 @@
 [osx]
-indexFile = /Users/bilickiv/tmpdata/oldFiles/datacollector-2015-01-13.sql.index
-blobFile = /Users/bilickiv/tmpdata/oldFiles/
+indexFile1 = /Users/bilickiv/tmpdata/oldFiles/datacollector-2015-01-13.sql.index
+blobFile1 = /Users/bilickiv/tmpdata/oldFiles/
+indexFile2 = /Users/bilickiv/tmpdata/oldFiles/datacollector-2015-01-13.sql.index
+blobFile2 = /Users/bilickiv/tmpdata/oldFiles/
 userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
 userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
-indexFile = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.index
-blobFile = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
+indexFile1 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.index
+blobFile1 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
+indexFile2 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-05-21.sql.index
+blobFile2 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-05-21.sql.blob
 userSpecificFiles = /home/bilickiv/raw_dataset/user_specific_data/
 userSpecificFilesWindows = /home/bilickiv/raw_dataset/user_specific_data/windows_phone/
 

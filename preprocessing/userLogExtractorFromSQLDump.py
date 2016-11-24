@@ -7,26 +7,35 @@ import os
 import base64
 
 indexEntries = {}
-indexFile = ""
+indexFile1 = ""
+blobFile1 = ""
+indexFile2 = ""
+blobFile2 = ""
 userSpecificFiles = ""
 userSpecificFilesWindows = ""
 actualEnvironment = "osx"
 
 def loadConfiguration():
-    global indexFile
-    global blobFile
+    global indexFile1
+    global blobFile1
+    global indexFile2
+    global blobFile2    
     global userSpecificFiles
     global userSpecificFilesWindows
     config = configparser.ConfigParser()
     config.read('userLogExtractorFromSQLDumpConfig.txt')
     if(actualEnvironment == "osx"):
-        indexFile = config['osx']['indexFile']
-        blobFile = config['osx']['blobFile']
+        indexFile1 = config['osx']['indexFile1']
+        blobFile1 = config['osx']['blobFile1']
+        indexFile2 = config['osx']['indexFile2']
+        blobFile2 = config['osx']['blobFile2']        
         userSpecificFiles = config['osx']['userSpecificFiles']
         userSpecificFilesWindows = config['osx']['userSpecificFilesWindows']
     else:
-        indexFile = config['fict']['indexFile']
-        blobFile = config['fict']['blobFile']
+        indexFile1 = config['fict']['indexFile1']
+        blobFile1 = config['fict']['blobFile1']
+        indexFile2 = config['fict']['indexFile2']
+        blobFile2 = config['fict']['blobFile2']        
         userSpecificFiles = config['fict']['userSpecificFiles']
         userSpecificFilesWindows = config['fict']['userSpecificFilesWindows']
     return;
@@ -41,7 +50,7 @@ def saveLine(idStr, content):
             file.write(content+'\n')
             file.close()
         except:
-            print("Error in saveLine:", sys.exc_info()[0])
+            print("Error in saveLine", sys.exc_info()[0])
         return;
 
 def saveWindowsLine(idString, content):
@@ -56,8 +65,15 @@ def saveWindowsLine(idString, content):
         file.close()
         return;
 
-def loadIndexFile():
-    global indexFile
+def loadIndexFile(round):
+    global indexFile1
+    global indexFile2
+    indexEntries = {}
+    indexFile = ""
+    if(round == "first"):
+        indexFile = indexFile1
+    else:
+        indexFile = indexFile2
     index = 0
     startTime = datetime.datetime.now()
     with open(indexFile, "r", encoding="utf-8") as ins:
@@ -72,8 +88,14 @@ def loadIndexFile():
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
     return;
-def loadBlobFile():
-    global blobFile
+def loadBlobFile(round):
+    global blobFile1
+    global blobFile2
+    blobFile = ""
+    if(round == "first"):
+        blobFile = blobFile1
+    else:
+        blobFile = blobFile2
     index = 0
     startTime = datetime.datetime.now()
     otherPart = ""
@@ -129,8 +151,10 @@ else:
 loadConfiguration()
 #add the newly uploaded files to the log
 print("Start loading indexfile  ("+str(datetime.datetime.now())+")")
-loadIndexFile()
+loadIndexFile("first")
 print("Finished loading indexfile  ("+str(datetime.datetime.now())+")")
-loadBlobFile()
-
+loadBlobFile("first")
+loadIndexFile("second")
+print("Finished loading indexfile  ("+str(datetime.datetime.now())+")")
+loadBlobFile("second")
 
