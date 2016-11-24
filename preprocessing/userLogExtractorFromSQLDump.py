@@ -90,7 +90,7 @@ def loadBlobFile():
                 dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
                 if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
                         saveWindowsLine(tmpOtherPart[3],dataString)
-                    else:
+                else:
                         saveLine(tmpOtherPart[3],dataString)
              #   print(dataString)
             #   print(line)
