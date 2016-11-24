@@ -41,7 +41,7 @@ def saveLine(idStr, content):
             file.write(content+'\n')
             file.close()
         except:
-            print("Error in saveLine", sys.exc_info()[0])
+            print("Error in saveLine:", sys.exc_info()[0])
         return;
 
 def saveWindowsLine(idString, content):
@@ -97,7 +97,7 @@ def loadBlobFile():
              #   print(dataString)
             #   print(line)
             except:
-                 print("Error" + tmpid ,sys.exc_info()[0])                
+                 print("Error in loadBlobFile:" + tmpid ,sys.exc_info()[0])                
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
