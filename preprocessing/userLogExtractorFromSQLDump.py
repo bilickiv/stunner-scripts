@@ -7,6 +7,7 @@ import os
 import base64
 
 indexEntries = {}
+hashIds = set()
 rawFiles = ""
 indexFile1 = ""
 blobFile1 = ""
@@ -53,11 +54,13 @@ def removeFiles():
     return;        
 def saveLine(idStr, content):
         global userSpecificFiles
+        global hashIds
         try:
             tmp = replaceProblematicChars(idStr)
             fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
             tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
             print(tmp)
+            hashIds.add(tmp)
             file = open(userSpecificFiles+tmp+".imp", "a+", encoding="utf-8")
             file.write(content+'\n')
             file.close()
@@ -223,6 +226,7 @@ removeFiles()
 print("Start extracting new files  ("+str(datetime.datetime.now())+")")
 #loadListOfFiles()
 loadFile(rawFiles+"409088.csv")
+print("Number of different ids:" + len(hashIds))
 #add the newly uploaded files to the log
 print("Start loading indexfile 1  ("+str(datetime.datetime.now())+")")
 #loadIndexFile("first")
