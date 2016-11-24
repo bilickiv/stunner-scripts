@@ -204,7 +204,9 @@ def loadFile(name):
                         niceString = replaceProblematicChars(output)                    
                         importString = name + ';' + niceString
                         #file.write(importString+'\n');
-                        saveLine(deviceId, importString)
+                        csvData1 = deviceId.split(';')
+                        idStr1 = csvData1[1]
+                        saveLine(idStr1, importString)
                         importString = ''
                         output = ''
                         first = 'true'
