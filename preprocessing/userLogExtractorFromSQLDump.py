@@ -59,7 +59,7 @@ def saveLine(idStr, content):
             tmp = replaceProblematicChars(idStr)
             fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
             tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
-            print(tmp)
+            #print(tmp)
             hashIds.add(tmp)
             file = open(userSpecificFiles+tmp+".imp", "a+", encoding="utf-8")
             file.write(content+'\n')
