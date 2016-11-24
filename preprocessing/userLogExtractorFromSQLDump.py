@@ -68,7 +68,8 @@ def saveWindowsLine(idString, content):
 def loadIndexFile(round):
     global indexFile1
     global indexFile2
-    indexEntries = {}
+    global indexEntries 
+    indexEntries.clear()
     indexFile = ""
     if(round == "first"):
         indexFile = indexFile1
