@@ -55,6 +55,7 @@ def removeFiles():
 def saveLine(idStr, content):
         global userSpecificFiles
         global hashIds
+        print(idStr) 
         try:
             tmp = replaceProblematicChars(idStr)
             fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
