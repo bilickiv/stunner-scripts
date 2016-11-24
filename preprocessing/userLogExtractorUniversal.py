@@ -26,7 +26,7 @@ def loadConfiguration():
     global userSpecificFiles
     global userSpecificFilesWindows
     config = configparser.ConfigParser()
-    config.read('userLogExtractorFromSQLDumpConfig.txt')
+    config.read('userLogExtractorUniversalConfig.txt')
     if(actualEnvironment == "osx"):
         rawFiles = config['osx']['rawFiles']        
         indexFile1 = config['osx']['indexFile1']
