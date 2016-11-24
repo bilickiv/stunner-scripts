@@ -30,10 +30,8 @@ def loadConfiguration():
         userSpecificFiles = config['fict']['userSpecificFiles']
         userSpecificFilesWindows = config['fict']['userSpecificFilesWindows']
     return;
-def saveLine(idString, content):
+def saveLine(idStr, content):
         global userSpecificFiles
-        csvData = idString.split(';')
-        idStr = csvData[1]
         tmp = replaceProblematicChars(idStr)
         fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
         tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
@@ -86,16 +84,9 @@ def loadBlobFile():
             index = index + 1    
             try:
                 otherPart = indexEntries[tmpid]
-                tmpOtherPart = otherPart.split('\t')
-                print("1    "+otherPart)
-                print("2    "+str(tmpOtherPart))
-                print("3    "+replaceProblematicChars(csvData[1]))
-                print("4    "+tmpOtherPart[2])
-                print("5    "+tmpOtherPart[3])
-                print("6    "+tmpOtherPart[1])                
+                tmpOtherPart = otherPart.split('\t')              
                 #file;timestamp;id;op;json
                 dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
-                print("7    " + dataString)
                 if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
                         saveWindowsLine(tmpOtherPart[3],dataString)
                 else:
