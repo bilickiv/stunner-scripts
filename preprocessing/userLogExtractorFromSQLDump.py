@@ -82,11 +82,12 @@ def loadBlobFile():
             tmpid = csvData[0]
             if(index % 10000 == 0):
                 print(index)
+            index = index + 1
+                
             try:
                 otherPart = indexEntries[tmpid]
-                print(otherPart)
-                print(line)
-                index = index + 1
+            #    print(otherPart)
+            #   print(line)
             except:
                  print("Error" + tmpid)                
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
