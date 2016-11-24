@@ -32,13 +32,16 @@ def loadConfiguration():
     return;
 def saveLine(idStr, content):
         global userSpecificFiles
-        tmp = replaceProblematicChars(idStr)
-        fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
-        tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
-        #print(tmp)
-        file = open(userSpecificFiles+tmp+".imp", "a+", encoding="utf-8")
-        file.write(content+'\n')
-        file.close()
+        try:
+            tmp = replaceProblematicChars(idStr)
+            fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
+            tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
+            #print(tmp)
+            file = open(userSpecificFiles+tmp+".imp", "a+", encoding="utf-8")
+            file.write(content+'\n')
+            file.close()
+        except:
+            print("Error in saveLine", sys.exc_info()[0])
         return;
 
 def saveWindowsLine(idString, content):
@@ -63,7 +66,7 @@ def loadIndexFile():
             csvData = line.split('\t')
             indexEntries[csvData[4]] = line
             index = index + 1
-            if(index % 10000 == 0):
+            if(index % 100000 == 0):
                 print(index)
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
@@ -94,7 +97,7 @@ def loadBlobFile():
              #   print(dataString)
             #   print(line)
             except:
-                 print("Error" + tmpid + str(sys.exc_info()[0]))                
+                 print("Error" + tmpid ,sys.exc_info()[0])                
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
