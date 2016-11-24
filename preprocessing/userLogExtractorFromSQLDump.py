@@ -100,5 +100,6 @@ loadConfiguration()
 print("Start loading indexfile  ("+str(datetime.datetime.now())+")")
 loadIndexFile()
 print("Finished loading indexfile  ("+str(datetime.datetime.now())+")")
+loadBlobFile()
 
 
