@@ -7,6 +7,7 @@ import os
 import base64
 
 indexEntries = {}
+rawFiles = ""
 indexFile1 = ""
 blobFile1 = ""
 indexFile2 = ""
@@ -16,6 +17,7 @@ userSpecificFilesWindows = ""
 actualEnvironment = "osx"
 
 def loadConfiguration():
+    global rawFiles
     global indexFile1
     global blobFile1
     global indexFile2
@@ -25,6 +27,7 @@ def loadConfiguration():
     config = configparser.ConfigParser()
     config.read('userLogExtractorFromSQLDumpConfig.txt')
     if(actualEnvironment == "osx"):
+        rawFiles = config['osx']['rawFiles']        
         indexFile1 = config['osx']['indexFile1']
         blobFile1 = config['osx']['blobFile1']
         indexFile2 = config['osx']['indexFile2']
@@ -33,12 +36,21 @@ def loadConfiguration():
         userSpecificFilesWindows = config['osx']['userSpecificFilesWindows']
     else:
         indexFile1 = config['fict']['indexFile1']
+        rawFiles = config['fict']['rawFiles']        
         blobFile1 = config['fict']['blobFile1']
         indexFile2 = config['fict']['indexFile2']
         blobFile2 = config['fict']['blobFile2']        
         userSpecificFiles = config['fict']['userSpecificFiles']
         userSpecificFilesWindows = config['fict']['userSpecificFilesWindows']
     return;
+def removeFiles():
+    global userSpecificFiles
+    global userSpecificFilesWindows    
+    for fl in glob.glob(userSpecificFiles+"*.imp"):
+        os.remove(fl)
+    for fl in glob.glob(userSpecificFilesWindows+"*.imp"):
+        os.remove(fl)        
+    return;        
 def saveLine(idStr, content):
         global userSpecificFiles
         try:
@@ -143,6 +155,62 @@ def replaceProblematicChars(inputString):
     niceString = inputString.replace('""O2 - UK""','"O2 - UK"')
     
     return niceString
+
+def loadListOfFiles():
+    global userSpecificFiles
+    global rawFiles
+    print("Searching for files in:" + rawFiles)
+    for fname in glob.glob(rawFiles+"*.csv"):
+        print("Processing file:" + fname)
+        loadFile(fname)
+    return;
+
+def loadFile(name):
+        deviceId = ""  
+        startTime = datetime.datetime.now()
+        first = 'true'
+        output = ''
+        importString = ''
+        #file = open(name+".imp", "w")
+        counter = 0
+        with open(name, "r", encoding="utf-8") as ins:
+            for line in ins:
+                if(line.find('hu.uszeged.wlab.stunner.windowsphone') != -1):
+                    #print('Windows phone')
+                    #print(line)
+                    output = line.replace('=\n','=')
+                    importString = name + ';' + output
+                    counter = counter + 1
+                    #file.write(importString+'\n')
+                    csvData = output.split(';')
+                    idStr = csvData[1]
+                    saveWindowsLine(idStr,output)
+                    importString = ''
+                    output = ''
+                    first = 'true'                               
+                else:
+                    if (first == 'true'):
+                        deviceId = line
+                        #print(deviceId)
+                        output = line
+                        first = 'false'
+                    else:
+                        counter = counter + 1
+                        output = output + line
+                        niceString = replaceProblematicChars(output)                    
+                        importString = name + ';' + niceString
+                        #file.write(importString+'\n');
+                        saveLine(deviceId, importString)
+                        importString = ''
+                        output = ''
+                        first = 'true'
+        endTime = (datetime.datetime.now() - startTime).total_seconds() 
+        print(str(counter) + ":row saved in: " + str(endTime) +"seconds")   
+        #  file.close()   
+        return;
+
+
+
 if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
 else:
@@ -150,12 +218,22 @@ else:
 
 #load configuration
 loadConfiguration()
+print("Start removing old files  ("+str(datetime.datetime.now())+")")
+removeFiles()
+print("Start extracting new files  ("+str(datetime.datetime.now())+")")
+loadListOfFiles()
 #add the newly uploaded files to the log
-print("Start loading indexfile  ("+str(datetime.datetime.now())+")")
+print("Start loading indexfile 1  ("+str(datetime.datetime.now())+")")
 loadIndexFile("first")
-print("Finished loading indexfile  ("+str(datetime.datetime.now())+")")
+print("Finished loading indexfile 1  ("+str(datetime.datetime.now())+")")
+print("Start loading blobfile 1  ("+str(datetime.datetime.now())+")")
 loadBlobFile("first")
+print("Finished loading blobfile1 1  ("+str(datetime.datetime.now())+")")
+print("Start loading indexfile 2  ("+str(datetime.datetime.now())+")")
 loadIndexFile("second")
-print("Finished loading indexfile  ("+str(datetime.datetime.now())+")")
+print("Finished loading indexfile 2  ("+str(datetime.datetime.now())+")")
+print("Start loading blobfile 2  ("+str(datetime.datetime.now())+")")
 loadBlobFile("second")
+print("Finished loading blobfile 2  ("+str(datetime.datetime.now())+")")
+
 

@@ -1,4 +1,5 @@
 [osx]
+rawFiles = /Users/bilickiv/tmpdata/rawUnzipped/
 indexFile1 = /Users/bilickiv/tmpdata/oldFiles/datacollector-2015-01-13.sql.index
 blobFile1 = /Users/bilickiv/tmpdata/oldFiles/
 indexFile2 = /Users/bilickiv/tmpdata/oldFiles/datacollector-2015-01-13.sql.index
@@ -7,6 +8,7 @@ userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
 userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
+rawFiles = /home/bilickiv/data/raw_dataset/unzipped_dataset/
 indexFile1 = /home/bilickiv/data/raw_dataset/old_data/datacollector-2015-01-13.sql.index
 blobFile1 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
 indexFile2 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-05-21.sql.index
