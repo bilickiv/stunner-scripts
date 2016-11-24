@@ -145,8 +145,8 @@ else:
 
 #load configuration
 loadConfiguration()
-loadFile(rawFiles+"409088.csv")
+#loadFile(rawFiles+"409088.csv")
 #add the newly uploaded files to the log
 print("Start generating log file  ("+str(datetime.datetime.now())+")")
-#loadListOfFiles()
+loadListOfFiles()
 
