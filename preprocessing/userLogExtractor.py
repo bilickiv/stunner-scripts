@@ -30,6 +30,7 @@ def loadConfiguration():
 def loadListOfFiles():
     global userSpecificFiles
     global rawFiles
+    print("Searching for files in:" rawFiles)
     for fname in glob.glob(rawFiles+"*.csv"):
         print("Processing file:" + fname)
         loadFile(fname)
