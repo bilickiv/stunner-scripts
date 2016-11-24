@@ -95,6 +95,7 @@ def loadBlobFile():
                 print("6    "+tmpOtherPart[1])                
                 #file;timestamp;id;op;json
                 dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
+                print("7    " + dataString)
                 if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
                         saveWindowsLine(tmpOtherPart[3],dataString)
                 else:
