@@ -234,16 +234,18 @@ loadListOfFiles()
 print("Number of different ids:" + str(len(hashIds)))
 #add the newly uploaded files to the log
 print("Start loading indexfile 1  ("+str(datetime.datetime.now())+")")
-#loadIndexFile("first")
+loadIndexFile("first")
 print("Finished loading indexfile 1  ("+str(datetime.datetime.now())+")")
 print("Start loading blobfile 1  ("+str(datetime.datetime.now())+")")
-#loadBlobFile("first")
+loadBlobFile("first")
 print("Finished loading blobfile1 1  ("+str(datetime.datetime.now())+")")
 print("Start loading indexfile 2  ("+str(datetime.datetime.now())+")")
-#loadIndexFile("second")
+loadIndexFile("second")
 print("Finished loading indexfile 2  ("+str(datetime.datetime.now())+")")
 print("Start loading blobfile 2  ("+str(datetime.datetime.now())+")")
-#loadBlobFile("second")
+loadBlobFile("second")
 print("Finished loading blobfile 2  ("+str(datetime.datetime.now())+")")
+print("Number of different ids:" + str(len(hashIds)))
+
 
 
