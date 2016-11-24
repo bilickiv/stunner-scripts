@@ -85,7 +85,10 @@ def loadBlobFile():
             index = index + 1    
             try:
                 otherPart = indexEntries[tmpid]
-            #    print(otherPart)
+                tmpOtherPart = otherPart.split('\t')
+                #file;timestamp;id;op;json
+                dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
+                print(dataString)
             #   print(line)
             except:
                  print("Error" + tmpid)                
@@ -93,6 +96,24 @@ def loadBlobFile():
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
     return;
+
+def replaceProblematicChars(inputString):
+    inputString = inputString.replace('=\n','=')
+    inputString = inputString.replace('=\\n','=')
+    inputString = inputString.replace('=\\\n','=')
+    inputString = inputString.replace('=\\\\n','=')
+    inputString = inputString.replace('=\\\\\\\\n','=')
+    inputString = inputString.replace('\n','')
+    inputString = inputString.replace('\t','')
+    inputString = inputString.replace("\'",'')
+    inputString = inputString.replace('ZAIN IQ\\n','ZAIN IQ')
+
+    
+    inputString = r''+inputString
+    niceString = inputString.replace('\\','')
+    niceString = inputString.replace('""O2 - UK""','"O2 - UK"')
+    
+    return niceString
 if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
 else:
