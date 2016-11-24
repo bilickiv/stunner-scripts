@@ -7,10 +7,10 @@ userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
 userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
-indexFile1 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.index
-blobFile1 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
-indexFile2 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-05-21.sql.index
-blobFile2 = /home/bilickiv/raw_dataset/old_data/datacollector-2015-05-21.sql.blob
-userSpecificFiles = /home/bilickiv/raw_dataset/user_specific_data/
-userSpecificFilesWindows = /home/bilickiv/raw_dataset/user_specific_data/windows_phone/
+indexFile1 = /home/bilickiv/data/raw_dataset/old_data/datacollector-2015-01-13.sql.index
+blobFile1 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
+indexFile2 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-05-21.sql.index
+blobFile2 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-05-21.sql.blob
+userSpecificFiles = /home/bilickiv//data/raw_dataset/user_specific_data/
+userSpecificFilesWindows = /home/bilickiv//data/raw_dataset/user_specific_data/windows_phone/
 
