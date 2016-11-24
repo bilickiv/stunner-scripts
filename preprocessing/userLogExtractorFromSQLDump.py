@@ -207,6 +207,8 @@ def loadFile(name):
                         importString = ''
                         output = ''
                         first = 'true'
+            print("Number of different ids:" + str(len(hashIds)))
+
         endTime = (datetime.datetime.now() - startTime).total_seconds() 
         print(str(counter) + ":row saved in: " + str(endTime) +"seconds")   
         #  file.close()   
@@ -224,8 +226,8 @@ loadConfiguration()
 print("Start removing old files  ("+str(datetime.datetime.now())+")")
 removeFiles()
 print("Start extracting new files  ("+str(datetime.datetime.now())+")")
-#loadListOfFiles()
-loadFile(rawFiles+"409088.csv")
+loadListOfFiles()
+#loadFile(rawFiles+"409088.csv")
 print("Number of different ids:" + str(len(hashIds)))
 #add the newly uploaded files to the log
 print("Start loading indexfile 1  ("+str(datetime.datetime.now())+")")
