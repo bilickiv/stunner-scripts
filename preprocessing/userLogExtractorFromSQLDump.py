@@ -102,31 +102,7 @@ def loadBlobFile():
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
     return;
-def saveLine(idString, content):
-        global userSpecificFiles
-        csvData = idString.split(';')
-        idStr = csvData[1]
-        tmp = replaceProblematicChars(idStr)
-        fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
-        tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
-        #print(tmp)
-        file = open(userSpecificFiles+tmp+".imp", "a+", encoding="utf-8")
-#        file = open(userSpecificFiles+fileName+".imp", "a+", encoding="utf-8")
-        file.write(content+'\n')
-        file.close()
-        return;
-def saveWindowsLine(idString, content):
-        global userSpecificFiles
-        global userSpecificFilesWindows
-        tmp = replaceProblematicChars(idString)
-        fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
-        tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
-        #print(tmp)
-        file = open(userSpecificFilesWindows+tmp+".imp", "a+", encoding="utf-8")
-#        file = open(userSpecificFiles+fileName+".imp", "a+", encoding="utf-8")
-        file.write(content+'\n')
-        file.close()
-        return;
+
 def replaceProblematicChars(inputString):
     inputString = inputString.replace('=\n','=')
     inputString = inputString.replace('=\\n','=')
