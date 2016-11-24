@@ -133,6 +133,12 @@ def replaceProblematicChars(inputString):
     niceString = inputString.replace('""O2 - UK""','"O2 - UK"')
     
     return niceString
+    
+if(str(sys.argv[1]) == "osx"):
+    actualEnvironment = "osx"
+else:
+    actualEnvironment = "linux"    
+
 #load configuration
 loadConfiguration()
 
