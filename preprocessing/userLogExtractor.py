@@ -28,7 +28,7 @@ def loadConfiguration():
     else:
         rawFiles = config['fict']['rawFiles']
         userSpecificFiles = config['fict']['userSpecificFiles']
-        userSpecificFilesWindows = config['osx']['userSpecificFilesWindows']
+        userSpecificFilesWindows = config['fict']['userSpecificFilesWindows']
     return;
 
 
