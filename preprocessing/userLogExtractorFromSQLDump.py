@@ -82,6 +82,7 @@ def loadBlobFile():
             tmpid = csvData[0]
             otherPart = indexEntries[tmpid]
             print(otherPart)
+            print(line)
             index = index + 1
             if(index % 10000 == 0):
                 print(index)
