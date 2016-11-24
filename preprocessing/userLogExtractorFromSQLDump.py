@@ -88,7 +88,7 @@ def loadBlobFile():
                 otherPart = indexEntries[tmpid]
                 tmpOtherPart = otherPart.split('\t')
                 print("1    "+otherPart)
-                print("2    "+str(tmpOtherPart)
+                print("2    "+str(tmpOtherPart))
                 print("3    "+replaceProblematicChars(csvData[1]))
                 print("4    "+tmpOtherPart[2])
                 print("5    "+tmpOtherPart[3])
