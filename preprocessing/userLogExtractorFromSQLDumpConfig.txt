@@ -6,7 +6,7 @@ userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
 indexFile = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.index
-blobFile = /Users/bilickiv/tmpdata/userSpecific/
+blobFile = /home/bilickiv/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
 userSpecificFiles = /home/bilickiv/data/raw_dataset/user_specific_data/
 userSpecificFilesWindows = /home/bilickiv/data/raw_dataset/user_specific_data/windows_phone/
 

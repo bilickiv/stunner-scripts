@@ -71,7 +71,24 @@ def loadIndexFile():
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
     #  file.close()   
     return;
-
+def loadBlobFile():
+    global blobFile
+    index = 0
+    startTime = datetime.datetime.now()
+    with open(blobFile, "r", encoding="utf-8") as ins:
+        for line in ins:
+            #print(line)
+            csvData = line.split(';')
+            tmpid = csvData[0]
+            otherPart = indexEntries[tmpid]
+            print(otherPart)
+            index = index + 1
+            if(index % 10000 == 0):
+                print(index)
+    endTime = (datetime.datetime.now() - startTime).total_seconds() 
+    print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
+    #  file.close()   
+    return;
 if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
 else:
