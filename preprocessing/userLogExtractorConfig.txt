@@ -1,7 +1,10 @@
 [osx]
 rawFiles = /Users/bilickiv/tmpdata/rawUnzipped/
 userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
+userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
+
 [fict]
 rawFiles = /home/bilickiv/data/raw_dataset/unzipped_dataset/
 userSpecificFiles = /home/bilickiv/data/raw_dataset/user_specific_data/
+userSpecificFilesWindows = /home/bilickiv/data/raw_dataset/user_specific_data/windows_phone/
 

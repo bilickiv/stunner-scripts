@@ -11,19 +11,24 @@ actualListOfFiles = []
 fileToBeUploaded = []
 rawFiles = ""
 userSpecificFiles = ""
+userSpecificFilesWindows = ""
 actualEnvironment = "osx"
 
 def loadConfiguration():
     global rawFiles
     global userSpecificFiles
+    global userSpecificFilesWindows
     config = configparser.ConfigParser()
     config.read('userLogExtractorConfig.txt')
     if(actualEnvironment == "osx"):
         rawFiles = config['osx']['rawFiles']
         userSpecificFiles = config['osx']['userSpecificFiles']
+        userSpecificFilesWindows = config['osx']['userSpecificFilesWindows']
+
     else:
         rawFiles = config['fict']['rawFiles']
         userSpecificFiles = config['fict']['userSpecificFiles']
+        userSpecificFilesWindows = config['osx']['userSpecificFilesWindows']
     return;
 
 
@@ -39,7 +44,7 @@ def loadListOfFiles():
 
 def saveTestLine(idString, content):
         csvData = idString.split(';')
-        idStr = csvData[1]
+        idStr = csvData[2]
         print(replaceProblematicChars(idStr))
         return;
        
@@ -60,13 +65,12 @@ def saveLine(idString, content):
 
 def saveWindowsLine(idString, content):
         global userSpecificFiles
-        csvData = idString.split(';')
-        idStr = csvData[1]
-        tmp = replaceProblematicChars(idStr)
+        global userSpecificFilesWindows
+        tmp = replaceProblematicChars(idString)
         fileName = base64.b64encode(tmp.encode(encoding='utf_8'))
         tmp = str(fileName).replace("b'","").replace("'","").replace("=","")
         #print(tmp)
-        file = open(userSpecificFiles+tmp+".imp", "a+", encoding="utf-8")
+        file = open(userSpecificFilesWindows+tmp+".imp", "a+", encoding="utf-8")
 #        file = open(userSpecificFiles+fileName+".imp", "a+", encoding="utf-8")
         file.write(content+'\n')
         file.close()
@@ -133,7 +137,7 @@ def replaceProblematicChars(inputString):
     niceString = inputString.replace('""O2 - UK""','"O2 - UK"')
     
     return niceString
-    
+
 if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
 else:
@@ -141,8 +145,8 @@ else:
 
 #load configuration
 loadConfiguration()
-
+loadFile(rawFiles+"409088.csv")
 #add the newly uploaded files to the log
 print("Start generating log file  ("+str(datetime.datetime.now())+")")
-loadListOfFiles()
+#loadListOfFiles()
 
