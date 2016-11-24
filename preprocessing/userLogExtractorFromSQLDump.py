@@ -87,9 +87,12 @@ def loadBlobFile():
             try:
                 otherPart = indexEntries[tmpid]
                 tmpOtherPart = otherPart.split('\t')
-                print(otherPart)
-                print(tmpOtherPart)
-                print(replaceProblematicChars(csvData[1]))
+                print("1    "+otherPart)
+                print("2    "+tmpOtherPart)
+                print("3    "+replaceProblematicChars(csvData[1]))
+                print("4    "+tmpOtherPart[2])
+                print("5    "+tmpOtherPart[3])
+                print("6    "+tmpOtherPart[1])                
                 #file;timestamp;id;op;json
                 dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
                 if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
