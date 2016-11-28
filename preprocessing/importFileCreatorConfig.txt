@@ -4,11 +4,7 @@ userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
 userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
-rawFiles = /home/bilickiv/data/raw_dataset/unzipped_dataset/
-indexFile1 = /home/bilickiv/data/raw_dataset/old_data/datacollector-2015-01-13.sql.index
-blobFile1 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-01-13.sql.blob
-indexFile2 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-05-21.sql.index
-blobFile2 = /home/bilickiv//data/raw_dataset/old_data/datacollector-2015-05-21.sql.blob
+userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
 userSpecificFiles = /home/bilickiv//data/raw_dataset/user_specific_data/
 userSpecificFilesWindows = /home/bilickiv//data/raw_dataset/user_specific_data/windows_phone/
 
