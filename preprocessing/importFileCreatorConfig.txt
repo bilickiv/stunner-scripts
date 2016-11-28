@@ -5,6 +5,6 @@ userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
 userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
-userSpecificFiles = /home/bilickiv//data/raw_dataset/user_specific_data/
-userSpecificFilesWindows = /home/bilickiv//data/raw_dataset/user_specific_data/windows_phone/
+userSpecificFiles = /home/bilickiv/data/raw_dataset/user_specific_data/
+userSpecificFilesWindows = /home/bilickiv/data/raw_dataset/user_specific_data/windows_phone/
 
