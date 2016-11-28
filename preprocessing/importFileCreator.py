@@ -188,7 +188,11 @@ def loadFile(name):
     print( str(counter) + ":row saved in: " + str(endTime) +"seconds")   
     file.close()   
     return;
-      
+if(str(sys.argv[1]) == "osx"):
+    actualEnvironment = "osx"
+else:
+    actualEnvironment = "linux"   
+print("Actul envirnment:" + "----" + actualEnvironment)
 #path = "/Volumes/Backup/research/data/*.csv"
 print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
