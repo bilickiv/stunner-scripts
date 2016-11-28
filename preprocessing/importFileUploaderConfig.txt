@@ -1,0 +1,8 @@
+[osx]
+userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/userSpecificPreprocessed/
+
+
+[fict]
+userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
+
+
