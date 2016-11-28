@@ -190,6 +190,7 @@ def loadFile(name):
     return;
       
 #path = "/Volumes/Backup/research/data/*.csv"
+print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
 for fname in glob.glob(userSpecificFiles+"*.imp"):
