@@ -27,7 +27,7 @@ def uploadFile(name):
         print('Finished')    
     return
 import glob
-path = "/Users/bilickiv/tmpdata/userSpecificPreprocessed/*.csv"
+path = "/home/bilickiv/data/raw_dataset/userSpecificPreprocessed/*.csv"
 for fname in glob.glob(path):
     print("Loading file:" + fname + "----" + unicode(datetime.datetime.now()))
 #    uploadFile(fname)
