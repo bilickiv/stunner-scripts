@@ -13,6 +13,11 @@ userSpecificFiles = ""
 userSpecificFilesWindows = ""
 actualEnvironment = "osx"
 
+def removeFiles():
+    global userSpecificPreprocessedFolder
+    for fl in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
+        os.remove(fl)     
+    return;        
 def loadConfiguration():
     global userSpecificPreprocessedFolder 
     global userSpecificFiles
@@ -196,6 +201,8 @@ print("Actul envirnment:" + "----" + actualEnvironment)
 #path = "/Volumes/Backup/research/data/*.csv"
 print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
+print("Removing old files :" + "----" + str(datetime.datetime.now()))
+removeFiles()
 print("Loading files from:" + userSpecificFiles + "----" + str(datetime.datetime.now()))
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
 for fname in glob.glob(userSpecificFiles+"*.imp"):
