@@ -105,7 +105,7 @@ def parseAndroidLog(unifiedLine):
         platform = csvData[4] #platform
 
         #tmp = datetime.datetime.fromtimestamp(float(importString+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
-        importString = sourceFile + ';' + upload_date + ';' + deviceHash + ';' + platform  #Device hash
+        importString = sourceFile + ';'  + str(source_row) +';'+ upload_date + ';' + deviceHash + ';' + platform  #Device hash
         tmp = replaceProblematicChars(csvData[5])
         #tmp = tmp.encode('utf-8')       
         try:
