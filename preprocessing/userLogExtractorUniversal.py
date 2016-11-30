@@ -128,7 +128,7 @@ def loadBlobFile(round):
                 otherPart = indexEntries[tmpid]
                 tmpOtherPart = otherPart.split('\t')              
                 #file;timestamp;id;op;json
-                dataString = "SQL;" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
+                dataString = "SQL:"+blobFile+";" + index +";" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
                 if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
                         saveWindowsLine(tmpOtherPart[3],dataString)
                 else:
@@ -183,7 +183,7 @@ def loadFile(name):
                     #print('Windows phone')
                     #print(line)
                     output = line.replace('=\n','=')
-                    importString = name + ';' + output
+                    importString = name + ';' + counter +';' + output
                     counter = counter + 1
                     #file.write(importString+'\n')
                     csvData = output.split(';')
@@ -201,8 +201,8 @@ def loadFile(name):
                     else:
                         counter = counter + 1
                         output = output + line
-                        niceString = replaceProblematicChars(output)                    
-                        importString = name + ';' + niceString
+                        niceString = replaceProblematicChars(output)
+                        importString = name + ';' + counter +';' + niceString
                         #file.write(importString+'\n');
                         csvData1 = deviceId.split(';')
                         idStr1 = csvData1[1]
