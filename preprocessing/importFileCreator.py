@@ -99,13 +99,14 @@ def parseWindowsPhoneLog(unifiedLine):
 def parseAndroidLog(unifiedLine):
         csvData = unifiedLine.split(';')
         sourceFile = csvData[0] #Source file
-        upload_date = csvData[1] #uploaad date
-        deviceHash = replaceProblematicChars(csvData[2]) #device hash
-        platform = csvData[3] #platform
+        source_row = csvData[1] #source row       
+        upload_date = csvData[2] #uploaad date
+        deviceHash = replaceProblematicChars(csvData[3]) #device hash
+        platform = csvData[4] #platform
 
         #tmp = datetime.datetime.fromtimestamp(float(importString+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
         importString = sourceFile + ';' + upload_date + ';' + deviceHash + ';' + platform  #Device hash
-        tmp = replaceProblematicChars(csvData[4])
+        tmp = replaceProblematicChars(csvData[5])
         #tmp = tmp.encode('utf-8')       
         try:
             data = json.loads(tmp)
