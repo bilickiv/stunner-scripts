@@ -18,7 +18,7 @@ def uploadFile(name):
         with connection.cursor() as cursor:
             # Create a new record
             sql = "LOAD DATA LOCAL INFILE '" + name + \
-                "'  INTO TABLE DATA FIELDS TERMINATED BY ';'"
+            "'  IGNORE INTO TABLE DATA FIELDS TERMINATED BY ';'"
             cursor.execute(sql)
         # connection is not autocommit by default. So you must commit to save
         # your changes.
