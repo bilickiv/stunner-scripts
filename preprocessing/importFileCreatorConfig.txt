@@ -1,10 +1,12 @@
 [osx]
 userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/userSpecificPreprocessed/
+userSpecificPreprocessedSubsetFolder = /Users/bilickiv/tmpdata/userSpecificPreprocessedSubset/
 userSpecificFiles = /Users/bilickiv/tmpdata/userSpecific/
 userSpecificFilesWindows = /Users/bilickiv/tmpdata/userSpecific/windows_phone/
 
 [fict]
 userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
+userSpecificPreprocessedSubsetFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessedSubset/
 userSpecificFiles = /home/bilickiv/data/raw_dataset/user_specific_data/
 userSpecificFilesWindows = /home/bilickiv/data/raw_dataset/user_specific_data/windows_phone/
 

@@ -9,6 +9,7 @@ import configparser
 indexEntries = {}
 hashIds = set()
 userSpecificPreprocessedFolder = ""
+userSpecificPreprocessedSubsetFolder = ""
 userSpecificFiles = ""
 userSpecificFilesWindows = ""
 actualEnvironment = "osx"
@@ -17,7 +18,10 @@ def removeFiles():
     global userSpecificPreprocessedFolder
     for fl in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
         os.remove(fl)     
-    return;        
+    return; 
+    for fl in glob.glob(userSpecificPreprocessedSubsetFolder+"*.csv"):
+        os.remove(fl)     
+    return;             
 def loadConfiguration():
     global userSpecificPreprocessedFolder 
     global userSpecificFiles
@@ -26,10 +30,12 @@ def loadConfiguration():
     config.read('importFileCreatorConfig.txt')
     if(actualEnvironment == "osx"):
         userSpecificPreprocessedFolder = config['osx']['userSpecificPreprocessedFolder']              
+        userSpecificPreprocessedSubsetFolder = config['osx']['userSpecificPreprocessedSubsetFolder']              
         userSpecificFiles = config['osx']['userSpecificFiles']
         userSpecificFilesWindows = config['osx']['userSpecificFilesWindows']
     else:
         userSpecificPreprocessedFolder = config['fict']['userSpecificPreprocessedFolder']            
+        userSpecificPreprocessedSubsetFolder = config['fict']['userSpecificPreprocessedSubsetFolder']            
         userSpecificFiles = config['fict']['userSpecificFiles']
         userSpecificFilesWindows = config['fict']['userSpecificFilesWindows']
     return;
@@ -150,7 +156,42 @@ def parseAndroidLog(unifiedLine):
             
         return importString;
     
+def parseAndroidFilteredLog(unifiedLine):
+        csvData = unifiedLine.split(';')      
+        deviceHash = replaceProblematicChars(csvData[3]) #device hash
+        platform = csvData[4] #platform
 
+        #tmp = datetime.datetime.fromtimestamp(float(importString+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
+        importString = deviceHash  #Device hash
+        tmp = replaceProblematicChars(csvData[5])
+        #tmp = tmp.encode('utf-8')       
+        try:
+            data = json.loads(tmp)
+            importString = importString + ';' + getJsonData(data,'publicIP')
+            importString = importString + ';' + getJsonData(data,'localIP')
+            tmp1 = getJsonData(data,'timeStamp')
+            tmp = datetime.datetime.fromtimestamp(float(tmp1+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
+            importString = importString + ';' + tmp
+            importString = importString + ';' + getJsonData(data,'latitude')
+            importString = importString + ';' + getJsonData(data,'longitude')
+            importString = importString + ';' + getJsonData(data,'discoveryResultCode')
+            importString = importString + ';' + getJsonData(data,'connectionMode')
+            importString = importString + ';' + getDeepJsonData(data,'wifiDTO','bandwidth')
+            importString = importString + ';' + getDeepJsonData(data,'wifiDTO','ssid')
+            importString = importString + ';' + getDeepJsonData(data,'wifiDTO','macAddress')
+            importString = importString + ';' + getDeepJsonData(data,'wifiDTO','rssi')
+            importString = importString + ';' + getDeepJsonData(data,'mobileDTO','carrier')
+            importString = importString + ';' + getDeepJsonData(data,'mobileDTO','simCountryIso')
+            importString = importString + ';' + getDeepJsonData(data,'mobileDTO','networkType')                                                                                                                                                                                                            
+            importString = importString + ';' + getDeepJsonData(data,'mobileDTO','roaming')
+            importString = importString + ';' + getJsonData(data,'timeZone')                                                                                                                                                                                                                                           
+        except (KeyError,TypeError,ValueError) as e: 
+            print( 'ERROR in parse Android: ' + str(e) + " : " + deviceHash)
+            print( tmp)
+        #                             pIP      lIP     mdate   lat    long     aVer    dRes    cMod   volt    temp    perc     health  chSta   BW     ssid    MA       rssi    CA     NT       Roaming
+        #    importString = importString + 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;'+ 'N/A;' + 'N/A;'                                                                     
+            
+        return importString;
 
 
 def removeByte(original):
@@ -176,23 +217,30 @@ def replaceProblematicChars(inputString):
 
 def loadFile(name):
     global userSpecificPreprocessedFolder
+    global userSpecificPreprocessedSubsetFolder
     startTime = datetime.datetime.now()
     fileNameArray = name.split("/")
     fileName = fileNameArray[-1]
     fileArray = fileName.split(".")
     fileWithoutExtension = fileArray[0]
     file = open(userSpecificPreprocessedFolder+fileWithoutExtension+".csv", "w")
+    fileredFile = open(userSpecificPreprocessedSubsetFolder+fileWithoutExtension+".csv", "w")
+
     counter = 0
     with open(name, "r") as ins:
         for line in ins:
             counter = counter + 1
             importString = parseAndroidLog(line)
+            filteredImportString = parseAndroidFilteredLog(line)
             file.write(importString+'\n');
+            fileredFile.write(filteredImportString+'\n');
+            filteredImportString = ''
             importString = ''
             output = ''
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print( str(counter) + ":row saved in: " + str(endTime) +"seconds")   
-    file.close()   
+    file.close()
+    file.fileredFile()   
     return;
 if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
