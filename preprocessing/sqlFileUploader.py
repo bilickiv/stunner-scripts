@@ -54,7 +54,7 @@ for fname in glob.glob(path):
 #    uploadFile(fname)
     print("Finished loading file:" + fname + "----" + unicode(datetime.datetime.now()))
     #uploadFile(fname)
-    uploadFilteredFile(name)          
+    uploadFilteredFile(fname)          
 
               
 #loadFile("../402036")      
