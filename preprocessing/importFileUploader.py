@@ -11,15 +11,22 @@ import pymysql.cursors
 
 userSpecificPreprocessedFolder = ""
 actualEnvironment = "osx"
+userSpecificPreprocessedSubsetFolder = ""
+
 
 def loadConfiguration():
     global userSpecificPreprocessedFolder 
+    global userSpecificPreprocessedSubsetFolder
+    
     config = configparser.ConfigParser()
     config.read('importFileUploaderConfig.txt')
     if(actualEnvironment == "osx"):
-        userSpecificPreprocessedFolder = config['osx']['userSpecificPreprocessedFolder']              
+        userSpecificPreprocessedFolder = config['osx']['userSpecificPreprocessedFolder']
+        userSpecificPreprocessedSubsetFolder = config['osx']['userSpecificPreprocessedSubsetFolder']              
+                      
     else:
-        userSpecificPreprocessedFolder = config['fict']['userSpecificPreprocessedFolder']            
+        userSpecificPreprocessedFolder = config['fict']['userSpecificPreprocessedFolder'] 
+        userSpecificPreprocessedSubsetFolder = config['fict']['userSpecificPreprocessedSubsetFolder']                               
     return;
 
 def uploadWithOtherDriver(name):
@@ -35,14 +42,18 @@ def uploadWithOtherDriver(name):
     finally:
         print('Finished')    
     return
-def uploadFile(name):
-    cnx = mysql.connector.connect(**config)
-    cursor = cnx.cursor()
-    query = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE STUDYDATA FIELDS TERMINATED BY ';'"
-    cursor.execute( query )
-    print( cursor.rowcount)
-    cnx.commit()
-    
+def uploadFiltered(name):
+    try:
+        with connection.cursor() as cursor:
+            # Create a new record
+            sql = "LOAD DATA LOCAL INFILE '"+name+"' INTO TABLE DATAPART FIELDS TERMINATED BY ';'"
+            cursor.execute(sql)
+
+        # connection is not autocommit by default. So you must commit to save
+        # your changes.
+        connection.commit()
+    finally:
+        print('Finished')    
     return
                 
 
@@ -53,17 +64,7 @@ else:
 print("Actul envirnment:" + "----" + actualEnvironment)
 #path = "/Volumes/Backup/research/data/*.csv"
 
-config = {
-'user': 'root',
-'password': '',
-'host': '10.6.14.36',
-'port' : 3306,
-'database': 'test',
-'raise_on_warnings': True,
-}
-
-
-connection = pymysql.connect(host='10.6.14.37',
+connection = pymysql.connect(host='10.6.14.36',
                              user='root',
                              password='',
                              db='stunner',
@@ -75,7 +76,7 @@ print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
 print("Loading files from:" + userSpecificPreprocessedFolder + "----" + str(datetime.datetime.now()))
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
-for fname in glob.glob(userSpecificPreprocessedFolder+"*.imp"):
+for fname in glob.glob(userSpecificPreprocessedSubsetFolder+"*.imp"):
     print("Loading file:" + fname + "----" + str(datetime.datetime.now()))
-    uploadWithOtherDriver(fname)
+    uploadFiltered(fname)
 cnx.close()
