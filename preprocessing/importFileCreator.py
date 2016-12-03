@@ -26,6 +26,7 @@ def loadConfiguration():
     global userSpecificPreprocessedFolder 
     global userSpecificFiles
     global userSpecificFilesWindows
+    global userSpecificPreprocessedSubsetFolder
     config = configparser.ConfigParser()
     config.read('importFileCreatorConfig.txt')
     if(actualEnvironment == "osx"):
