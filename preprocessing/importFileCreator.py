@@ -224,7 +224,7 @@ def loadFile(name):
     fileArray = fileName.split(".")
     fileWithoutExtension = fileArray[0]
     file = open(userSpecificPreprocessedFolder+fileWithoutExtension+".csv", "w")
-    fileredFile = open(userSpecificPreprocessedSubsetFolder+fileWithoutExtension+".csv", "w")
+    filteredFile = open(userSpecificPreprocessedSubsetFolder+fileWithoutExtension+".csv", "w")
 
     counter = 0
     with open(name, "r") as ins:
@@ -233,14 +233,14 @@ def loadFile(name):
             importString = parseAndroidLog(line)
             filteredImportString = parseAndroidFilteredLog(line)
             file.write(importString+'\n');
-            fileredFile.write(filteredImportString+'\n');
+            filteredFile.write(filteredImportString+'\n');
             filteredImportString = ''
             importString = ''
             output = ''
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print( str(counter) + ":row saved in: " + str(endTime) +"seconds")   
     file.close()
-    file.fileredFile()   
+    filteredFile.close()   
     return;
 if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
