@@ -1,0 +1,2 @@
+u_cols = ['hashid', 'publicIP', 'localIP', 'timestamp', 'latitude', 'longitude','discoveryResultCode', 'connectionMode','bandwidth','ssid','macAddress','rssi','carrier','simCountryIso','networkType','roaming','timeZone']
+>>> df[[3]] = pd.to_datetime(df[[3]].stack()).unstack()
