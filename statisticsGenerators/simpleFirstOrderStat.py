@@ -11,6 +11,10 @@ userSpecificPreprocessedFolder = ""
 actualEnvironment = "osx"
 userSpecificPreprocessedSubsetFolder = ""
 simpleFirstOrderStat  = ""
+cumulativeStat15m = {}
+cumulativeStat1h = {}
+cumulativeStat3h = {}
+cumulativeStat1d = {}
 def removeFiles():
     global userSpecificPreprocessedFolder
     for fl in glob.glob(simpleFirstOrderStat+"*.csv"):
@@ -33,6 +37,10 @@ def loadConfiguration():
         simpleFirstOrderStat = config['fict']['simpleFirstOrderStat']                               
     return;
 def createStat(name, frequency):
+    global cumulativeStat15m
+    global cumulativeStat1h
+    global cumulativeStat3h
+    global cumulativeStat1d
     global simpleFirstOrderStat
     u_cols = ['hashid', 'publicIP', 'localIP', 'timestamp', 'latitude', 'longitude','discoveryResultCode', 'connectionMode','bandwidth','ssid','macAddress','rssi','carrier','simCountryIso','networkType','roaming','timeZone']
     statColumns = ['publicIP', 'localIP', 'latitude', 'longitude','discoveryResultCode', 'connectionMode','bandwidth','ssid','macAddress','rssi','carrier','simCountryIso','networkType','roaming','timeZone']
@@ -60,18 +68,26 @@ def createStat(name, frequency):
    # print(len(e.index))
     e = e[(e.localIP != 0)]
     #print(len(e.index))
-
+    print(e.describe(include = 'all'))
    # print('-------------------------')
     #print(e.head())
     #print('-------------------------')
     if(frequency == "15 T"):
         e.to_csv(simpleFirstOrderStat+"/15minute/"+fileWithoutExtension+".csv",sep=";")
+        cumulativeStat15m[fileWithoutExtension] = e.describe(include = 'all')
+
     if(frequency == "H"):
-        e.to_csv(simpleFirstOrderStat+"/hour/"+fileWithoutExtension+".csv",sep=";") 
+        e.to_csv(simpleFirstOrderStat+"/hour/"+fileWithoutExtension+".csv",sep=";")
+        cumulativeStat1h[fileWithoutExtension] = e.describe(include = 'all')
+
     if(frequency == "3 H"):
         e.to_csv(simpleFirstOrderStat+"/3hour/"+fileWithoutExtension+".csv",sep=";")
+        cumulativeStat3h[fileWithoutExtension] = e.describe(include = 'all')
+
     if(frequency == "D"):
         e.to_csv(simpleFirstOrderStat+"/day/"+fileWithoutExtension+".csv",sep=";")
+        cumulativeStat1d[fileWithoutExtension] = e.describe(include = 'all')
+        
     #print(pIP)
    # c = gp['localIP'].count()
     #z = gp.apply(lambda x: x.nunique(),axis=3)
@@ -100,4 +116,17 @@ for fname in glob.glob(userSpecificPreprocessedSubsetFolder+"*.csv"):
     createStat(fname, "H")
     createStat(fname, "3 H")
     createStat(fname, "D")
+df15m = pd.DataFrame(cumulativeStat15m)
+df1h = pd.DataFrame(cumulativeStat1h)
+df3h = pd.DataFrame(cumulativeStat3h)
+df1d = pd.DataFrame(cumulativeStat1d)
+
+df15m.to_csv(simpleFirstOrderStat+"/15minute/stat.csv",sep=";")
+df1h.to_csv(simpleFirstOrderStat+"/hour/stat.csv",sep=";")
+df3h.to_csv(simpleFirstOrderStat+"/3hour/stat.csv",sep=";")
+dfd.to_csv(simpleFirstOrderStat+"/day/stat.csv",sep=";")
+
+
+
+
 
