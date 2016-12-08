@@ -8,6 +8,7 @@ import configparser
 import pandas as pd
 import numpy as np
 from itertools import islice
+import argparse
 
 userSpecificPreprocessedFolder = ""
 actualEnvironment = "osx"
@@ -101,14 +102,18 @@ def createStat(name, frequency):
     return;
                 
 
-
-arguments = sys.argv[1].split(' ')
-if(str(arguments[0]) == "osx"):
+parser = argparse.ArgumentParser()
+parser.add_argument("opsystem", help="runntime, 1=linux, 2=osx",
+                    type=int)
+parser.add_argument("chunk", help="chunk number, 0-12",
+                    type=int)                    
+args = parser.parse_args()
+if(args.opsystem == 2):
     actualEnvironment = "osx"
 else:
     actualEnvironment = "linux"
 print("Actul envirnment:" + "----" + actualEnvironment)
-fileStepCount =  int(arguments[1])  
+fileStepCount =  args.chunk  
 print("Actul step:" + "----" + str(fileStepCount))
 #path = "/Volumes/Backup/research/data/*.csv"
 
