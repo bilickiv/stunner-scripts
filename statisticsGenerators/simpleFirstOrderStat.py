@@ -79,19 +79,19 @@ def createStat(name, frequency):
     #print(e.head())
     #print('-------------------------')
     if(frequency == "15 T"):
-        e.to_csv(simpleFirstOrderStat+"/15minute/"+fileWithoutExtension+".csv",sep=";")
+        e.to_csv(simpleFirstOrderStat+"15minute/"+fileWithoutExtension+".csv",sep=";")
         cumulativeStat15m[fileWithoutExtension] = e.describe(include = 'all')
 
     if(frequency == "H"):
-        e.to_csv(simpleFirstOrderStat+"/hour/"+fileWithoutExtension+".csv",sep=";")
+        e.to_csv(simpleFirstOrderStat+"hour/"+fileWithoutExtension+".csv",sep=";")
         cumulativeStat1h[fileWithoutExtension] = e.describe(include = 'all')
 
     if(frequency == "3 H"):
-        e.to_csv(simpleFirstOrderStat+"/3hour/"+fileWithoutExtension+".csv",sep=";")
+        e.to_csv(simpleFirstOrderStat+"3hour/"+fileWithoutExtension+".csv",sep=";")
         cumulativeStat3h[fileWithoutExtension] = e.describe(include = 'all')
 
     if(frequency == "D"):
-        e.to_csv(simpleFirstOrderStat+"/day/"+fileWithoutExtension+".csv",sep=";")
+        e.to_csv(simpleFirstOrderStat+"day/"+fileWithoutExtension+".csv",sep=";")
         cumulativeStat1d[fileWithoutExtension] = e.describe(include = 'all')
         
     #print(pIP)
