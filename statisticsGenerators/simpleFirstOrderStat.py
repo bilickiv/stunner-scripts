@@ -7,6 +7,8 @@ import glob
 import configparser
 import pandas as pd
 import numpy as np
+from itertools import islice
+
 userSpecificPreprocessedFolder = ""
 actualEnvironment = "osx"
 userSpecificPreprocessedSubsetFolder = ""
@@ -15,6 +17,9 @@ cumulativeStat15m = {}
 cumulativeStat1h = {}
 cumulativeStat3h = {}
 cumulativeStat1d = {}
+fileList = []
+fileStep = 500
+fileStepCount = 0
 def removeFiles():
     global userSpecificPreprocessedFolder
     for fl in glob.glob(simpleFirstOrderStat+"*.csv"):
@@ -68,7 +73,7 @@ def createStat(name, frequency):
    # print(len(e.index))
     e = e[(e.localIP != 0)]
     #print(len(e.index))
-    print(e.describe(include = 'all'))
+    #print(e.describe(include = 'all'))
    # print('-------------------------')
     #print(e.head())
     #print('-------------------------')
@@ -97,12 +102,14 @@ def createStat(name, frequency):
                 
 
 
-
-if(str(sys.argv[1]) == "osx"):
+arguments = sys.argv[1].split(' ')
+if(str(arguments[0]) == "osx"):
     actualEnvironment = "osx"
 else:
-    actualEnvironment = "linux"   
+    actualEnvironment = "linux"
 print("Actul envirnment:" + "----" + actualEnvironment)
+fileStepCount =  int(arguments[1])  
+print("Actul step:" + "----" + str(fileStepCount))
 #path = "/Volumes/Backup/research/data/*.csv"
 
 
@@ -110,21 +117,28 @@ print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
 print("Loading files from:" + userSpecificPreprocessedSubsetFolder + "----" + str(datetime.datetime.now()))
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
-for fname in glob.glob(userSpecificPreprocessedSubsetFolder+"*.csv"):
-    print("Loading file:" + fname + "----" + str(datetime.datetime.now()))
-    createStat(fname, "15 T")
-    createStat(fname, "H")
-    createStat(fname, "3 H")
-    createStat(fname, "D")
-df15m = pd.DataFrame(cumulativeStat15m)
-df1h = pd.DataFrame(cumulativeStat1h)
-df3h = pd.DataFrame(cumulativeStat3h)
-df1d = pd.DataFrame(cumulativeStat1d)
+for fileName in glob.glob(userSpecificPreprocessedSubsetFolder+"*.csv"):
+    fileList.append(fileName)
+print(str(fileStep))
+start = fileStepCount*fileStep
+end = (fileStepCount+1)*fileStep
+iter = islice(fileList, start, end, None)
+for a in iter:
+    print(a)
+    print("Loading file:" + a + "----" + str(datetime.datetime.now()))    
+    createStat(a, "15 T")
+    createStat(a, "H")
+    createStat(a, "3 H")
+    createStat(a, "D")
+#df15m = pd.DataFrame(cumulativeStat15m)
+#df1h = pd.DataFrame(cumulativeStat1h)
+#df3h = pd.DataFrame(cumulativeStat3h)
+#df1d = pd.DataFrame(cumulativeStat1d)
 
-df15m.to_csv(simpleFirstOrderStat+"/15minute/stat.csv",sep=";")
-df1h.to_csv(simpleFirstOrderStat+"/hour/stat.csv",sep=";")
-df3h.to_csv(simpleFirstOrderStat+"/3hour/stat.csv",sep=";")
-dfd.to_csv(simpleFirstOrderStat+"/day/stat.csv",sep=";")
+#df15m.to_csv(simpleFirstOrderStat+"/15minute/stat.csv",sep=";")
+#df1h.to_csv(simpleFirstOrderStat+"/hour/stat.csv",sep=";")
+#df3h.to_csv(simpleFirstOrderStat+"/3hour/stat.csv",sep=";")
+#dfd.to_csv(simpleFirstOrderStat+"/day/stat.csv",sep=";")
 
 
 
