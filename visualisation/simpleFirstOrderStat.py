@@ -89,10 +89,10 @@ for fileName in glob.glob(simpleFirstOrderStat+"/15minute/"+"*.csv"):
 for fileName in glob.glob(simpleFirstOrderStat+"/hour/"+"*.csv"):
     createStat(fileName, "H")
     print("H - Loaded file:" + fileName)
- for fileName in glob.glob(simpleFirstOrderStat+"/3hour/"+"*.csv"):
+for fileName in glob.glob(simpleFirstOrderStat+"/3hour/"+"*.csv"):
     createStat(fileName, "3 H")
     print("3H - Loaded file:" + fileName)
- for fileName in glob.glob(simpleFirstOrderStat+"/day/"+"*.csv"):
+for fileName in glob.glob(simpleFirstOrderStat+"/day/"+"*.csv"):
     createStat(fileName, "D")     
     print("D - Loaded file:" + fileName)         
 
