@@ -86,24 +86,25 @@ loadConfiguration()
 for fileName in glob.glob(simpleFirstOrderStat+"/15minute/"+"*.csv"):
     createStat(fileName, "15 T")
     print("15 T - Loaded file:" + fileName)
+df15m = pd.DataFrame(cumulativeStat15m)
+df15m.to_csv(simpleFirstOrderStat+"/15minute/stat.csv",sep=";")
+
 for fileName in glob.glob(simpleFirstOrderStat+"/hour/"+"*.csv"):
     createStat(fileName, "H")
     print("H - Loaded file:" + fileName)
+df1h = pd.DataFrame(cumulativeStat1h)
+df1h.to_csv(simpleFirstOrderStat+"/hour/stat.csv",sep=";")
+
 for fileName in glob.glob(simpleFirstOrderStat+"/3hour/"+"*.csv"):
     createStat(fileName, "3 H")
     print("3H - Loaded file:" + fileName)
+df3h = pd.DataFrame(cumulativeStat3h)
+df3h.to_csv(simpleFirstOrderStat+"/3hour/stat.csv",sep=";")
+
 for fileName in glob.glob(simpleFirstOrderStat+"/day/"+"*.csv"):
     createStat(fileName, "D")     
     print("D - Loaded file:" + fileName)         
-
-df15m = pd.DataFrame(cumulativeStat15m)
-df1h = pd.DataFrame(cumulativeStat1h)
-df3h = pd.DataFrame(cumulativeStat3h)
 df1d = pd.DataFrame(cumulativeStat1d)
-
-df15m.to_csv(simpleFirstOrderStat+"/15minute/stat.csv",sep=";")
-df1h.to_csv(simpleFirstOrderStat+"/hour/stat.csv",sep=";")
-df3h.to_csv(simpleFirstOrderStat+"/3hour/stat.csv",sep=";")
 dfd.to_csv(simpleFirstOrderStat+"/day/stat.csv",sep=";")
 
 
