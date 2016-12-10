@@ -14,7 +14,7 @@ cumulativeStat1h = {}
 cumulativeStat3h = {}
 cumulativeStat1d = {}
 fileList = []
-fileStep = 8000
+fileStep = 500
 fileStepCount = 0
 
 
@@ -151,7 +151,7 @@ print("Actul step:" + "----" + str(fileStepCount))
 
 
 loadConfiguration()
-#loadday()
+loadday()
 load3hour()
 load1hour()
 load15min()
