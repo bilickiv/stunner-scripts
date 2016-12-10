@@ -22,7 +22,6 @@ def loadConfiguration():
     global simpleFirstOrderStat
     config = configparser.ConfigParser()
     config.read('firstOrderAggregator.txt')
-    print(config.sections())
     if(actualEnvironment == "osx"):
         simpleFirstOrderStat = config['osx']['simpleFirstOrderStat']
     else:
@@ -70,6 +69,7 @@ def createStat(name, frequency):
 
 def load15min():
     fileList = []
+    print("Loading from:" + simpleFirstOrderStat + "15minute/" + "*.csv")
     for fileName in glob.glob(simpleFirstOrderStat + "15minute/" + "*.csv"):
         fileList.append(fileName)
     print(str(fileStep))
