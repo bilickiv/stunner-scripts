@@ -19,7 +19,7 @@ cumulativeStat1h = {}
 cumulativeStat3h = {}
 cumulativeStat1d = {}
 fileList = []
-fileStep = 1000
+fileStep = 500
 fileStepCount = 0
 def removeFiles():
     global userSpecificPreprocessedFolder
