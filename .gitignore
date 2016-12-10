@@ -3,5 +3,6 @@
 *.imp
 *.csv
 *.json
+*.DS_Store
 data/
 results/
