@@ -18,7 +18,7 @@ cumulativeStat1h = {}
 cumulativeStat3h = {}
 cumulativeStat1d = {}
 fileList = []
-fileStep = 10
+fileStep = 8000
 fileStepCount = 0
 def loadConfiguration():
     global simpleFirstOrderStat
