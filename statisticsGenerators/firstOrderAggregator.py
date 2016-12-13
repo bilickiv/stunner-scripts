@@ -9,10 +9,10 @@ import pandas as pd
 
 actualEnvironment = "osx"
 simpleFirstOrderStat = ""
-cumulativeStat15m = {}
-cumulativeStat1h = {}
-cumulativeStat3h = {}
-cumulativeStat1d = {}
+cumulativeStat15m = pd.DataFrame()
+cumulativeStat1h = pd.DataFrame()
+cumulativeStat3h = pd.DataFrame()
+cumulativeStat1d = pd.DataFrame()
 fileList = []
 fileStep = 500
 fileStepCount = 0
@@ -50,7 +50,9 @@ def createStat(name, frequency):
    # print('-------------------------')
     # print('-------------------------')
     if(frequency == "15 T"):
-        cumulativeStat15m[fileWithoutExtension] = df.max()
+        tmpseries = df.max()
+        tmpseries.append(fileWithoutExtension)
+        cumulativeStat15m.append(tmpseries) 
 
     if(frequency == "H"):
         cumulativeStat1h[fileWithoutExtension] = df.max()
@@ -59,7 +61,12 @@ def createStat(name, frequency):
         cumulativeStat3h[fileWithoutExtension] = df.max()
 
     if(frequency == "D"):
-        cumulativeStat1d[fileWithoutExtension] = df.max()
+        tmpseries = df.max().to_dict()
+        tmpseries['ID']=fileWithoutExtension
+        tmpDf = pd.DataFrame.from_dict(tmpseries,orient='columns', index='ID')
+        cumulativeStat1d.append(tmpDf, ignore_index=True)
+        print(cumulativeStat1d)
+        #cumulativeStat1d[fileWithoutExtension] = df.max()
 
     # print(pIP)
    # c = gp['localIP'].count()
