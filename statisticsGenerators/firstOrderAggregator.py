@@ -14,7 +14,7 @@ cumulativeStat1h = []
 cumulativeStat3h = []
 cumulativeStat1d = []
 fileList = []
-fileStep = 500
+fileStep = 10000
 fileStepCount = 0
 
 
