@@ -9,10 +9,10 @@ import pandas as pd
 
 actualEnvironment = "osx"
 simpleFirstOrderStat = ""
-cumulativeStat15m = pd.DataFrame()
-cumulativeStat1h = pd.DataFrame()
-cumulativeStat3h = pd.DataFrame()
-cumulativeStat1d = pd.DataFrame()
+cumulativeStat15m = []
+cumulativeStat1h = []
+cumulativeStat3h = []
+cumulativeStat1d = []
 fileList = []
 fileStep = 500
 fileStepCount = 0
@@ -50,22 +50,36 @@ def createStat(name, frequency):
    # print('-------------------------')
     # print('-------------------------')
     if(frequency == "15 T"):
-        tmpseries = df.max()
-        tmpseries.append(fileWithoutExtension)
-        cumulativeStat15m.append(tmpseries) 
+        tmpseries = df.max().to_dict()
+        tmpseries['ID']=fileWithoutExtension
+        tmpDf = pd.DataFrame(tmpseries, index=[0])
+        #print(tmpDf.head())
+        cumulativeStat15m.append(tmpDf)
+        #cumulativeStat15m.append(tmpseries) 
 
     if(frequency == "H"):
-        cumulativeStat1h[fileWithoutExtension] = df.max()
+        tmpseries = df.max().to_dict()
+        tmpseries['ID']=fileWithoutExtension
+        tmpDf = pd.DataFrame(tmpseries, index=[0])
+        #print(tmpDf.head())
+        cumulativeStat1h.append(tmpDf)
+        #cumulativeStat1h[fileWithoutExtension] = df.max()
 
     if(frequency == "3 H"):
-        cumulativeStat3h[fileWithoutExtension] = df.max()
+        tmpseries = df.max().to_dict()
+        tmpseries['ID']=fileWithoutExtension
+        tmpDf = pd.DataFrame(tmpseries, index=[0])
+        #print(tmpDf.head())
+        cumulativeStat3h.append(tmpDf)
+        #cumulativeStat3h[fileWithoutExtension] = df.max()
 
     if(frequency == "D"):
         tmpseries = df.max().to_dict()
         tmpseries['ID']=fileWithoutExtension
-        tmpDf = pd.DataFrame.from_dict(tmpseries,orient='columns', index='ID')
-        cumulativeStat1d.append(tmpDf, ignore_index=True)
-        print(cumulativeStat1d)
+        tmpDf = pd.DataFrame(tmpseries, index=[0])
+        #print(tmpDf.head())
+        cumulativeStat1d.append(tmpDf)
+       # print(cumulativeStat1d)
         #cumulativeStat1d[fileWithoutExtension] = df.max()
 
     # print(pIP)
@@ -87,7 +101,7 @@ def load15min():
     for a in iter:
         createStat(a, "15 T")
         print("15 T - Loaded file:" + a)
-    df15m = pd.DataFrame(cumulativeStat15m)
+    df15m = pd.concat(cumulativeStat15m)
     df15m.to_csv(simpleFirstOrderStat + "agg/15minute-stat.csv", sep=";")
     return
 
@@ -104,7 +118,7 @@ def load1hour():
     for a in iter:
         createStat(a, "H")
         print("H - Loaded file:" + a)
-    df1h = pd.DataFrame(cumulativeStat1h)
+    df1h = pd.concat(cumulativeStat1h)
     df1h.to_csv(simpleFirstOrderStat + "agg/hour-stat.csv", sep=";")
     return
 
@@ -121,12 +135,13 @@ def load3hour():
     for a in iter:
         createStat(a, "3 H")
         print("3 H - Loaded file:" + a)
-    df1h = pd.DataFrame(cumulativeStat3h)
+    df1h = pd.concat(cumulativeStat3h)
     df1h.to_csv(simpleFirstOrderStat + "agg/3hour-stat.csv", sep=";")
     return
 
 
 def loadday():
+    global cumulativeStat1d
     fileList = []
     for fileName in glob.glob(simpleFirstOrderStat + "day/" + "*.csv"):
         fileList.append(fileName)
@@ -138,7 +153,8 @@ def loadday():
     for a in iter:
         createStat(a, "D")
         print("D - Loaded file:" + a)
-    df1d = pd.DataFrame(cumulativeStat1d)
+    df1d = pd.concat(cumulativeStat1d)
+    print(df1d.head())
     df1d.to_csv(simpleFirstOrderStat + "agg/day-stat.csv", sep=";")
     return
 parser = argparse.ArgumentParser()
