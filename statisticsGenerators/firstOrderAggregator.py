@@ -147,6 +147,7 @@ def loadday():
         fileList.append(fileName)
     print(str(fileStep))
     print(simpleFirstOrderStat + "day/" + "*.csv")
+    print(len(fileList))
     start = fileStepCount * fileStep
     end = (fileStepCount + 1) * fileStep
     iter = islice(fileList, start, end, None)
