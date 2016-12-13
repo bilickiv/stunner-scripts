@@ -150,6 +150,8 @@ def loadday():
     print(len(fileList))
     start = fileStepCount * fileStep
     end = (fileStepCount + 1) * fileStep
+    print(start)
+    print(end)
     iter = islice(fileList, start, end, None)
     # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
     for a in iter:
