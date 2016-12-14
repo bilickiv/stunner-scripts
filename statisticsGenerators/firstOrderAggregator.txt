@@ -1,5 +1,7 @@
 [osx]
 simpleFirstOrderStat = /Users/bilickiv/tmpdata/simpleFirstOrderStat/
+[univ-osx]
+simpleFirstOrderStat = /Users/Vilmos/tmpdata/simpleFirstOrderStat/
 [fict]
 simpleFirstOrderStat = /home/bilickiv/data/raw_dataset/simpleFirstOrderStat/
 
