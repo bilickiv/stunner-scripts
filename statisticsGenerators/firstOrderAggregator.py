@@ -24,7 +24,9 @@ def loadConfiguration():
     config.read('firstOrderAggregator.txt')
     if(actualEnvironment == "osx"):
         simpleFirstOrderStat = config['osx']['simpleFirstOrderStat']
-    else:
+    if(actualEnvironment == "univ-osx"):
+        simpleFirstOrderStat = config['univ-osx']['simpleFirstOrderStat']
+    if(actualEnvironment == "linux"):
         simpleFirstOrderStat = config['fict']['simpleFirstOrderStat']
     return
 
@@ -149,8 +151,11 @@ parser.add_argument("chunk", help="chunk number, 0-12",
 args = parser.parse_args()
 if(args.opsystem == 2):
     actualEnvironment = "osx"
-else:
+if(args.opsystem == 1):
+    actualEnvironment = "univ-osx"
+if(args.opsystem == 0):
     actualEnvironment = "linux"
+
 print("Actul envirnment:" + "----" + actualEnvironment)
 fileStepCount = args.chunk
 print("Actul step:" + "----" + str(fileStepCount))
