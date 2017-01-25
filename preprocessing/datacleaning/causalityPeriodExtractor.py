@@ -19,20 +19,28 @@ def createTimeAnalysis(data):
     data.sort_values(by=[0,1], ascending=[True,True])
     print(data.head(10))
     count = 0
+    tmpdate = ""
     for index, row in data.iterrows():
         count=+1
-        if(row[2] >= uploadDate):
-            uploadDate = row[2]
+        if(isinstance( row[2], int )):
+            tmpdate = datetime.datetime.fromtimestamp(row[2]/1000).strftime('%Y-%m-%d %H:%M:%S')
         else:
-            print("Error actual:" + uploadDate + "next one:" + row[2])
+            tmpdate = row[2]
+        if(tmpdate >= uploadDate):
+            uploadDate = tmpdate
+        else:
+            print("Error actual:" + uploadDate + "next one:" + tmpdate)
             print(count)
+            print(row)
+            
             count = 0    
-            uploadDate = row[2]
+            uploadDate = tmpdate
                     
         if(row[7] >= mdate):
                 mdate = row[7]
         else:
             print("Error actual:" + mdate + "next one:" + row[7])
+            print(row)
             print(count)
             count = 0
             mdate = row[7]
