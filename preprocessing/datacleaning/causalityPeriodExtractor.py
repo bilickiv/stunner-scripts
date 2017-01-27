@@ -34,7 +34,8 @@ def createTimeAnalysis(data):
     countU = 0    
     tmpdate = ""
     firstUDate = ""
-    firstADate = ""    
+    firstADate = ""
+    rowlist = []    
     for index, row in df.iterrows():
         hashId = row[3]
         firstUDate = ""
@@ -54,9 +55,8 @@ def createTimeAnalysis(data):
             endUDate = tmpdate
         else:
             #print("U:" + firstDate + ":" + tmpdate +":" + str(count))
-            errorULog = {"Type":['U'],"StartDate": [firstUDate], "EndDate" : [endUDate],"Count" : [countU], "Error": ['Y'], "HashID": [hashId] }
-            tmpDf = pd.DataFrame.from_dict(errorULog)
-            errorLogCollector.append(tmpDf)
+            errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'Y', "HashID": hashId }
+            tmpDf = rowlist.append(errorULog)
             print(errorULog)
             firstUDate = tmpdate
             endUDate = tmpdate
@@ -69,8 +69,7 @@ def createTimeAnalysis(data):
             endADate = row[7]            
         else:
             errorALog = {"Type":['A'],"StartDate": [firstADate], "EndDate" : [endADate],"Count" : [countA], "Error": ['Y'], "HashID": [hashId] }
-            tmpDf = pd.DataFrame.from_dict(errorALog)
-            errorLogCollector.append(tmpDf)
+            rowlist.append(errorALog)
             print(errorALog)
             #print(count)
             countA = 0
