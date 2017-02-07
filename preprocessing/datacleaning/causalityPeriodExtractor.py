@@ -14,7 +14,17 @@ userSpecificPreprocessedFolder = ""
 userSpecificPreprocessedCausalityReports = ""
 actualEnvironment = "osx"
 errorLogCollector = pd.DataFrame(columns=('Type','StartDate', 'EndDate', 'Count', 'Error', 'HashId'))
+summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U'))
+summarylogRow = []
+androidPeriodCount = 0
+serverPeriodCount = 0
+
 def createTimeAnalysis(data):
+    global errorLogCollector
+    global androidPeriodCount
+    global serverPeriodCount
+    androidPeriodCount = 0
+    serverPeriodCount = 0
     endUDate = "1970-01-01"
     endADate = "1970-01-01"
     errorLog = {}
@@ -28,8 +38,7 @@ def createTimeAnalysis(data):
     data['globalIndex'] = fileNumber
     df = data[['globalIndex',1,2,7,3]]
     df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
-    #print(df.head(1000))
-    #print(data.head(10))
+   #print(df.head(1000))
     countA = 0
     countU = 0    
     tmpdate = ""
@@ -56,8 +65,9 @@ def createTimeAnalysis(data):
         else:
             #print("U:" + firstDate + ":" + tmpdate +":" + str(count))
             errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'Y', "HashID": hashId }
-            tmpDf = rowlist.append(errorULog)
-            print(errorULog)
+            rowlist.append(errorULog)
+            serverPeriodCount = serverPeriodCount + 1
+            #print(rowlist)
             firstUDate = tmpdate
             endUDate = tmpdate
             #print(count)
@@ -68,27 +78,32 @@ def createTimeAnalysis(data):
         if(row[7] >= endADate):
             endADate = row[7]            
         else:
-            errorALog = {"Type":['A'],"StartDate": [firstADate], "EndDate" : [endADate],"Count" : [countA], "Error": ['Y'], "HashID": [hashId] }
+            errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId }
             rowlist.append(errorALog)
-            print(errorALog)
+            androidPeriodCount = androidPeriodCount + 1
+ 
+            #print(rowlist)
             #print(count)
             countA = 0
             firstADate = row[7]
             endADate = row[7]
 
     if(countA != 0):
-        errorALog = {"Type":['A'],"StartDate": [firstADate], "EndDate" : [endADate],"Count" : [countA], "Error": ['N'], "HashID": [hashId] }
-        print("Without error:"+str(errorALog))
-        tmpDf = pd.DataFrame.from_dict(errorALog)
-        errorLogCollector.append(tmpDf)
+        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId }
+        #print("Without error:"+str(errorALog))
+        androidPeriodCount = androidPeriodCount + 1        
+        rowlist.append(errorALog)
+        #print(rowlist)
         
     if(countU != 0):
-        errorULog = {"Type":['U'],"StartDate": [firstUDate], "EndDate" : [endUDate],"Count" : [countU], "Error": ['N'], "HashID": [hashId] }
-        print("Without error:"+str(errorULog))
-        tmpDf = pd.DataFrame.from_dict(errorULog)
-        errorLogCollector.append(tmpDf)   
-    print(errorLogCollector.head(100))    
-
+        errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'N', "HashID": hashId }
+        #print("Without error:"+str(errorULog))
+        rowlist.append(errorULog)
+        serverPeriodCount = serverPeriodCount + 1
+        
+    #print(rowlist)    
+    errorLogCollector = pd.DataFrame(rowlist)
+    #print(errorLogCollector.head(10))
 
 def removeFiles():
     global userSpecificPreprocessedCausalityReports
@@ -96,7 +111,8 @@ def removeFiles():
         os.remove(fl)     
     return;             
 def loadConfiguration():
-    global userSpecificPreprocessedFolder 
+    global userSpecificPreprocessedFolder
+    global userSpecificPreprocessedCausalityReports      
     global userSpecificFiles
     parser = argparse.ArgumentParser()
     parser.add_argument("opsystem", help="runntime, 1=linux, 2=osx",type=int)
@@ -118,16 +134,26 @@ def loadConfiguration():
 
 
 #path = "/Volumes/Backup/research/data/*.csv"
-print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
-print("Actual envirnment:" + "----" + actualEnvironment)
 #removeFiles()
-print("Loading files from:" + userSpecificPreprocessedFolder + "----" + str(datetime.datetime.now()))
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
 for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
-    print("Loading file:" + fname + "----" + str(datetime.datetime.now()))
+    global summarylogRow
+#for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
+    head, tail = os.path.split(fname)
+    filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=-1, sep=';')
+    #print(data.head(10))
     createTimeAnalysis(data)
+    #print(errorLogCollector.head(10))  
+    summarylogRow.append([filename,len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount]) 
+    summaryLogCollector = pd.DataFrame(summarylogRow)
+    summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')
+
+    print(summaryLogCollector.tail(10))
+    print("F: " + filename +  " L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount))
+    errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
+
     #loadFile(fname)
           
 
