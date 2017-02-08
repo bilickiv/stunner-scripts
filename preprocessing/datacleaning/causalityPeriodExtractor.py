@@ -13,12 +13,17 @@ hashIds = set()
 userSpecificPreprocessedFolder = ""
 userSpecificPreprocessedCausalityReports = ""
 actualEnvironment = "osx"
-errorLogCollector = pd.DataFrame(columns=('Type','StartDate', 'EndDate', 'Count', 'Error', 'HashId'))
-summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U'))
+errorLogCollector = pd.DataFrame(columns=('Type','StartDate', 'EndDate', 'Count', 'Error', 'HashId', 'Delta'))
+summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U', 'Max', 'Med'))
 summarylogRow = []
 androidPeriodCount = 0
 serverPeriodCount = 0
-
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 def createTimeAnalysis(data):
     global errorLogCollector
     global androidPeriodCount
@@ -37,7 +42,8 @@ def createTimeAnalysis(data):
     #fileNumber = fileNumber.to_numeric()            
     data['globalIndex'] = fileNumber
     df = data[['globalIndex',1,2,7,3]]
-    df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
+    df = df.sort_values(by=[2, 'globalIndex', 1], ascending=[True, True, True])    
+    #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
    #print(df.head(1000))
     countA = 0
     countU = 0    
@@ -53,18 +59,25 @@ def createTimeAnalysis(data):
         countA = countA + 1
         
         #print(str(row['globalIndex'])+":"+str(row[1]))
-        if(isinstance( row[2], int )):
-            tmpdate = datetime.datetime.fromtimestamp(row[2]/1000).strftime('%Y-%m-%d %H:%M:%S')
+        dTmp = row[2]
+        if(RepresentsInt(dTmp)):
+            tmpdate = datetime.datetime.fromtimestamp(int(dTmp)/1000).strftime('%Y-%m-%d %H:%M:%S')
         else:
-            tmpdate = row[2]
+            tmpdate = dTmp
 
         if(firstUDate == ""):
             firstUDate =  tmpdate           
         if(tmpdate >= endUDate):
             endUDate = tmpdate
         else:
+            endUDate = endUDate.split(".")[0]
+            tmpdate = tmpdate.split(".")[0]
+            a = datetime.datetime.strptime(endUDate,'%Y-%m-%d %H:%M:%S')
+            b = datetime.datetime.strptime(tmpdate,'%Y-%m-%d %H:%M:%S')
+            delta = abs(( a - b ).seconds)/60
+            #print(str(delta))
             #print("U:" + firstDate + ":" + tmpdate +":" + str(count))
-            errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'Y', "HashID": hashId }
+            errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'Y', "HashID": hashId , "Delta" : delta}
             rowlist.append(errorULog)
             serverPeriodCount = serverPeriodCount + 1
             #print(rowlist)
@@ -78,7 +91,16 @@ def createTimeAnalysis(data):
         if(row[7] >= endADate):
             endADate = row[7]            
         else:
-            errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId }
+            thisDate = row[7]
+            #print(endADate)
+            #print(thisDate)
+            endADate = endADate.split(".")[0]
+            thisDate = thisDate.split(".")[0]
+            a = datetime.datetime.strptime(endADate,'%Y-%m-%d %H:%M:%S')
+            b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
+            delta = abs(( a - b ).seconds)/60
+            #print(str(delta))
+            errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta }
             rowlist.append(errorALog)
             androidPeriodCount = androidPeriodCount + 1
  
@@ -89,14 +111,14 @@ def createTimeAnalysis(data):
             endADate = row[7]
 
     if(countA != 0):
-        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId }
+        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId, "Delta" : 0 }
         #print("Without error:"+str(errorALog))
         androidPeriodCount = androidPeriodCount + 1        
         rowlist.append(errorALog)
         #print(rowlist)
         
     if(countU != 0):
-        errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'N', "HashID": hashId }
+        errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'N', "HashID": hashId, "Delta" : 0 }
         #print("Without error:"+str(errorULog))
         rowlist.append(errorULog)
         serverPeriodCount = serverPeriodCount + 1
@@ -115,19 +137,24 @@ def loadConfiguration():
     global userSpecificPreprocessedCausalityReports      
     global userSpecificFiles
     parser = argparse.ArgumentParser()
-    parser.add_argument("opsystem", help="runntime, 1=linux, 2=osx",type=int)
+    parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
     parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
     args = parser.parse_args()
     if(args.opsystem == 2):
         actualEnvironment = "osx"
-    else:
+    if(args.opsystem == 0):
+        actualEnvironment = "benti"
+    if(args.opsystem == 1):
         actualEnvironment = "linux" 
     config = configparser.ConfigParser()
     config.read('causalityPeriodExtractor.txt')
     if(actualEnvironment == "osx"):
         userSpecificPreprocessedFolder = config['osx']['userSpecificPreprocessedFolder']              
-        userSpecificPreprocessedCausalityReports = config['osx']['userSpecificPreprocessedCausalityReports']              
-    else:
+        userSpecificPreprocessedCausalityReports = config['osx']['userSpecificPreprocessedCausalityReports']
+    if(actualEnvironment == "benti"):
+        userSpecificPreprocessedFolder = config['benti']['userSpecificPreprocessedFolder']              
+        userSpecificPreprocessedCausalityReports = config['benti']['userSpecificPreprocessedCausalityReports']                        
+    if(actualEnvironment == "linux"):
         userSpecificPreprocessedFolder = config['fict']['userSpecificPreprocessedFolder']            
         userSpecificPreprocessedCausalityReports = config['fict']['userSpecificPreprocessedCausalityReports']            
     return;
@@ -144,14 +171,15 @@ for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=-1, sep=';')
     #print(data.head(10))
+    print("Staring file:" + filename)
+
     createTimeAnalysis(data)
     #print(errorLogCollector.head(10))  
-    summarylogRow.append([filename,len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount]) 
+    summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     summaryLogCollector = pd.DataFrame(summarylogRow)
     summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')
-
-    print(summaryLogCollector.tail(10))
-    print("F: " + filename +  " L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount))
+   # print(summaryLogCollector.tail(10))
+    print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
     errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
 
     #loadFile(fname)
