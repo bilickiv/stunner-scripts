@@ -24,11 +24,13 @@ fileStep = 500
 fileStepCount = 0
 
 def loadchunks():
+    global fileStepCount
+    global fileStep
     indexCounter = 0
     fileList = []
     for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
         fileList.append(fileName)
-    print(str(fileStep))
+    print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
     end = (fileStepCount + 1) * fileStep
     iter = islice(fileList, start, end, None)
@@ -176,6 +178,8 @@ def loadConfiguration():
     global userSpecificPreprocessedFolder
     global userSpecificPreprocessedCausalityReports      
     global userSpecificFiles
+    global fileStepCount
+
     parser = argparse.ArgumentParser()
     parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
     parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
