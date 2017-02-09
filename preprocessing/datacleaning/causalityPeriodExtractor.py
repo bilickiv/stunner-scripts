@@ -85,30 +85,32 @@ def createTimeAnalysis(data):
             endUDate = tmpdate
             #print(count)
             #print(row)        
-            countU = 0    
-        if(firstADate == ""):
-            firstADate =  row[7]                      
-        if(row[7] >= endADate):
-            endADate = row[7]            
-        else:
-            thisDate = row[7]
-            #print(endADate)
-            #print(thisDate)
-            endADate = endADate.split(".")[0]
-            thisDate = thisDate.split(".")[0]
-            a = datetime.datetime.strptime(endADate,'%Y-%m-%d %H:%M:%S')
-            b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
-            delta = abs(( a - b ).seconds)/60
-            #print(str(delta))
-            errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta }
-            rowlist.append(errorALog)
-            androidPeriodCount = androidPeriodCount + 1
- 
-            #print(rowlist)
-            #print(count)
-            countA = 0
-            firstADate = row[7]
-            endADate = row[7]
+            countU = 0
+        tmpRow7 =  row[7]
+        if(not pd.isnull(tmpRow7)):
+            if(firstADate == ""):
+                firstADate =  row[7]                      
+            if(row[7] >= endADate):
+                endADate = row[7]            
+            else:
+                thisDate = row[7]
+                #print(endADate)
+                #print(thisDate)
+                endADate = endADate.split(".")[0]
+                thisDate = thisDate.split(".")[0]
+                a = datetime.datetime.strptime(endADate,'%Y-%m-%d %H:%M:%S')
+                b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
+                delta = abs(( a - b ).seconds)/60
+                #print(str(delta))
+                errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta }
+                rowlist.append(errorALog)
+                androidPeriodCount = androidPeriodCount + 1
+    
+                #print(rowlist)
+                #print(count)
+                countA = 0
+                firstADate = row[7]
+                endADate = row[7]
 
     if(countA != 0):
         errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId, "Delta" : 0 }
@@ -164,7 +166,7 @@ def loadConfiguration():
 loadConfiguration()
 #removeFiles()
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
-for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
+for fname in glob.glob(userSpecificPreprocessedFolder+"b1BHRXdNOFVUVXBiWGZWVjJ6SmNHWlZUeXhqMzRaU1paNGc0SG9tQ3BkQT0.csv"):
     global summarylogRow
 #for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
     head, tail = os.path.split(fname)
