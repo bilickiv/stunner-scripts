@@ -78,10 +78,12 @@ def createTimeAnalysis(data):
     fileNumber = fileNumber.str.replace('SQL:/home/bilickiv//data/raw_dataset/old_data/datacollector-','')
     fileNumber = fileNumber.str.replace('.sql.blob','')
     fileNumber = fileNumber.str.replace('2015-01-13','13')
+    fileNumber = fileNumber.str.replace('2015-05-21','21')
     fileNumber = pd.to_numeric(fileNumber, errors='coerce')
     #fileNumber = fileNumber.to_numeric()            
     data['globalIndex'] = fileNumber
     df = data[['globalIndex',1,2,7,3]]
+    # server date, file name, row
     df = df.sort_values(by=[2, 'globalIndex', 1], ascending=[True, True, True])    
     #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
    #print(df.head(1000))
