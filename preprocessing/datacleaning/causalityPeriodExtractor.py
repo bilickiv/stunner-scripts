@@ -24,6 +24,7 @@ fileStep = 500
 fileStepCount = 0
 
 def loadchunks():
+    indexCounter = 0
     fileList = []
     for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
         fileList.append(fileName)
@@ -34,7 +35,8 @@ def loadchunks():
     # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
     for a in iter:
         mainCycle(a)
-        print("Loaded file:" + a)
+        indexCounter = indexCounter + 1
+        print("Loaded file (" + str(indexCounter) + "):" + a)
     return
 def mainCycle(fname):
     #for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
@@ -44,14 +46,14 @@ def mainCycle(fname):
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=-1, sep=';')
     #print(data.head(10))
-    print("Staring file:" + filename)
+   # print("Staring file:" + filename)
     createTimeAnalysis(data)
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     #summaryLogCollector = pd.DataFrame(summarylogRow)
     #summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')
    # print(summaryLogCollector.tail(10))
-    print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
+   # print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
     errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
 
 def RepresentsInt(s):
@@ -179,7 +181,7 @@ def loadConfiguration():
     parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
     args = parser.parse_args()
     fileStepCount = args.chunk
-    print("Actul step:" + "----" + str(fileStepCount))
+    #print("Actul step:" + "----" + str(fileStepCount))
     if(args.opsystem == 2):
         actualEnvironment = "osx"
     if(args.opsystem == 0):
