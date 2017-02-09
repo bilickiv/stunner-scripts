@@ -20,5 +20,7 @@ nohup python3 causalityPeriodExtractor.py 1 17 > log17.txt &
 nohup python3 causalityPeriodExtractor.py 1 18 > log18.txt &
 nohup python3 causalityPeriodExtractor.py 1 19 > log19.txt &
 nohup python3 causalityPeriodExtractor.py 1 20 > log20.txt &
+nohup python3 causalityPeriodExtractor.py 1 21 > log21.txt &
+
 
 
