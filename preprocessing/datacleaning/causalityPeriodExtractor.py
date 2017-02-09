@@ -93,7 +93,7 @@ def createTimeAnalysis(data):
         firstADate = ""
         countU = countU + 1
         countA = countA + 1
-        
+        print(row)
         #print(str(row['globalIndex'])+":"+str(row[1]))
         dTmp = row[2]
         if(RepresentsInt(dTmp)):
