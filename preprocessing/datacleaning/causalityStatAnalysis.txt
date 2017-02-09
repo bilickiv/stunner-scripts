@@ -1,0 +1,8 @@
+[osx]
+userSpecificPreprocessedCausalityReports = /Users/bilickiv/tmpdata/userSpecificDataCleaning/
+[benti]
+userSpecificPreprocessedCausalityReports = /Users/Vilmos/tmpdata/userSpecificDataCleaning/
+[fict]
+userSpecificPreprocessedCausalityReports = /home/bilickiv/data/raw_dataset/userSpecificDataCleaning/
+
+
