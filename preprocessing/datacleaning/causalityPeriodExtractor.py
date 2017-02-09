@@ -7,7 +7,9 @@ import configparser
 import pandas as pd
 import numpy as np
 import argparse
+from itertools import islice
 
+fileList = []
 indexEntries = {}
 hashIds = set()
 userSpecificPreprocessedFolder = ""
@@ -18,6 +20,40 @@ summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U', 'Max', 'Med'
 summarylogRow = []
 androidPeriodCount = 0
 serverPeriodCount = 0
+fileStep = 500
+fileStepCount = 0
+
+def loadchunks():
+    fileList = []
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
+        fileList.append(fileName)
+    print(str(fileStep))
+    start = fileStepCount * fileStep
+    end = (fileStepCount + 1) * fileStep
+    iter = islice(fileList, start, end, None)
+    # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
+    for a in iter:
+        mainCycle(a)
+        print("Loaded file:" + a)
+    return
+def mainCycle(fname):
+    #for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
+    global summarylogRow
+#for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
+    head, tail = os.path.split(fname)
+    filename = tail.split('.')[0] 
+    data = pd.read_csv(fname, header=-1, sep=';')
+    #print(data.head(10))
+    print("Staring file:" + filename)
+    createTimeAnalysis(data)
+    #print(errorLogCollector.head(10))  
+    #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
+    #summaryLogCollector = pd.DataFrame(summarylogRow)
+    #summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')
+   # print(summaryLogCollector.tail(10))
+    print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
+    errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
+
 def RepresentsInt(s):
     try: 
         int(s)
@@ -142,6 +178,8 @@ def loadConfiguration():
     parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
     parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
     args = parser.parse_args()
+    fileStepCount = args.chunk
+    print("Actul step:" + "----" + str(fileStepCount))
     if(args.opsystem == 2):
         actualEnvironment = "osx"
     if(args.opsystem == 0):
@@ -164,25 +202,10 @@ def loadConfiguration():
 
 #path = "/Volumes/Backup/research/data/*.csv"
 loadConfiguration()
+loadchunks()
 #removeFiles()
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
-for fname in glob.glob(userSpecificPreprocessedFolder+"b1BHRXdNOFVUVXBiWGZWVjJ6SmNHWlZUeXhqMzRaU1paNGc0SG9tQ3BkQT0.csv"):
-    global summarylogRow
-#for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
-    head, tail = os.path.split(fname)
-    filename = tail.split('.')[0] 
-    data = pd.read_csv(fname, header=-1, sep=';')
-    #print(data.head(10))
-    print("Staring file:" + filename)
 
-    createTimeAnalysis(data)
-    #print(errorLogCollector.head(10))  
-    summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
-    summaryLogCollector = pd.DataFrame(summarylogRow)
-    summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')
-   # print(summaryLogCollector.tail(10))
-    print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
-    errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
 
     #loadFile(fname)
           
