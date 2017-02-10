@@ -13,13 +13,6 @@ import pymysql
 duplicateFree = ""
 fileStep = 500
 fileStepCount = 0
-connection = pymysql.connect(host='10.6.14.37',
-                             user='root',
-                             password='',
-                             db='stunner',
-                             charset='utf8mb4',
-                             local_infile=True,
-                             cursorclass=pymysql.cursors.Cursor)
 connectionFiltered = pymysql.connect(host='10.6.14.36',
                              user='root',
                              password='',
@@ -51,19 +44,7 @@ def loadConfiguration():
     if(actualEnvironment == "linux"):
         duplicateFree = config['fict']['duplicateFree']            
     return;
-def uploadFile(name):
-    try:
-        with connection.cursor() as cursor:
-            # Create a new record
-            sql = "LOAD DATA LOCAL INFILE '" + name + \
-            "'  IGNORE INTO TABLE FILTEREDDATA FIELDS TERMINATED BY ';'"
-            cursor.execute(sql)
-        # connection is not autocommit by default. So you must commit to save
-        # your changes.
-        connection.commit()
-    finally:
-        print('Finished')    
-    return
+
 def uploadFilteredFile(name):
     try:
         with connectionFiltered.cursor() as cursor:
@@ -90,7 +71,7 @@ def loadchunks():
     start = fileStepCount * fileStep
     end = (fileStepCount + 1) * fileStep
     iter = islice(fileList, start, end, None)
-    # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
+    print("Loading files between:" + str(start) + " and " + str(end))
     for a in iter:
         print("Loading file:" + a)
         uploadFilteredFile(a)
