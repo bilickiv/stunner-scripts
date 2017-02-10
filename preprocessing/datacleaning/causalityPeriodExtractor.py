@@ -28,7 +28,7 @@ def loadchunks():
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "engwMXpTNmZ5ME1IZmt3QVd5T2xGMElPakVFK2dlaVRrcG5aTmo2U09XVT0.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -43,7 +43,6 @@ def loadchunks():
 def mainCycle(fname):
     #for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
     global summarylogRow
-#for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
     head, tail = os.path.split(fname)
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=-1, sep=';')
@@ -81,9 +80,13 @@ def createTimeAnalysis(data):
     fileNumber = fileNumber.str.replace('2015-05-21','21')
     fileNumber = pd.to_numeric(fileNumber, errors='coerce')
     #fileNumber = fileNumber.to_numeric()            
+    data['duplicated'] = data.duplicated()
+    print(data.tail(10))
     data['globalIndex'] = fileNumber
-    df = data[['globalIndex',1,2,7,3]]
+    tmp = data.loc[data['duplicated'] == 'True']
+    df = tmp[['globalIndex',1,2,7,3]]
     # server date, file name, row
+
     df = df.sort_values(by=[2, 'globalIndex', 1], ascending=[True, True, True])    
     #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
    #print(df.head(1000))
