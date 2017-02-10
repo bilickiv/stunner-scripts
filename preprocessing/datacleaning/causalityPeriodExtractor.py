@@ -22,13 +22,14 @@ androidPeriodCount = 0
 serverPeriodCount = 0
 fileStep = 500
 fileStepCount = 0
-
+originalSize = 0
+shrinkedSize = 0
 def loadchunks():
     global fileStepCount
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "engwMXpTNmZ5ME1IZmt3QVd5T2xGMElPakVFK2dlaVRrcG5aTmo2U09XVT0.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -67,6 +68,8 @@ def createTimeAnalysis(data):
     global errorLogCollector
     global androidPeriodCount
     global serverPeriodCount
+    global originalSize
+    global shrinkedSize
     androidPeriodCount = 0
     serverPeriodCount = 0
     endUDate = "1970-01-01"
@@ -80,13 +83,14 @@ def createTimeAnalysis(data):
     fileNumber = fileNumber.str.replace('2015-05-21','21')
     fileNumber = pd.to_numeric(fileNumber, errors='coerce')
     #fileNumber = fileNumber.to_numeric()            
-    data['duplicated'] = data.duplicated()
-    print(data.tail(10))
+    data['duplicated'] = data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , keep='first')
+    #print(data.tail(100))
     data['globalIndex'] = fileNumber
-    tmp = data.loc[data['duplicated'] == 'True']
+    tmp = data.loc[data['duplicated'] == True]
+    shrinkedSize = len(tmp.index)
+    originalSize = len(data.index)
     df = tmp[['globalIndex',1,2,7,3]]
     # server date, file name, row
-
     df = df.sort_values(by=[2, 'globalIndex', 1], ascending=[True, True, True])    
     #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
    #print(df.head(1000))
@@ -122,7 +126,7 @@ def createTimeAnalysis(data):
             delta = abs(( a - b ).seconds)/60
             #print(str(delta))
             #print("U:" + firstDate + ":" + tmpdate +":" + str(count))
-            errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'Y', "HashID": hashId , "Delta" : delta}
+            errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'Y', "HashID": hashId , "Delta" : delta, "Original" : originalSize, "Shrinked" : shrinkedSize}
             rowlist.append(errorULog)
             serverPeriodCount = serverPeriodCount + 1
             #print(rowlist)
@@ -147,7 +151,7 @@ def createTimeAnalysis(data):
                 b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
                 delta = abs(( a - b ).seconds)/60
                 #print(str(delta))
-                errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta }
+                errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta, "Original" : originalSize, "Shrinked" : shrinkedSize }
                 rowlist.append(errorALog)
                 androidPeriodCount = androidPeriodCount + 1
     
@@ -158,14 +162,14 @@ def createTimeAnalysis(data):
                 endADate = row[7]
 
     if(countA != 0):
-        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId, "Delta" : 0 }
+        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId, "Delta" : 0, "Original" : originalSize, "Shrinked" : shrinkedSize }
         #print("Without error:"+str(errorALog))
         androidPeriodCount = androidPeriodCount + 1        
         rowlist.append(errorALog)
         #print(rowlist)
         
     if(countU != 0):
-        errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'N', "HashID": hashId, "Delta" : 0 }
+        errorULog = {"Type":'U',"StartDate": firstUDate, "EndDate" : endUDate,"Count" : countU, "Error": 'N', "HashID": hashId, "Delta" : 0, "Original" : originalSize, "Shrinked" : shrinkedSize }
         #print("Without error:"+str(errorULog))
         rowlist.append(errorULog)
         serverPeriodCount = serverPeriodCount + 1
