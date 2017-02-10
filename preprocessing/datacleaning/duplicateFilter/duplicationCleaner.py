@@ -50,7 +50,17 @@ def mainCycle(fname):
     #print(data.head(10))
    # print("Staring file:" + filename)
     removeDuplicates(data, filename)
-
+def times100(x):
+    # that, if x is a string,
+    if type(x) is str:
+        # just returns it untouched
+        return x
+    # but, if not, return it multiplied by 100
+    elif x:
+        return 100 * x
+    # and leave everything else
+    else:
+        return
 def RepresentsInt(s):
     try: 
         int(s)
@@ -69,21 +79,18 @@ def removeDuplicates(data, filename):
     data['duplicated'] = data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , keep='first')
     tmp = data.loc[data['duplicated'] == False]
     tmp['fileName'] = filename
-    correctUploadDate(tmp)
+    tmp['uploadDate'] = tmp[2].map(correctUploadDate)
     #print(tmp.tail(100))
     tmp.to_csv(duplicateFree+filename+".csv", sep=';', encoding='utf-8')
-    return        
-def correctUploadDate(data):
+    return    
+def correctUploadDate(uploadDate):
     #print(data.tail(100))
-    for index, row in data.iterrows():
-        dTmp = row[2]
-        if(RepresentsInt(dTmp)):
-            tmpdate = datetime.datetime.fromtimestamp(int(dTmp)/1000).strftime('%Y-%m-%d %H:%M:%S')
-        else:
-            tmpdate = dTmp
-        #data.set_value('uploaDate', tmpdate, index)
-        data.loc[index,'uploaDate'] = tmpdate
-    return
+    tmpdate = ""
+    if(RepresentsInt(uploadDate)):
+        tmpdate = datetime.datetime.fromtimestamp(int(uploadDate)/1000).strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        tmpdate = uploadDate
+    return tmpdate
 
 def createTimeAnalysis(data):
     global errorLogCollector
