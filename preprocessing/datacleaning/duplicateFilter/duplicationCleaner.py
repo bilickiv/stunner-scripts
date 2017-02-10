@@ -70,7 +70,7 @@ def removeDuplicates(data, filename):
     tmp = data.loc[data['duplicated'] == False]
     tmp['fileName'] = filename
     correctUploadDate(tmp)
-    print(tmp.tail(100))
+    #print(tmp.tail(100))
     tmp.to_csv(duplicateFree+filename+".csv", sep=';', encoding='utf-8')
     return        
 def correctUploadDate(data):
