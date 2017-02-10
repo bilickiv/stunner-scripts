@@ -188,7 +188,7 @@ def createOverlapAnalysis(data):
     #sever, android, file, row, hash, fileHash
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
     # server date, file name, row
-    df = df.sort_values(by=['uploadDate', 'globalIndex', '1'], ascending=[True, True, True])    
+    df = df.sort_values(by=['uploadDate', '7'], ascending=[True, True])    
     #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
    #print(df.head(1000))
     countA = 0
