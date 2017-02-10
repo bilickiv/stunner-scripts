@@ -1,0 +1,10 @@
+[osx]
+duplicateFree = /Users/bilickiv/tmpdata/duplicateFree/
+
+[benti]
+duplicateFree = /Users/Vilmos/tmpdata/duplicateFree/
+
+[fict]
+duplicateFree = /home/bilickiv/data/raw_dataset/duplicateFree/
+
+
