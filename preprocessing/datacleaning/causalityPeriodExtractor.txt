@@ -1,11 +1,11 @@
 [osx]
-userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/userSpecificPreprocessed/
+userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/duplicateFree/
 userSpecificPreprocessedCausalityReports = /Users/bilickiv/tmpdata/userSpecificDataCleaning/
 [benti]
-userSpecificPreprocessedFolder = /Users/Vilmos/tmpdata/userSpecificPreprocessed/
+userSpecificPreprocessedFolder = /Users/Vilmos/tmpdata/duplicateFree/
 userSpecificPreprocessedCausalityReports = /Users/Vilmos/tmpdata/userSpecificDataCleaning/
 [fict]
-userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
+userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/duplicateFree/
 userSpecificPreprocessedCausalityReports = /home/bilickiv/data/raw_dataset/userSpecificDataCleaning/
 
 
