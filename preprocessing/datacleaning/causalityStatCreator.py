@@ -52,8 +52,10 @@ def mainCycle(fname):
     u = data[data.Type == "U"].shape[0]
     med = int(data['Delta'].median())
     m = int(data['Delta'].max())
-    summarylogRow.append([f,hashId,l,cr,a,u,m,med]) 
-    print("F: " + f +  " Hash:"+ hashId +" L:" + str(l) + " CR:" + str(cr) + " A/U:" + str(a)+"/"+str(u) + "Max:" + str(int(m)) + "Med:" + str(med))
+    originalSize = data['Original'].iloc[0]
+    shrinkedSize = data['Shrinked'].iloc[0]
+    summarylogRow.append([f,hashId,l,cr,a,u,m,med, originalSize, shrinkedSize]) 
+    print("F: " + f +  " Hash:"+ hashId +" L:" + str(l) + " CR:" + str(cr) + " A/U:" + str(a)+"/"+str(u) + " Max:" + str(int(m)) + " Med:" + str(med) + " Orig:" + str(originalSize) + " Shrinked:" + str(shrinkedSize))
 
 def RepresentsInt(s):
     try: 

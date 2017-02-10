@@ -84,9 +84,9 @@ def createTimeAnalysis(data):
     fileNumber = pd.to_numeric(fileNumber, errors='coerce')
     #fileNumber = fileNumber.to_numeric()            
     data['duplicated'] = data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , keep='first')
-    #print(data.tail(100))
+    print(data.tail(100))
     data['globalIndex'] = fileNumber
-    tmp = data.loc[data['duplicated'] == True]
+    tmp = data.loc[data['duplicated'] == False]
     shrinkedSize = len(tmp.index)
     originalSize = len(data.index)
     df = tmp[['globalIndex',1,2,7,3]]
