@@ -11,7 +11,7 @@ from itertools import islice
 import pymysql
 
 duplicateFree = ""
-fileStep = 9000
+fileStep = 500
 fileStepCount = 0
 connection = pymysql.connect(host='10.6.14.37',
                              user='root',
