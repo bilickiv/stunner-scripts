@@ -52,7 +52,7 @@ def uploadFilteredFile(name):
         with connectionFiltered.cursor() as cursor:
             # Create a new record
             sql = "LOAD DATA LOCAL INFILE '" + name + \
-            "'  IGNORE INTO TABLE FILTEREDDATA FIELDS TERMINATED BY ';'"
+            "'  IGNORE INTO TABLE FILTEREDDATA FIELDS TERMINATED BY ';' IGNORE 1 LINES"
             cursor.execute(sql)
         # connection is not autocommit by default. So you must commit to save
         # your changes.

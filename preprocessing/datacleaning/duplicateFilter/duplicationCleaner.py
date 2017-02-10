@@ -29,7 +29,7 @@ def loadchunks():
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "a0dqdkY4RkFMa3ZFaXBSK1Y1RUJTeFh3WllBcnJwQi9tNDFEVlB2L2MwZz0.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -68,8 +68,23 @@ def removeDuplicates(data, filename):
     data['globalIndex'] = fileNumber
     data['duplicated'] = data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , keep='first')
     tmp = data.loc[data['duplicated'] == False]
+    tmp['fileName'] = filename
+    correctUploadDate(tmp)
+    print(tmp.tail(100))
     tmp.to_csv(duplicateFree+filename+".csv", sep=';', encoding='utf-8')
     return        
+def correctUploadDate(data):
+    #print(data.tail(100))
+    for index, row in data.iterrows():
+        dTmp = row[2]
+        if(RepresentsInt(dTmp)):
+            tmpdate = datetime.datetime.fromtimestamp(int(dTmp)/1000).strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            tmpdate = dTmp
+        #data.set_value('uploaDate', tmpdate, index)
+        data.loc[index,'uploaDate'] = tmpdate
+    return
+
 def createTimeAnalysis(data):
     global errorLogCollector
     global androidPeriodCount
