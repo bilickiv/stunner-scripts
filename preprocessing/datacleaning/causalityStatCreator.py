@@ -19,7 +19,7 @@ summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U', 'Max', 'Med'
 summarylogRow = []
 androidPeriodCount = 0
 serverPeriodCount = 0
-fileStep = 500
+fileStep = 9000
 fileStepCount = 0
 
 def loadchunks():
