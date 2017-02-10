@@ -50,14 +50,12 @@ def mainCycle(fname):
     print("Staring file:" + filename)
     #print(data.tail(100))
     f = filename
-    hashId = data['HashID'].iloc[0]
-    l = data['Count'].sum()
+    hashId = data['5HashID'].iloc[0]
+    l = data['3Count'].sum()
     cr = len(data.index)
     a = data[data.Type == "A"].shape[0]
-    med = int(data['Delta'].median())
-    m = int(data['Delta'].max())
-    summarylogRow.append([f,hashId,l,cr,a,m,med]) 
-    print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " AS:" + str(a) + " Max:" + str(int(m)) + " Med:" + str(med))
+    summarylogRow.append([f,hashId,l,cr,a]) 
+    print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " AS:" + str(a))
 
 def RepresentsInt(s):
     try: 
