@@ -184,7 +184,7 @@ def createOverlapAnalysis(data):
     androidPeriodCount = 0
     endADate = "1970-01-01"
     errorLog = {}
-    print(data.tail(10))
+    #print(data.tail(10))
     #sever, android, file, row, hash, fileHash
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
     # server date, file name, row
