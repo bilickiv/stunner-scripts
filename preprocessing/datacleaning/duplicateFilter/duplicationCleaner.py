@@ -50,13 +50,6 @@ def mainCycle(fname):
     #print(data.head(10))
    # print("Staring file:" + filename)
     removeDuplicates(data, filename)
-    #print(errorLogCollector.head(10))  
-    #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
-    #summaryLogCollector = pd.DataFrame(summarylogRow)
-    #summaryLogCollector.to_csv(duplicateFree+"summary.csv", sep='\t', encoding='utf-8')
-   # print(summaryLogCollector.tail(10))
-   # print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
-    #errorLogCollector.to_csv(duplicateFree+filename+".csv", sep='\t', encoding='utf-8')
 
 def RepresentsInt(s):
     try: 
@@ -75,7 +68,7 @@ def removeDuplicates(data, filename):
     data['globalIndex'] = fileNumber
     data['duplicated'] = data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , keep='first')
     tmp = data.loc[data['duplicated'] == False]
-    tmp.to_csv(duplicateFree+filename+".csv", sep='\t', encoding='utf-8')
+    tmp.to_csv(duplicateFree+filename+".csv", sep=';', encoding='utf-8')
     return        
 def createTimeAnalysis(data):
     global errorLogCollector

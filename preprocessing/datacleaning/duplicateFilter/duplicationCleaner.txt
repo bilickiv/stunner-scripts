@@ -1,9 +1,11 @@
 [osx]
 userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/userSpecificPreprocessed/
 duplicateFree = /Users/bilickiv/tmpdata/duplicateFree/
+
 [benti]
 userSpecificPreprocessedFolder = /Users/Vilmos/tmpdata/userSpecificPreprocessed/
 duplicateFree = /Users/Vilmos/tmpdata/duplicateFree/
+
 [fict]
 userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
 duplicateFree = /home/bilickiv/data/raw_dataset/duplicateFree/
