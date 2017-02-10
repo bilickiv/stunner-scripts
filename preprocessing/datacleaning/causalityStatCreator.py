@@ -53,7 +53,7 @@ def mainCycle(fname):
     hashId = data['5HashID'].iloc[0]
     l = data['3Count'].sum()
     cr = len(data.index)
-    a = data[data.Type == "A"].shape[0]
+    a = data.shape[0]
     summarylogRow.append([f,hashId,l,cr,a]) 
     print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " AS:" + str(a))
 
