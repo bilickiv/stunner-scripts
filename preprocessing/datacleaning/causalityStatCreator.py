@@ -44,6 +44,7 @@ def mainCycle(fname):
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=0, sep="\t")
     print("Staring file:" + filename)
+    #print(data.tail(100))
     f = filename
     hashId = data['HashID'].iloc[0]
     l = data['Count'].sum()
@@ -55,7 +56,7 @@ def mainCycle(fname):
     originalSize = data['Original'].iloc[0]
     shrinkedSize = data['Shrinked'].iloc[0]
     summarylogRow.append([f,hashId,l,cr,a,u,m,med, originalSize, shrinkedSize]) 
-    print("F: " + f +  " Hash:"+ hashId +" L:" + str(l) + " CR:" + str(cr) + " A/U:" + str(a)+"/"+str(u) + " Max:" + str(int(m)) + " Med:" + str(med) + " Orig:" + str(originalSize) + " Shrinked:" + str(shrinkedSize))
+    print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " A/U:" + str(a)+"/"+str(u) + " Max:" + str(int(m)) + " Med:" + str(med) + " Orig:" + str(originalSize) + " Shrinked:" + str(shrinkedSize))
 
 def RepresentsInt(s):
     try: 

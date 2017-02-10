@@ -43,6 +43,8 @@ def mainCycle(fname):
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=0, sep="\t")
     print(data.tail(10))
+    print(data['8'].sum(axis=0))
+    print(data['9'].sum(axis=0))
     ax5 = data.filter(items=['4']).plot(kind='hist', alpha=0.5,  bins=[10, 20, 30, 40, 50, 100,1000,2000,4000,10000,100000],title='Number of Android timestamp collosions', logy = False, logx = True)
     fig5 = ax5.get_figure()
     fig5.savefig(userSpecificPreprocessedCausalityReports + 'boxAllDay.png')
