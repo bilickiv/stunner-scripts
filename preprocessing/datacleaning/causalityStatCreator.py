@@ -50,13 +50,10 @@ def mainCycle(fname):
     l = data['Count'].sum()
     cr = len(data.index)
     a = data[data.Type == "A"].shape[0]
-    u = data[data.Type == "U"].shape[0]
     med = int(data['Delta'].median())
     m = int(data['Delta'].max())
-    originalSize = data['Original'].iloc[0]
-    shrinkedSize = data['Shrinked'].iloc[0]
-    summarylogRow.append([f,hashId,l,cr,a,u,m,med, originalSize, shrinkedSize]) 
-    print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " A/U:" + str(a)+"/"+str(u) + " Max:" + str(int(m)) + " Med:" + str(med) + " Orig:" + str(originalSize) + " Shrinked:" + str(shrinkedSize))
+    summarylogRow.append([f,hashId,l,cr,a,m,med]) 
+    print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " AS:" + str(a) + " Max:" + str(int(m)) + " Med:" + str(med))
 
 def RepresentsInt(s):
     try: 
