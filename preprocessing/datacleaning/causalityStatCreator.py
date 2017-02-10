@@ -19,7 +19,7 @@ summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U', 'Max', 'Med'
 summarylogRow = []
 androidPeriodCount = 0
 serverPeriodCount = 0
-fileStep = 9000
+fileStep = 500
 fileStepCount = 0
 
 def loadchunks():
@@ -36,6 +36,10 @@ def loadchunks():
         mainCycle(a)
         print("Loaded file:" + a)
     summaryLogCollector = pd.DataFrame(summarylogRow)
+    #print(summaryLogCollector.head(10))
+    summaryLogCollector = summaryLogCollector.sort_values(by=[2, 3], ascending=[False, False]) 
+    #print(summaryLogCollector.head(10))
+ 
     summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')        
     return
 def mainCycle(fname):

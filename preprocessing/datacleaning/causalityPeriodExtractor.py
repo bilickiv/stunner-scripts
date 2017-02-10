@@ -29,7 +29,7 @@ def loadchunks():
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "amo3bUNUeDlVSzNTUGRqckxvekVXZVIvNnZyUFNPRkp1Tm5QR0NwcWZMMD0.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -216,9 +216,9 @@ def createOverlapAnalysis(data):
                 thisDate = thisDate.split(".")[0]
                 a = datetime.datetime.strptime(endADate,'%Y-%m-%d %H:%M:%S')
                 b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
-                delta = abs(( a - b ).seconds)/60
+                delta = int(abs(( a - b ).seconds)/60)
                 #print(str(delta))
-                errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta }
+                errorALog = {"1StartDate": firstADate, "2EndDate" : endADate,"3Count" : countA, "4Error": 'Y', "5HashID": hashId}
                 rowlist.append(errorALog)
                 androidPeriodCount = androidPeriodCount + 1
                 countA = 0
@@ -226,7 +226,7 @@ def createOverlapAnalysis(data):
                 endADate = row['7']
 
     if(countA != 0):
-        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId, "Delta" : 0, "Original" : originalSize, "Shrinked" : shrinkedSize }
+        errorALog = {"1StartDate": firstADate, "2EndDate" : endADate,"3Count" : countA, "4Error": 'N', "5HashID": hashId}
         #print("Without error:"+str(errorALog))
         androidPeriodCount = androidPeriodCount + 1        
         rowlist.append(errorALog)
