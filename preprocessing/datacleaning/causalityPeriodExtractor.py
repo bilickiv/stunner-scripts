@@ -46,10 +46,10 @@ def mainCycle(fname):
     global summarylogRow
     head, tail = os.path.split(fname)
     filename = tail.split('.')[0] 
-    data = pd.read_csv(fname, header=-1, sep=';')
+    data = pd.read_csv(fname, header=0, sep=';')
     #print(data.head(10))
    # print("Staring file:" + filename)
-    createTimeAnalysis(data)
+    createOverlapAnalysis(data)
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     #summaryLogCollector = pd.DataFrame(summarylogRow)
@@ -177,12 +177,64 @@ def createTimeAnalysis(data):
     #print(rowlist)    
     errorLogCollector = pd.DataFrame(rowlist)
     #print(errorLogCollector.head(10))
+    return
+def createOverlapAnalysis(data):
+    global errorLogCollector
+    global androidPeriodCount
+    androidPeriodCount = 0
+    endADate = "1970-01-01"
+    errorLog = {}
+    print(data.tail(10))
+    #sever, android, file, row, hash, fileHash
+    df = data[['uploadDate','7','globalIndex','1','3','fileName']]
+    # server date, file name, row
+    df = df.sort_values(by=['uploadDate', 'globalIndex', '1'], ascending=[True, True, True])    
+    #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
+   #print(df.head(1000))
+    countA = 0
+    tmpdate = ""
+    firstADate = ""
+    rowlist = []    
+    for index, row in df.iterrows():
+        hashId = row['3']
+        countA = countA + 1
+        #print(row)
+        #print(str(row['globalIndex'])+":"+str(row[1])
+        #Android
+        #print(row)
+        tmpAndroid =  row['7']
+        if(not pd.isnull(tmpAndroid)):
+            if(firstADate == ""):
+                firstADate =  row['7']                      
+            if(row['7'] >= endADate):
+                endADate = row['7']            
+            else:
+                thisDate = row['7']
+                #print(endADate)
+                #print(thisDate)
+                endADate = endADate.split(".")[0]
+                thisDate = thisDate.split(".")[0]
+                a = datetime.datetime.strptime(endADate,'%Y-%m-%d %H:%M:%S')
+                b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
+                delta = abs(( a - b ).seconds)/60
+                #print(str(delta))
+                errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'Y', "HashID": hashId, "Delta" : delta }
+                rowlist.append(errorALog)
+                androidPeriodCount = androidPeriodCount + 1
+                countA = 0
+                firstADate = row['7']
+                endADate = row['7']
 
-def removeFiles():
-    global userSpecificPreprocessedCausalityReports
-    for fl in glob.glob(userSpecificPreprocessedCausalityReports+"*.csv"):
-        os.remove(fl)     
-    return;             
+    if(countA != 0):
+        errorALog = {"Type":'A',"StartDate": firstADate, "EndDate" : endADate,"Count" : countA, "Error": 'N', "HashID": hashId, "Delta" : 0, "Original" : originalSize, "Shrinked" : shrinkedSize }
+        #print("Without error:"+str(errorALog))
+        androidPeriodCount = androidPeriodCount + 1        
+        rowlist.append(errorALog)
+        #print(rowlist)      
+    #print(rowlist)    
+    errorLogCollector = pd.DataFrame(rowlist)
+    #print(errorLogCollector.head(10))
+    return;    
 def loadConfiguration():
     global userSpecificPreprocessedFolder
     global userSpecificPreprocessedCausalityReports      
