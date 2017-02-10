@@ -22,6 +22,8 @@ connectionFiltered = pymysql.connect(host='10.6.14.36',
                              cursorclass=pymysql.cursors.Cursor)                             
 def loadConfiguration():
     global duplicateFree      
+    global fileStep
+    global fileStepCount
 
     parser = argparse.ArgumentParser()
     parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
