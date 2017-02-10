@@ -29,7 +29,7 @@ def loadchunks():
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "a0dqdkY4RkFMa3ZFaXBSK1Y1RUJTeFh3WllBcnJwQi9tNDFEVlB2L2MwZz0.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
