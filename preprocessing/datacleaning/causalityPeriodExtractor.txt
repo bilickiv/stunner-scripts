@@ -11,7 +11,7 @@ userSpecificPreprocessedTimePeriodReports = /Users/Vilmos/tmpdata/timePeriods/
 [fict]
 userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/duplicateFree/
 userSpecificPreprocessedCausalityReports = /home/bilickiv/data/raw_dataset/userSpecificDataCleaning/
-userSpecificPreprocessedTimePeriodReports = /home/bilickiv/tmpdata/timePeriods/
+userSpecificPreprocessedTimePeriodReports = /home/bilickiv/data/raw_dataset/timePeriods/
 
 
 
