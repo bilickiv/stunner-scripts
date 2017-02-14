@@ -36,11 +36,11 @@ def loadchunks():
         mainCycle(a)
         print("Loaded file:" + a)
     summaryLogCollector = pd.DataFrame(summarylogRow)
-    #print(summaryLogCollector.head(10))
+    print(summaryLogCollector.head(10))
     summaryLogCollector = summaryLogCollector.sort_values(by=[2, 3], ascending=[False, False]) 
     #print(summaryLogCollector.head(10))
  
-    summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')        
+    summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csvv", sep='\t', encoding='utf-8')        
     return
 def mainCycle(fname):
     global summarylogRow

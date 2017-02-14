@@ -14,9 +14,11 @@ indexEntries = {}
 hashIds = set()
 userSpecificPreprocessedFolder = ""
 userSpecificPreprocessedCausalityReports = ""
+userSpecificPreprocessedTimePeriodReports = ""
 actualEnvironment = "osx"
-errorLogCollector = pd.DataFrame(columns=('Type','StartDate', 'EndDate', 'Count', 'Error', 'HashId', 'Delta'))
-summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U', 'Max', 'Med'))
+errorLogCollector = pd.DataFrame()
+timePeriodCollector = pd.DataFrame()
+summaryLogCollector = pd.DataFrame()
 summarylogRow = []
 androidPeriodCount = 0
 serverPeriodCount = 0
@@ -49,7 +51,8 @@ def mainCycle(fname):
     data = pd.read_csv(fname, header=0, sep=';')
     #print(data.head(10))
    # print("Staring file:" + filename)
-    createOverlapAnalysis(data)
+   # createOverlapAnalysis(data)
+    createFinePeriodAnalisys(data,60,fname)
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     #summaryLogCollector = pd.DataFrame(summarylogRow)
@@ -64,6 +67,38 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
+def createFinePeriodAnalisys(data, delta, fname):
+    global timePeriodCollector
+    global userSpecificPreprocessedTimePeriodReports    
+    count = 0
+    rowlist = []
+    previouseDate = ""    
+    df = data[['uploadDate','7','globalIndex','1','3','fileName']]
+    # Android time
+    df = df.sort_values(by=['7'], ascending=[True])  
+    for index, row in df.iterrows():
+        actualTimestamp =  row['7']
+        hashId = row[3]
+        if(not pd.isnull(actualTimestamp)):
+            if(previouseDate == ""):
+                previouseDate =  actualTimestamp
+            else:
+                previouseDate = previouseDate.split(".")[0]
+                actualTimestamp = actualTimestamp.split(".")[0]
+                a = datetime.datetime.strptime(previouseDate,'%Y-%m-%d %H:%M:%S')
+                b = datetime.datetime.strptime(actualTimestamp,'%Y-%m-%d %H:%M:%S')
+                localdelta = abs(( a - b ).seconds)
+                if(localdelta > delta):
+                    previouseDate = ""
+                    errorALog = {"1StartDate": previouseDate, "2EndDate" : actualTimestamp,"3Count" : count, "4HashID": hashId}
+                    rowlist.append(errorALog)
+                    count = 0
+                else:
+                    count = count + 1
+                    previouseDate = actualTimestamp
+    timePeriodCollector = pd.DataFrame(rowlist)
+    timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+fname+".csv", sep='\t', encoding='utf-8')    
+    return;        
 def checkChargingRules(data):
     #
     return;
@@ -226,7 +261,8 @@ def createOverlapAnalysis(data):
     return;    
 def loadConfiguration():
     global userSpecificPreprocessedFolder
-    global userSpecificPreprocessedCausalityReports      
+    global userSpecificPreprocessedCausalityReports 
+    global userSpecificPreprocessedTimePeriodReports     
     global userSpecificFiles
     global fileStepCount
 
@@ -247,12 +283,16 @@ def loadConfiguration():
     if(actualEnvironment == "osx"):
         userSpecificPreprocessedFolder = config['osx']['userSpecificPreprocessedFolder']              
         userSpecificPreprocessedCausalityReports = config['osx']['userSpecificPreprocessedCausalityReports']
+        userSpecificPreprocessedTimePeriodReports = config['osx']['userSpecificPreprocessedTimePeriodReports']
     if(actualEnvironment == "benti"):
         userSpecificPreprocessedFolder = config['benti']['userSpecificPreprocessedFolder']              
-        userSpecificPreprocessedCausalityReports = config['benti']['userSpecificPreprocessedCausalityReports']                        
+        userSpecificPreprocessedCausalityReports = config['benti']['userSpecificPreprocessedCausalityReports']
+        userSpecificPreprocessedTimePeriodReports = config['benti']['userSpecificPreprocessedTimePeriodReports']
+                        
     if(actualEnvironment == "linux"):
         userSpecificPreprocessedFolder = config['fict']['userSpecificPreprocessedFolder']            
-        userSpecificPreprocessedCausalityReports = config['fict']['userSpecificPreprocessedCausalityReports']            
+        userSpecificPreprocessedCausalityReports = config['fict']['userSpecificPreprocessedCausalityReports']
+        userSpecificPreprocessedTimePeriodReports = config['fict']['userSpecificPreprocessedTimePeriodReports']            
     return;
 
 

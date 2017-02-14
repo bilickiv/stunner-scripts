@@ -1,11 +1,17 @@
 [osx]
 userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/duplicateFree/
 userSpecificPreprocessedCausalityReports = /Users/bilickiv/tmpdata/userSpecificDataCleaning/
+userSpecificPreprocessedTimePeriodReports = /Users/bilickiv/tmpdata/timePeriods/
+
 [benti]
 userSpecificPreprocessedFolder = /Users/Vilmos/tmpdata/duplicateFree/
 userSpecificPreprocessedCausalityReports = /Users/Vilmos/tmpdata/userSpecificDataCleaning/
+userSpecificPreprocessedTimePeriodReports = /Users/Vilmos/tmpdata/timePeriods/
+
 [fict]
 userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/duplicateFree/
 userSpecificPreprocessedCausalityReports = /home/bilickiv/data/raw_dataset/userSpecificDataCleaning/
+userSpecificPreprocessedTimePeriodReports = /home/bilickiv/tmpdata/timePeriods/
+
 
 
