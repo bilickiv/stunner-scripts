@@ -52,7 +52,18 @@ def mainCycle(fname):
     #print(data.head(10))
    # print("Staring file:" + filename)
    # createOverlapAnalysis(data)
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(3))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(5))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(10))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(20))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(30))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(60))
     createFinePeriodAnalisys(data,3,filename)
+    createFinePeriodAnalisys(data,5,filename)
+    createFinePeriodAnalisys(data,10,filename)
+    createFinePeriodAnalisys(data,20,filename)
+    createFinePeriodAnalisys(data,30,filename)
+    createFinePeriodAnalisys(data,60,filename)
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     #summaryLogCollector = pd.DataFrame(summarylogRow)
@@ -60,7 +71,10 @@ def mainCycle(fname):
    # print(summaryLogCollector.tail(10))
    # print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
     errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
-
+def initDirectories(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    return;
 def RepresentsInt(s):
     try: 
         int(s)
@@ -102,7 +116,7 @@ def createFinePeriodAnalisys(data, delta, fname):
                     count = count + 1
                     previousDate = actualTimestamp
     timePeriodCollector = pd.DataFrame(rowlist)
-    timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+fname+".csv", sep='\t', encoding='utf-8')    
+    timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+str(delta)+"/"+fname+".csv", sep='\t', encoding='utf-8')    
     return;        
 def checkChargingRules(data):
     #
