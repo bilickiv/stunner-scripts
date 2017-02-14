@@ -72,7 +72,8 @@ def createFinePeriodAnalisys(data, delta, fname):
     global userSpecificPreprocessedTimePeriodReports    
     count = 0
     rowlist = []
-    previouseDate = ""    
+    previousDate = ""
+    startDate = ""    
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
     # Android time
     df = df.sort_values(by=['7'], ascending=[True])  
@@ -80,22 +81,26 @@ def createFinePeriodAnalisys(data, delta, fname):
         actualTimestamp =  row['7']
         hashId = row[3]
         if(not pd.isnull(actualTimestamp)):
-            if(previouseDate == ""):
-                previouseDate =  actualTimestamp
+            if(previousDate == ""):
+                previousDate =  actualTimestamp
+                startDate = actualTimestamp
             else:
-                previouseDate = previouseDate.split(".")[0]
+                previousDate = previousDate.split(".")[0]
                 actualTimestamp = actualTimestamp.split(".")[0]
-                a = datetime.datetime.strptime(previouseDate,'%Y-%m-%d %H:%M:%S')
+                a = datetime.datetime.strptime(previousDate,'%Y-%m-%d %H:%M:%S')
                 b = datetime.datetime.strptime(actualTimestamp,'%Y-%m-%d %H:%M:%S')
-                localdelta = int(abs(( a - b ).seconds))
+                localdelta = int(abs(( a - b ).total_seconds())/60)
+                #end of current period
                 if(localdelta > delta):
-                    previouseDate = ""
-                    errorALog = {"1StartDate": previouseDate, "2EndDate" : actualTimestamp,"3Count" : count, "4HashID": hashId}
+                    errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
                     rowlist.append(errorALog)
+                    previousDate = actualTimestamp
+                    startDate = actualTimestamp
                     count = 0
+                #it continues
                 else:
                     count = count + 1
-                    previouseDate = actualTimestamp
+                    previousDate = actualTimestamp
     timePeriodCollector = pd.DataFrame(rowlist)
     timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+fname+".csv", sep='\t', encoding='utf-8')    
     return;        
