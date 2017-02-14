@@ -52,7 +52,7 @@ def mainCycle(fname):
     #print(data.head(10))
    # print("Staring file:" + filename)
    # createOverlapAnalysis(data)
-    createFinePeriodAnalisys(data,60,fname)
+    createFinePeriodAnalisys(data,3,filename)
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     #summaryLogCollector = pd.DataFrame(summarylogRow)
@@ -87,7 +87,7 @@ def createFinePeriodAnalisys(data, delta, fname):
                 actualTimestamp = actualTimestamp.split(".")[0]
                 a = datetime.datetime.strptime(previouseDate,'%Y-%m-%d %H:%M:%S')
                 b = datetime.datetime.strptime(actualTimestamp,'%Y-%m-%d %H:%M:%S')
-                localdelta = abs(( a - b ).seconds)
+                localdelta = int(abs(( a - b ).seconds))
                 if(localdelta > delta):
                     previouseDate = ""
                     errorALog = {"1StartDate": previouseDate, "2EndDate" : actualTimestamp,"3Count" : count, "4HashID": hashId}
