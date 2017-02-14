@@ -64,6 +64,9 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
+def checkChargingRules(data):
+    #
+    return;
 def createTimeAnalysis(data):
     global errorLogCollector
     global androidPeriodCount
@@ -177,7 +180,7 @@ def createTimeAnalysis(data):
     #print(rowlist)    
     errorLogCollector = pd.DataFrame(rowlist)
     #print(errorLogCollector.head(10))
-    return
+    return;
 def createOverlapAnalysis(data):
     global errorLogCollector
     global androidPeriodCount
@@ -185,12 +188,10 @@ def createOverlapAnalysis(data):
     endADate = "1970-01-01"
     errorLog = {}
     #print(data.tail(10))
-    #sever, android, file, row, hash, fileHash
+    #severTimestamp, androidTimestamp, logfileid, logrow, hash, fileHash
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
-    # server date, file name, row
+    # server date, android timestamp
     df = df.sort_values(by=['uploadDate', '7'], ascending=[True, True])    
-    #df = df.sort_values(by=['globalIndex',1], ascending=[True,True])
-   #print(df.head(1000))
     countA = 0
     tmpdate = ""
     firstADate = ""
@@ -198,10 +199,6 @@ def createOverlapAnalysis(data):
     for index, row in df.iterrows():
         hashId = row['3']
         countA = countA + 1
-        #print(row)
-        #print(str(row['globalIndex'])+":"+str(row[1])
-        #Android
-        #print(row)
         tmpAndroid =  row['7']
         if(not pd.isnull(tmpAndroid)):
             if(firstADate == ""):
@@ -210,30 +207,22 @@ def createOverlapAnalysis(data):
                 endADate = row['7']            
             else:
                 thisDate = row['7']
-                #print(endADate)
-                #print(thisDate)
                 endADate = endADate.split(".")[0]
                 thisDate = thisDate.split(".")[0]
                 a = datetime.datetime.strptime(endADate,'%Y-%m-%d %H:%M:%S')
                 b = datetime.datetime.strptime(thisDate,'%Y-%m-%d %H:%M:%S')
                 delta = int(abs(( a - b ).seconds)/60)
-                #print(str(delta))
                 errorALog = {"1StartDate": firstADate, "2EndDate" : endADate,"3Count" : countA, "4Error": 'Y', "5HashID": hashId}
                 rowlist.append(errorALog)
                 androidPeriodCount = androidPeriodCount + 1
                 countA = 0
                 firstADate = row['7']
                 endADate = row['7']
-
     if(countA != 0):
         errorALog = {"1StartDate": firstADate, "2EndDate" : endADate,"3Count" : countA, "4Error": 'N', "5HashID": hashId}
-        #print("Without error:"+str(errorALog))
         androidPeriodCount = androidPeriodCount + 1        
         rowlist.append(errorALog)
-        #print(rowlist)      
-    #print(rowlist)    
     errorLogCollector = pd.DataFrame(rowlist)
-    #print(errorLogCollector.head(10))
     return;    
 def loadConfiguration():
     global userSpecificPreprocessedFolder
