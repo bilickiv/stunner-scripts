@@ -58,12 +58,16 @@ def mainCycle(fname):
     initDirectories(userSpecificPreprocessedTimePeriodReports+str(20))
     initDirectories(userSpecificPreprocessedTimePeriodReports+str(30))
     initDirectories(userSpecificPreprocessedTimePeriodReports+str(60))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(1440))
+
     createFinePeriodAnalisys(data,3,filename)
     createFinePeriodAnalisys(data,5,filename)
     createFinePeriodAnalisys(data,10,filename)
     createFinePeriodAnalisys(data,20,filename)
     createFinePeriodAnalisys(data,30,filename)
     createFinePeriodAnalisys(data,60,filename)
+    createFinePeriodAnalisys(data,1440,filename)
+
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
     #summaryLogCollector = pd.DataFrame(summarylogRow)
@@ -89,11 +93,12 @@ def createFinePeriodAnalisys(data, delta, fname):
     previousDate = ""
     startDate = ""    
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
+    print(df.tail(10))
     # Android time
     df = df.sort_values(by=['7'], ascending=[True])  
     for index, row in df.iterrows():
         actualTimestamp =  row['7']
-        hashId = row[3]
+        hashId = row['3']
         if(not pd.isnull(actualTimestamp)):
             if(previousDate == ""):
                 previousDate =  actualTimestamp
