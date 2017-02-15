@@ -93,7 +93,7 @@ def createFinePeriodAnalisys(data, delta, fname):
     previousDate = ""
     startDate = ""    
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
-    print(df.tail(10))
+    #print(df.tail(10))
     # Android time
     df = df.sort_values(by=['7'], ascending=[True])  
     for index, row in df.iterrows():
