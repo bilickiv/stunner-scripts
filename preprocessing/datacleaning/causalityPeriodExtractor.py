@@ -120,6 +120,9 @@ def createFinePeriodAnalisys(data, delta, fname):
                 else:
                     count = count + 1
                     previousDate = actualTimestamp
+    if(count != 0):
+        errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
+        rowlist.append(errorALog)
     timePeriodCollector = pd.DataFrame(rowlist)
     timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+str(delta)+"/"+fname+".csv", sep='\t', encoding='utf-8')    
     return;        
