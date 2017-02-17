@@ -44,7 +44,7 @@ def mainCycle(fname):
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=0, sep="\t")
     print(data.tail(10))
-    deltas = {'3', '5', '10', '20', '30', '60', '120','240','1440','2880'}
+    deltas = {3, 5, 10, 20, 30, 60, 120,240,1440,2880}
     for delta in deltas:
         ax = data[(data.Delta == int(delta))].filter(items=['PeriodCount']).plot(kind='hist', alpha=0.5,  bins=[10, 20, 30, 40, 50, 100,1000,2000,4000,10000,100000],title=str(delta)+' minute long follow time', logy = False, logx = True)
         fig = ax.get_figure()

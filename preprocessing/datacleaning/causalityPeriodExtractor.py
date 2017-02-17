@@ -31,7 +31,7 @@ def loadchunks():
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "ZzgrSUk3cGRyTThLcU5QanJ5bm4rdndVcUMwMXJvbE1lTkRWUjJDaGxYOD0.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -99,12 +99,15 @@ def createFinePeriodAnalisys(data, delta, fname):
                 first = False
                 previousDate = previousDate.split(".")[0]
                 actualTimestamp = actualTimestamp.split(".")[0]
+                startDate = startDate.split(".")[0]
                 a = datetime.datetime.strptime(previousDate,'%Y-%m-%d %H:%M:%S')
                 b = datetime.datetime.strptime(actualTimestamp,'%Y-%m-%d %H:%M:%S')
+                c = datetime.datetime.strptime(startDate,'%Y-%m-%d %H:%M:%S')
                 localdelta = int(abs(( a - b ).total_seconds())/60)
                 #end of current period
                 if(localdelta > delta):
-                    errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
+                    periodLength = int(abs(( a - c ).total_seconds())/60)
+                    errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId, "5PeriodLength": periodLength}
                     rowlist.append(errorALog)
                     previousDate = actualTimestamp
                     startDate = actualTimestamp
@@ -114,10 +117,15 @@ def createFinePeriodAnalisys(data, delta, fname):
                     count = count + 1
                     previousDate = actualTimestamp
     if(count != 0):
-        errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
+        previousDate = previousDate.split(".")[0]
+        startDate = startDate.split(".")[0]
+        a = datetime.datetime.strptime(previousDate,'%Y-%m-%d %H:%M:%S')
+        c = datetime.datetime.strptime(startDate,'%Y-%m-%d %H:%M:%S')
+        periodLength = int(abs(( a - c ).total_seconds())/60)
+        errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId, "5PeriodLength": periodLength}
         rowlist.append(errorALog)
     if(first):
-        errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : 1, "4HashID": hashId}
+        errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : 1, "4HashID": hashId, "5PeriodLength": 0}
         rowlist.append(errorALog)
     timePeriodCollector = pd.DataFrame(rowlist)
     timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+str(delta)+"/"+fname+".csv", sep='\t', encoding='utf-8')    
