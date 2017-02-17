@@ -61,7 +61,7 @@ def startFinePeriodAnalysis(fname):
     head, tail = os.path.split(fname)
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=0, sep=';')
-    deltas = {'3', '5', '10', '20', '30', '60', '120','240','1440','2880'}
+    deltas = {3, 5, 10, 20, 30, 60, 120,240,1440,2880}
     for delta in deltas:
         initDirectories(userSpecificPreprocessedTimePeriodReports+str(delta))
         createFinePeriodAnalisys(data,delta,filename)
@@ -103,7 +103,7 @@ def createFinePeriodAnalisys(data, delta, fname):
                 b = datetime.datetime.strptime(actualTimestamp,'%Y-%m-%d %H:%M:%S')
                 localdelta = int(abs(( a - b ).total_seconds())/60)
                 #end of current period
-                if(localdelta > delta):
+                if(q > delta):
                     errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
                     rowlist.append(errorALog)
                     previousDate = actualTimestamp
