@@ -123,5 +123,6 @@ def loadConfiguration():
 
 loadConfiguration()
 startDelta()
+saveLogs()
 
       
