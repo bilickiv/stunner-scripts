@@ -12,20 +12,33 @@ from itertools import islice
 fileList = []
 indexEntries = {}
 hashIds = set()
-userSpecificPreprocessedCausalityReports = ""
 actualEnvironment = "osx"
-errorLogCollector = pd.DataFrame(columns=('Type','StartDate', 'EndDate', 'Count', 'Error', 'HashId', 'Delta'))
-summaryLogCollector = pd.DataFrame(columns=('F','L', 'CR', 'A','U', 'Max', 'Med'))
-summarylogRow = []
-androidPeriodCount = 0
-serverPeriodCount = 0
+userSpecificPreprocessedTimePeriodSummary = ""
+userSpecificPreprocessedTimePeriodReports = ""
+totalNumberPerDeltaReportCollector = [] #= pd.DataFrame(columns=('Hashid','Filename','Delta', 'TotalEvents','PeriodCount', 'Median length'))
 fileStep = 9000
 fileStepCount = 0
+def startDelta():
+    deltas = {'3', '5', '10', '20', '30', '60', '1440'}
+    for delta in deltas:
+        loadchunks(delta)
+    return;
+def saveLogs():
+    global userSpecificPreprocessedTimePeriodSummary  
+    global totalNumberPerDeltaReportCollector
+    tmp = pd.DataFrame(totalNumberPerDeltaReportCollector,columns=('Hashid','Filename','Delta', 'TotalEvents','PeriodCount', 'Median length'))    
+    print(tmp.head(10))
+    tmp = tmp.sort_values(by=[2, 3], ascending=[False, False]) 
+    #print(summaryLogCollector.head(10))
+    tmp.to_csv(userSpecificPreprocessedTimePeriodSummary+"totalNumberPerDeltaReport-summary.csvv", sep='\t', encoding='utf-8')     
+    return;
 
-def loadchunks():
+def loadchunks(delta):
     global summarylogRow
+    global userSpecificPreprocessedTimePeriodReports
+    print("Loading delata" + str(delta))
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedCausalityReports + "*.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedTimePeriodReports+str(delta)+"/" + "*.csv"):
         fileList.append(fileName)
     print(str(fileStep))
     start = fileStepCount * fileStep
@@ -33,29 +46,43 @@ def loadchunks():
     iter = islice(fileList, start, end, None)
     # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
     for a in iter:
-        mainCycle(a)
-        print("Loaded file:" + a)
-    summaryLogCollector = pd.DataFrame(summarylogRow)
-    print(summaryLogCollector.head(10))
-    summaryLogCollector = summaryLogCollector.sort_values(by=[2, 3], ascending=[False, False]) 
-    #print(summaryLogCollector.head(10))
- 
-    summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csvv", sep='\t', encoding='utf-8')        
-    return
-def mainCycle(fname):
+        mainCycle(a, delta)
+        print("Loaded file:" + a)   
+    return;
+
+def mainCycle(fname, delta):
     global summarylogRow
     head, tail = os.path.split(fname)
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=0, sep="\t")
-    print("Staring file:" + filename)
+    if not data.empty:
+        totalNumberPerDeltaReport(filename,data, delta)
+    else:
+        print("Empty file:" + str(fname))
+
+    #print("Staring file:" + filename)
     #print(data.tail(100))
+    #f = filename
+    #hashId = data['5HashID'].iloc[0]
+    #l = data['3Count'].sum()
+    #cr = len(data.index)
+    #a = data.shape[0]
+    #summarylogRow.append([f,hashId,l,cr,a]) 
+    #print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " AS:" + str(a))
+    return;
+def totalNumberPerDeltaReport(filename,data, delta):
+    global totalNumberPerDeltaReportCollector
+   # print(data.tail(10))
     f = filename
-    hashId = data['5HashID'].iloc[0]
+    hashId = data['4HashID'].iloc[0]
     l = data['3Count'].sum()
     cr = len(data.index)
-    a = data.shape[0]
-    summarylogRow.append([f,hashId,l,cr,a]) 
-    print("F: " + f +  " Hash:"+ str(hashId) +" L:" + str(l) + " CR:" + str(cr) + " AS:" + str(a))
+    median = data['3Count'].median()
+    #a = data.shape[0]
+# 'Hashid','Filename','Delta', 'TotalEvents','PeriodCount', 'Median length'
+    totalNumberPerDeltaReportCollector.append([hashId,f,delta,l,cr,median])
+   # print(totalNumberPerDeltaReportCollector)
+    return;
 
 def RepresentsInt(s):
     try: 
@@ -66,7 +93,8 @@ def RepresentsInt(s):
 
 
 def loadConfiguration():
-    global userSpecificPreprocessedCausalityReports      
+    global userSpecificPreprocessedTimePeriodReports
+    global userSpecificPreprocessedTimePeriodSummary      
     parser = argparse.ArgumentParser()
     parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
     parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
@@ -82,15 +110,18 @@ def loadConfiguration():
     config = configparser.ConfigParser()
     config.read('causalityStatCreator.txt')
     if(actualEnvironment == "osx"):
-        userSpecificPreprocessedCausalityReports = config['osx']['userSpecificPreprocessedCausalityReports']
+        userSpecificPreprocessedTimePeriodReports = config['osx']['userSpecificPreprocessedTimePeriodReports']
+        userSpecificPreprocessedTimePeriodSummary = config['osx']['userSpecificPreprocessedTimePeriodSummary']
     if(actualEnvironment == "benti"):
-        userSpecificPreprocessedCausalityReports = config['benti']['userSpecificPreprocessedCausalityReports']                        
+        userSpecificPreprocessedTimePeriodReports = config['benti']['userSpecificPreprocessedTimePeriodReports']
+        userSpecificPreprocessedTimePeriodSummary = config['benti']['userSpecificPreprocessedTimePeriodSummary']        
     if(actualEnvironment == "linux"):
-        userSpecificPreprocessedCausalityReports = config['fict']['userSpecificPreprocessedCausalityReports']            
+        userSpecificPreprocessedTimePeriodReports = config['fict']['userSpecificPreprocessedTimePeriodReports']
+        userSpecificPreprocessedTimePeriodSummary = config['fict']['userSpecificPreprocessedTimePeriodSummary'] 
     return;
 
 
 loadConfiguration()
-loadchunks()
+startDelta()
 
       

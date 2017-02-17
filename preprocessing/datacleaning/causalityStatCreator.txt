@@ -1,11 +1,17 @@
 [osx]
-userSpecificPreprocessedFolder = /Users/bilickiv/tmpdata/userSpecificPreprocessed/
-userSpecificPreprocessedCausalityReports = /Users/bilickiv/tmpdata/timeperiodsummary/
+userSpecificPreprocessedTimePeriodReports = /Users/bilickiv/tmpdata/timePeriods/
+userSpecificPreprocessedTimePeriodSummary = /Users/bilickiv/tmpdata/timeperiodsummary/
+
+
 [benti]
-userSpecificPreprocessedFolder = /Users/Vilmos/tmpdata/userSpecificPreprocessed/
-userSpecificPreprocessedCausalityReports = /Users/Vilmos/tmpdata/timeperiodsummary/
+userSpecificPreprocessedTimePeriodReports = /Users/Vilmos/tmpdata/timePeriods/
+userSpecificPreprocessedTimePeriodSummary = /Users/Vilmos/tmpdata/timeperiodsummary/
+
+
 [fict]
-userSpecificPreprocessedFolder = /home/bilickiv/data/raw_dataset/userSpecificPreprocessed/
-userSpecificPreprocessedCausalityReports = /home/bilickiv/data/raw_dataset/timeperiodsummary/
+userSpecificPreprocessedTimePeriodReports = /home/bilickiv/data/raw_dataset/timePeriods/
+userSpecificPreprocessedTimePeriodSummary = /home/bilickiv/data/raw_dataset/timeperiodsummary/
+
+
 
 

@@ -45,28 +45,10 @@ def loadchunks():
     return
 def mainCycle(fname):
     #for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
-    global summarylogRow
-    head, tail = os.path.split(fname)
-    filename = tail.split('.')[0] 
-    data = pd.read_csv(fname, header=0, sep=';')
     #print(data.head(10))
    # print("Staring file:" + filename)
    # createOverlapAnalysis(data)
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(3))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(5))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(10))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(20))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(30))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(60))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(1440))
-
-    createFinePeriodAnalisys(data,3,filename)
-    createFinePeriodAnalisys(data,5,filename)
-    createFinePeriodAnalisys(data,10,filename)
-    createFinePeriodAnalisys(data,20,filename)
-    createFinePeriodAnalisys(data,30,filename)
-    createFinePeriodAnalisys(data,60,filename)
-    createFinePeriodAnalisys(data,1440,filename)
+    startFinePeriodAnalysis(fname)
 
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
@@ -74,7 +56,26 @@ def mainCycle(fname):
     #summaryLogCollector.to_csv(userSpecificPreprocessedCausalityReports+"summary.csv", sep='\t', encoding='utf-8')
    # print(summaryLogCollector.tail(10))
    # print("F: " + filename +  "Hash:"+errorLogCollector['HashID'].iloc[0] +" L:" + str(len(data.index)) + " CR:" + str(len(errorLogCollector.index)) + " A/U:" + str(androidPeriodCount)+"/"+str(serverPeriodCount) + "Max:" + str(int(errorLogCollector['Delta'].max())) + "Med:" + str(int(errorLogCollector['Delta'].median())))
-    errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
+    #errorLogCollector.to_csv(userSpecificPreprocessedCausalityReports+filename+".csv", sep='\t', encoding='utf-8')
+def startFinePeriodAnalysis(fname):
+    head, tail = os.path.split(fname)
+    filename = tail.split('.')[0] 
+    data = pd.read_csv(fname, header=0, sep=';')
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(3))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(5))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(10))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(20))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(30))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(60))
+    initDirectories(userSpecificPreprocessedTimePeriodReports+str(1440))
+    createFinePeriodAnalisys(data,3,filename)
+    createFinePeriodAnalisys(data,5,filename)
+    createFinePeriodAnalisys(data,10,filename)
+    createFinePeriodAnalisys(data,20,filename)
+    createFinePeriodAnalisys(data,30,filename)
+    createFinePeriodAnalisys(data,60,filename)
+    createFinePeriodAnalisys(data,1440,filename)
+    return;
 def initDirectories(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
