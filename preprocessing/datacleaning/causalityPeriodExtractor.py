@@ -48,7 +48,8 @@ def mainCycle(fname):
     #print(data.head(10))
    # print("Staring file:" + filename)
    # createOverlapAnalysis(data)
-    startFinePeriodAnalysis(fname)
+    checkChargingRules(fname)
+    #startFinePeriodAnalysis(fname)
 
     #print(errorLogCollector.head(10))  
     #summarylogRow.append([filename,errorLogCollector['HashID'].iloc[0],len(data.index),len(errorLogCollector.index),androidPeriodCount,serverPeriodCount,int(errorLogCollector['Delta'].max()),int(errorLogCollector['Delta'].median())]) 
@@ -130,8 +131,22 @@ def createFinePeriodAnalisys(data, delta, fname):
     timePeriodCollector = pd.DataFrame(rowlist)
     timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+str(delta)+"/"+fname+".csv", sep='\t', encoding='utf-8')    
     return;        
-def checkChargingRules(data):
-    #
+def checkChargingRules(fname):
+    head, tail = os.path.split(fname)
+    filename = tail.split('.')[0] 
+    data = pd.read_csv(fname, header=0, sep=';')
+    #severTimestamp, androidTimestamp, logfileid, logrow, hash, fileHash, pluggedState, voltage, temperature, percentage, health, chargingState 
+    df = data[['uploadDate','7','globalIndex','1','3','fileName','15','16','17','18','19','20']]
+    df = df.sort_values(by=['7'], ascending=[True])    
+    print(df.tail())
+
+    for index, row in df.iterrows():
+        voltageLevel = row['16']
+        temperature = row['17']
+        percentage = row['18']
+        health = row['19']
+        chargingState = row['20']
+    print(df.tail(10))    
     return;
 def createTimeAnalysis(data):
     global errorLogCollector
