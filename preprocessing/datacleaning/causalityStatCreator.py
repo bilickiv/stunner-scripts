@@ -47,7 +47,7 @@ def loadchunks(delta):
     # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
     for a in iter:
         mainCycle(a, delta)
-        print("Loaded file:" + a)   
+        #print("Loaded file:" + a)   
     return;
 
 def mainCycle(fname, delta):
