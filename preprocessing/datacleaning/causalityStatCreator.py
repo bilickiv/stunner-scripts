@@ -28,7 +28,7 @@ def saveLogs():
     global totalNumberPerDeltaReportCollector
     tmp = pd.DataFrame(totalNumberPerDeltaReportCollector,columns=('Hashid','Filename','Delta', 'TotalEvents','PeriodCount', 'Median length'))    
     print(tmp.head(10))
-    tmp = tmp.sort_values(by=[2, 3], ascending=[False, False]) 
+    tmp = tmp.sort_values(by=['Delta','TotalEvents', 'PeriodCount'], ascending=[True, False, False]) 
     #print(summaryLogCollector.head(10))
     tmp.to_csv(userSpecificPreprocessedTimePeriodSummary+"totalNumberPerDeltaReport-summary.csvv", sep='\t', encoding='utf-8')     
     return;
