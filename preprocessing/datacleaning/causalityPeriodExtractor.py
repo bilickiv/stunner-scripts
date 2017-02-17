@@ -31,7 +31,7 @@ def loadchunks():
     global fileStep
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(userSpecificPreprocessedFolder + "*.csv"):
+    for fileName in glob.glob(userSpecificPreprocessedFolder + "Sm1VaVM0V1RWc3ZBajV0UVFNRVpiUEhwbWV0TjhBaTU1T0RsWVJsZ3pzMD0.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -61,20 +61,10 @@ def startFinePeriodAnalysis(fname):
     head, tail = os.path.split(fname)
     filename = tail.split('.')[0] 
     data = pd.read_csv(fname, header=0, sep=';')
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(3))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(5))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(10))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(20))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(30))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(60))
-    initDirectories(userSpecificPreprocessedTimePeriodReports+str(1440))
-    createFinePeriodAnalisys(data,3,filename)
-    createFinePeriodAnalisys(data,5,filename)
-    createFinePeriodAnalisys(data,10,filename)
-    createFinePeriodAnalisys(data,20,filename)
-    createFinePeriodAnalisys(data,30,filename)
-    createFinePeriodAnalisys(data,60,filename)
-    createFinePeriodAnalisys(data,1440,filename)
+    deltas = {'3', '5', '10', '20', '30', '60', '120','240','1440','2880'}
+    for delta in deltas:
+        initDirectories(userSpecificPreprocessedTimePeriodReports+str(delta))
+        createFinePeriodAnalisys(data,delta,filename)
     return;
 def initDirectories(directory):
     if not os.path.exists(directory):
@@ -96,7 +86,8 @@ def createFinePeriodAnalisys(data, delta, fname):
     df = data[['uploadDate','7','globalIndex','1','3','fileName']]
     #print(df.tail(10))
     # Android time
-    df = df.sort_values(by=['7'], ascending=[True])  
+    df = df.sort_values(by=['7'], ascending=[True])
+    first = True  
     for index, row in df.iterrows():
         actualTimestamp =  row['7']
         hashId = row['3']
@@ -105,6 +96,7 @@ def createFinePeriodAnalisys(data, delta, fname):
                 previousDate =  actualTimestamp
                 startDate = actualTimestamp
             else:
+                first = False
                 previousDate = previousDate.split(".")[0]
                 actualTimestamp = actualTimestamp.split(".")[0]
                 a = datetime.datetime.strptime(previousDate,'%Y-%m-%d %H:%M:%S')
@@ -123,6 +115,9 @@ def createFinePeriodAnalisys(data, delta, fname):
                     previousDate = actualTimestamp
     if(count != 0):
         errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
+        rowlist.append(errorALog)
+    if(first):
+        errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : 1, "4HashID": hashId}
         rowlist.append(errorALog)
     timePeriodCollector = pd.DataFrame(rowlist)
     timePeriodCollector.to_csv(userSpecificPreprocessedTimePeriodReports+str(delta)+"/"+fname+".csv", sep='\t', encoding='utf-8')    

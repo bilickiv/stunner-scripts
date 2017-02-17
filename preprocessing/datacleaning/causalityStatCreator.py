@@ -19,7 +19,7 @@ totalNumberPerDeltaReportCollector = [] #= pd.DataFrame(columns=('Hashid','Filen
 fileStep = 9000
 fileStepCount = 0
 def startDelta():
-    deltas = {'3', '5', '10', '20', '30', '60', '1440'}
+    deltas = {'3', '5', '10', '20', '30', '60', '120','240','1440','2880'}
     for delta in deltas:
         loadchunks(delta)
     return;

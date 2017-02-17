@@ -1,8 +1,8 @@
 [osx]
-userSpecificPreprocessedCausalityReports = /Users/bilickiv/tmpdata/userSpecificDataCleaning/
+timeperiodsummary = /Users/bilickiv/tmpdata/timeperiodsummary/
 [benti]
-userSpecificPreprocessedCausalityReports = /Users/Vilmos/tmpdata/userSpecificDataCleaning/
+timeperiodsummary = /Users/Vilmos/tmpdata/timeperiodsummary/
 [fict]
-userSpecificPreprocessedCausalityReports = /home/bilickiv/data/raw_dataset/userSpecificDataCleaning/
+timeperiodsummary = /home/bilickiv/data/raw_dataset/timeperiodsummary/
 
 
