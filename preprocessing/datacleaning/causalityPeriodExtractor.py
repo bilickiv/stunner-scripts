@@ -103,7 +103,7 @@ def createFinePeriodAnalisys(data, delta, fname):
                 b = datetime.datetime.strptime(actualTimestamp,'%Y-%m-%d %H:%M:%S')
                 localdelta = int(abs(( a - b ).total_seconds())/60)
                 #end of current period
-                if(q > delta):
+                if(localdelta > delta):
                     errorALog = {"1StartDate": startDate, "2EndDate" : previousDate,"3Count" : count, "4HashID": hashId}
                     rowlist.append(errorALog)
                     previousDate = actualTimestamp
