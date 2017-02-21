@@ -8,6 +8,11 @@ import pandas as pd
 import numpy as np
 import argparse
 from itertools import islice
+from matplotlib import pyplot
+from pandas import Series
+from pandas import DataFrame
+from pandas import TimeGrouper
+from matplotlib import pyplot
 
 fileList = []
 indexEntries = {}
@@ -139,7 +144,22 @@ def checkChargingRules(fname):
     df = data[['uploadDate','7','globalIndex','1','3','fileName','15','16','17','18','19','20']]
     df = df.sort_values(by=['7'], ascending=[True])    
     print(df.tail())
-
+    voltage = data[['7','18','20','15','17','16']]
+    voltage['7'] = pd.to_datetime(voltage['7'])
+    voltage.index = voltage['7']
+    del voltage['7']
+    print(voltage.head(100))
+    #voltage.plot(x='7', y='16',style='k.')
+    voltage['2015-11-05':'2015-11-07'].plot()
+    pyplot.show()
+    groups = voltage.groupby(pd.TimeGrouper(freq='D'))
+    days = pd.DataFrame()
+    for name, group in groups:
+        print(name.day)
+        print(group.values)
+        days[name.day] = group.values
+    month.plot(subplots=True, legend=False)
+    pyplot.show()
     for index, row in df.iterrows():
         voltageLevel = row['16']
         temperature = row['17']
