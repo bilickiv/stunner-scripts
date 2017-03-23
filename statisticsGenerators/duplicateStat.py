@@ -88,6 +88,7 @@ def mainCycle(val):
     if(len(a) > 0):
         print("Duplicate")
         print(len(a))
+        print(len(data))
     #print(s.head(40))
 print("START")
 for fileName in glob.glob("/home/bilickiv/data/raw_dataset/userSpecificPreprocessed/Zz*.csv"):
