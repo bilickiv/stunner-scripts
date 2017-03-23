@@ -88,7 +88,6 @@ def mainCycle(val):
     if(len(a) > 0):
         print("Duplicate")
         print(len(a))
-        print(a)
     total_rows = len(data)
     data['AndroidDate'] = pd.to_datetime(data['7'])
     data['uploadDate'] = pd.to_datetime(data['uploadDate'])
