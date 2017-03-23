@@ -88,38 +88,6 @@ def mainCycle(val):
     if(len(a) > 0):
         print("Duplicate")
         print(len(a))
-    total_rows = len(data)
-    data['AndroidDate'] = pd.to_datetime(data['7'])
-    data['uploadDate'] = pd.to_datetime(data['uploadDate'])
-    data['StripedUploadDate'] = data['uploadDate'].apply(lambda A: A.date())
-    data['StripedUploadDate'].apply(count_dayly_record)
-    #print(data.head())
-    #print(dateDict)
-   
-    if 'globalIndex' not in data.columns:
-        print("Not present")
-        return
-    #print(data.head(100))
-    #CREATE DATA FROM STRING
-
-    #ORDER BY ANDROID DATE AND SERVERSIDE ROW
-    data = data.sort_values(by=['AndroidDate', '1'], ascending=[True,True])
-    #SELECT SUBSET:'pluggedState', 'voltage', 'temperature', 'percentage', 'health', 'chargingState','AndroidTime', 'ServerSideRow','AndroidTimezone'
-    chargingData = data[['15','16','17','18','19','20','AndroidDate', '1','34','globalIndex','uploadDate','32','2']]
-    chargingData.columns = ['pluggedState', 'voltage', 'temperature', 'percentage', 'health', 'chargingState','AndroidTime', 'ServerSideRow','AndroidTimezone','globalIndex','uploadDate','triggerCode','UploadTimestamp']
-    #print(chargingData.head(200))
-
-
-    #HANDLE NAN values (0) 
-    chargingData['AndroidTimezone'] = chargingData['AndroidTimezone'].apply(time_zone_normalization)
-    #ADD TIMEZONE TO ACTUAL ANDROID TIME
-    chargingData['localizedDate'] = chargingData['AndroidTime'] + pd.to_timedelta(chargingData.AndroidTimezone, unit='h')
-    #ADD DATE ONLY FIELD
-    #print(chargingData[['localizedDate', 'AndroidTime', 'AndroidTimezone']])
-    #ANDROID TIME TO INDEX
-    chargingData.index = chargingData['localizedDate']
-    chargingData.sort_index(inplace=True)
-   
     #print(s.head(40))
 print("START")
 for fileName in glob.glob("/home/bilickiv/data/raw_dataset/userSpecificPreprocessed/Zz*.csv"):
