@@ -83,9 +83,10 @@ def mainCycle(val):
     global dateDict
     #LOAD DATA
     data = pd.read_csv(val, header=-1, sep=';')
-    print(data.head(10))
+    print(data.head(1))
     a = data[data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34],keep=False)]
     if(len(a) > 0):
+        print("Duplicate")
         print(len(a))
         print(a)
     total_rows = len(data)
