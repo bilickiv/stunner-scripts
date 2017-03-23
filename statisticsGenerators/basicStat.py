@@ -117,17 +117,17 @@ def mainCycle(val):
    
     #print(s.head(40))
 print("START")
-for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/Zz*.csv"):
+for fileName in glob.glob("/home/bilickiv/data/raw_dataset/duplicateFree/*.csv"):
     print(fileName)
     mainCycle(fileName)
     nodeDict[fileName] = total_rows
-for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/Zz*.csv"):
-    print(fileName)
-    mainCycle(fileName)
-    nodeDict[fileName] = total_rows
+#for fileName in glob.glob("/home/bilickiv/data/raw_dataset/duplicateFree/Zz*.csv"):
+ #   print(fileName)
+  #  mainCycle(fileName)
+   # nodeDict[fileName] = total_rows
     
 a = pd.Series(dateDict, name='Count')
-a.to_csv('/Users/bilickiv/tmpdata/dayliStat.csv')
+a.to_csv('/home/bilickiv/data/raw_dataset/dayliStat.csv')
 b = pd.Series(nodeDict, name='Count')
-b.to_csv('/Users/bilickiv/tmpdata/nodeStat.csv')
+b.to_csv('/home/bilickiv/data/raw_dataset/nodeStat.csv')
 print("END")
