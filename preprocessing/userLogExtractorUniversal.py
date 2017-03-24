@@ -19,6 +19,7 @@ userSpecificFilesWindows = ""
 actualEnvironment = "osx"
 fileCreationDate = datetime.date(2013,11,1)
 previousFileCreationDate = datetime.date(2013,11,1)
+previousValidDate = datetime.date(2013,11,1)
 def loadConfiguration():
     global rawFiles
     global indexFile1
@@ -87,6 +88,8 @@ def loadIndexFile(round):
     global indexFile1
     global indexFile2
     global indexEntries 
+    global previousValidDate
+    previousValidDate = datetime.date(2013,11,1)
     indexEntries.clear()
     indexFile = ""
     if(round == "first"):
@@ -99,15 +102,15 @@ def loadIndexFile(round):
         for line in ins:
             #print(line)
             csvData = line.split('\t')
-            indexEntries[csvData[4]] = line
+            indexEntries[csvData[4]] = str(previousValidDate) + "\t" + line
             dateString = csvData[2]
             dateStringParts = dateString.split('.')
             dateString = dateStringParts[0]
             dateObject = datetime.datetime.strptime(dateString, "%Y-%m-%d %H:%S:%M").date()
             refernceLowerDate = datetime.datetime.strptime("2013-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
             refernceUpperDate = datetime.datetime.strptime("2016-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
-            if dateObject < refernceLowerDate or dateObject > refernceUpperDate:
-                print("Error: " + line)
+            if dateObject > refernceLowerDate or dateObject < refernceUpperDate:
+                previousValidDate = dateString
             index = index + 1
             if(index % 1000000 == 0):
                 print(index)
@@ -131,19 +134,20 @@ def loadBlobFile(round):
             #print(line)
             csvData = line.split(';')
             tmpid = csvData[0]
-            if(index % 10000 == 0):
+            if(index % 1000000 == 0):
                 print(index)
             index = index + 1    
             try:
                 otherPart = indexEntries[tmpid]
                 tmpOtherPart = otherPart.split('\t')
-                indexId = tmpOtherPart[0]
-                blobId = tmpOtherPart[4]
-                timestamp = tmpOtherPart[2]
-                deviceId = tmpOtherPart[3]
-                clientOS = tmpOtherPart[1]
+                prevoiusDate = tmpOtherPart[0]
+                indexId = tmpOtherPart[1]
+                blobId = tmpOtherPart[5]
+                timestamp = tmpOtherPart[3]
+                deviceId = tmpOtherPart[4]
+                clientOS = tmpOtherPart[2]
                 #file;timestamp;id;op;json
-                dataString = str(indexId) +";" + str(blobId) + ";" +"SQL:"+blobFile+";" + str(index) + ";" + str(timestamp) + ";" + str(deviceId) + ";" +str(clientOS) + ";"+ replaceProblematicChars(csvData[1])
+                dataString = str(timestamp) +";" + str(prevoiusDate) +";" +"SQL:"+blobFile+ ";" + str(index) +"-"+str(indexId)+"-"+str(blobId) + ";" + str(timestamp) + ";" + str(deviceId) + ";" +str(clientOS) + ";"+ replaceProblematicChars(csvData[1])
                 if(clientOS  == "hu.uszeged.wlab.stunner.windowsphone"):
                         saveWindowsLine(deviceId,dataString)
                 else:
@@ -181,7 +185,7 @@ def loadListOfFiles():
     global fileCreationDate
     global previousFileCreationDate
     print("Searching for files in:" + rawFiles)
-    for fname in glob.glob(rawFiles+"*.csv"):
+    for fname in glob.glob(rawFiles+"*.csv1"):
         previousFileCreationDate = fileCreationDate
         fileCreationDate = datetime.datetime.fromtimestamp(os.path.getmtime(fname))
         print("Processing file:" + fname)
