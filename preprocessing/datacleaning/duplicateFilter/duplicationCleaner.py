@@ -8,7 +8,9 @@ import pandas as pd
 import numpy as np
 import argparse
 from itertools import islice
+import warnings
 
+warnings.filterwarnings('ignore')
 fileList = []
 indexEntries = {}
 hashIds = set()
@@ -68,7 +70,7 @@ def RepresentsInt(s):
     except ValueError:
         return False
 def removeDuplicates(data, filename):
-    fileNumber = data[0].str.replace('/home/bilickiv/data/raw_dataset/unzipped_dataset/','')
+    fileNumber = data[2].str.replace('/home/bilickiv/data/raw_dataset/unzipped_dataset/','')
     fileNumber = fileNumber.str.replace('.csv','')
     fileNumber = fileNumber.str.replace('SQL:/home/bilickiv//data/raw_dataset/old_data/datacollector-','')
     fileNumber = fileNumber.str.replace('.sql.blob','')
@@ -76,7 +78,7 @@ def removeDuplicates(data, filename):
     fileNumber = fileNumber.str.replace('2015-05-21','21')
     fileNumber = pd.to_numeric(fileNumber, errors='coerce')
     data['globalIndex'] = fileNumber
-    data['duplicated'] = data.duplicated(subset=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24] , keep='first')
+    data['duplicated'] = data.duplicated(subset=[5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36] , keep='first')
     tmp = data.loc[data['duplicated'] == False]
     tmp['fileName'] = filename
     tmp['uploadDate'] = tmp[2].map(correctUploadDate)
@@ -245,6 +247,7 @@ def loadConfiguration():
 
 #path = "/Volumes/Backup/research/data/*.csv"
 loadConfiguration()
+removeFiles()
 loadchunks()
 #removeFiles()
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
