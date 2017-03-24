@@ -100,6 +100,14 @@ def loadIndexFile(round):
             #print(line)
             csvData = line.split('\t')
             indexEntries[csvData[4]] = line
+            dateString = csvData[2]
+            dateStringParts = dateString.split('.')
+            dateString = dateStringParts[0]
+            dateObject = datetime.datetime.strptime(dateString, "%Y-%m-%d %H:%S:%M").date()
+            refernceLowerDate = datetime.datetime.strptime("2013-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
+            refernceUpperDate = datetime.datetime.strptime("2016-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
+            if dateObject < refernceLowerDate or dateObject > refernceUpperDate:
+                print("Error: " + line)
             index = index + 1
             if(index % 1000000 == 0):
                 print(index)
@@ -123,18 +131,23 @@ def loadBlobFile(round):
             #print(line)
             csvData = line.split(';')
             tmpid = csvData[0]
-            if(index % 1000000 == 0):
+            if(index % 10000 == 0):
                 print(index)
             index = index + 1    
             try:
                 otherPart = indexEntries[tmpid]
-                tmpOtherPart = otherPart.split('\t')              
+                tmpOtherPart = otherPart.split('\t')
+                indexId = tmpOtherPart[0]
+                blobId = tmpOtherPart[4]
+                timestamp = tmpOtherPart[2]
+                deviceId = tmpOtherPart[3]
+                clientOS = tmpOtherPart[1]
                 #file;timestamp;id;op;json
-                dataString = "SQL:"+blobFile+";" + str(index) +";" + tmpOtherPart[2] + ";" + tmpOtherPart[3] + ";" + tmpOtherPart[1] + ";"+ replaceProblematicChars(csvData[1])
-                if(tmpOtherPart[1] == "hu.uszeged.wlab.stunner.windowsphone"):
-                        saveWindowsLine(tmpOtherPart[3],dataString)
+                dataString = str(indexId) +";" + str(blobId) + ";" +"SQL:"+blobFile+";" + str(index) + ";" + str(timestamp) + ";" + str(deviceId) + ";" +str(clientOS) + ";"+ replaceProblematicChars(csvData[1])
+                if(clientOS  == "hu.uszeged.wlab.stunner.windowsphone"):
+                        saveWindowsLine(deviceId,dataString)
                 else:
-                        saveLine(tmpOtherPart[3],dataString)
+                        saveLine(deviceId,dataString)
              #   print(dataString)
             #   print(line)
             except:
