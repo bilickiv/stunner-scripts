@@ -59,6 +59,7 @@ def getDeepJsonData(jsonSource, jsonTree,jsonKey):
 def parseWindowsPhoneLog(unifiedLine):
     csvData = unifiedLine.split(';')
    # print unifiedLine    
+
     importString = csvData[0] #UploadTimestam
    # print importString
     tmp = datetime.datetime.fromtimestamp(float(importString+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
@@ -105,15 +106,17 @@ def parseWindowsPhoneLog(unifiedLine):
     return importString 
 def parseAndroidLog(unifiedLine):
         csvData = unifiedLine.split(';')
-        sourceFile = csvData[0] #Source file
-        source_row = csvData[1] #source row       
-        upload_date = csvData[2] #uploaad date
-        deviceHash = replaceProblematicChars(csvData[3]) #device hash
-        platform = csvData[4] #platform
+        creationDate = csvData[0] #creation date
+        previusValidDate = csvData[1] #best valid date
+        sourceFile = csvData[2] #Source file
+        source_row = csvData[3] #source row       
+        upload_date = csvData[4] #upload date
+        deviceHash = replaceProblematicChars(csvData[5]) #device hash
+        platform = csvData[6] #platform
 
         #tmp = datetime.datetime.fromtimestamp(float(importString+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
-        importString = sourceFile + ';'  + str(source_row) +';'+ upload_date + ';' + deviceHash + ';' + platform  #Device hash
-        tmp = replaceProblematicChars(csvData[5])
+        importString = str(creationDate) + ';'  + str(previusValidDate) + ';'  + sourceFile + ';'  + str(source_row) +';'+ upload_date + ';' + deviceHash + ';' + platform  #Device hash
+        tmp = replaceProblematicChars(csvData[7])
         #tmp = tmp.encode('utf-8')       
         try:
             data = json.loads(tmp)
@@ -159,12 +162,12 @@ def parseAndroidLog(unifiedLine):
     
 def parseAndroidFilteredLog(unifiedLine):
         csvData = unifiedLine.split(';')      
-        deviceHash = replaceProblematicChars(csvData[3]) #device hash
-        platform = csvData[4] #platform
+        deviceHash = replaceProblematicChars(csvData[5]) #device hash
+        platform = csvData[6] #platform
 
         #tmp = datetime.datetime.fromtimestamp(float(importString+'.0')/1000).strftime('%Y-%m-%d %H:%M:%S')
         importString = deviceHash  #Device hash
-        tmp = replaceProblematicChars(csvData[5])
+        tmp = replaceProblematicChars(csvData[7])
         #tmp = tmp.encode('utf-8')       
         try:
             data = json.loads(tmp)
@@ -247,7 +250,7 @@ if(str(sys.argv[1]) == "osx"):
     actualEnvironment = "osx"
 else:
     actualEnvironment = "linux"   
-print("Actul envirnment:" + "----" + actualEnvironment)
+print("Actual envirnment:" + "----" + actualEnvironment)
 #path = "/Volumes/Backup/research/data/*.csv"
 print("Loading configfile:" + "----" + str(datetime.datetime.now()))
 loadConfiguration()
