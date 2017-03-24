@@ -112,7 +112,7 @@ def loadIndexFile(round):
             if dateObject > refernceLowerDate or dateObject < refernceUpperDate:
                 previousValidDate = dateString
             index = index + 1
-            if(index % 10000 == 0):
+            if(index % 100000 == 0):
                 print(index)
     endTime = (datetime.datetime.now() - startTime).total_seconds() 
     print(str(index) + ":rows loaded in: " + str(endTime) +"seconds")   
