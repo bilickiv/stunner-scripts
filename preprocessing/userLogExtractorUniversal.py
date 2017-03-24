@@ -5,6 +5,7 @@ import pdb
 import configparser
 import os
 import base64
+import time
 
 indexEntries = {}
 hashIds = set()
@@ -16,7 +17,8 @@ blobFile2 = ""
 userSpecificFiles = ""
 userSpecificFilesWindows = ""
 actualEnvironment = "osx"
-
+fileCreationDate = datetime.date(2013,11,1)
+previousFileCreationDate = datetime.date(2013,11,1)
 def loadConfiguration():
     global rawFiles
     global indexFile1
@@ -163,13 +165,19 @@ def replaceProblematicChars(inputString):
 def loadListOfFiles():
     global userSpecificFiles
     global rawFiles
+    global fileCreationDate
+    global previousFileCreationDate
     print("Searching for files in:" + rawFiles)
     for fname in glob.glob(rawFiles+"*.csv"):
+        previousFileCreationDate = fileCreationDate
+        fileCreationDate = datetime.datetime.fromtimestamp(os.path.getmtime(fname))
         print("Processing file:" + fname)
         loadFile(fname)
     return;
 
 def loadFile(name):
+        global fileCreationDate
+        global previousFileCreationDate
         deviceId = ""  
         startTime = datetime.datetime.now()
         first = 'true'
@@ -183,7 +191,7 @@ def loadFile(name):
                     #print('Windows phone')
                     #print(line)
                     output = line.replace('=\n','=')
-                    importString = name + ';' + str(counter) +';' + output
+                    importString = str(fileCreationDate) + ';' + str(previousFileCreationDate) + ';' + name + ';' + str(counter) +';' + output
                     counter = counter + 1
                     #file.write(importString+'\n')
                     csvData = output.split(';')
@@ -202,7 +210,7 @@ def loadFile(name):
                         counter = counter + 1
                         output = output + line
                         niceString = replaceProblematicChars(output)
-                        importString = name + ';' + str(counter) +';' + niceString
+                        importString = str(fileCreationDate) + ';' + str(previousFileCreationDate) + ';' + name + ';' + str(counter) +';' + niceString
                         #file.write(importString+'\n');
                         csvData1 = deviceId.split(';')
                         idStr1 = csvData1[1]
