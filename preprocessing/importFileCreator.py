@@ -6,6 +6,7 @@ import time
 import glob
 import configparser
 
+
 indexEntries = {}
 hashIds = set()
 userSpecificPreprocessedFolder = ""
@@ -231,7 +232,7 @@ def loadFile(name):
     filteredFile = open(userSpecificPreprocessedSubsetFolder+fileWithoutExtension+".csv", "w")
 
     counter = 0
-    with open(name, "r") as ins:
+    with open(name, "r", encoding = 'UTF-8') as ins:
         for line in ins:
             counter = counter + 1
             importString = parseAndroidLog(line)
@@ -258,7 +259,7 @@ print("Removing old files :" + "----" + str(datetime.datetime.now()))
 removeFiles()
 print("Loading files from:" + userSpecificFiles + "----" + str(datetime.datetime.now()))
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
-for fname in glob.glob(userSpecificFiles+"*.imp"):
+for fname in glob.glob(userSpecificFiles+"Tzg0NnA1V0tEcVBLM2pk*.imp"):
     print("Loading file:" + fname + "----" + str(datetime.datetime.now()))
     loadFile(fname)
           
