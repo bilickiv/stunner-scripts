@@ -1,12 +1,19 @@
 import sys
-import json
 import os
 import datetime
 import time
+import json
 import glob
 import configparser
+import pandas as pd
+import numpy as np
+import argparse
+from itertools import islice
+import warnings
 
+warnings.filterwarnings('ignore')
 
+fileList = []
 indexEntries = {}
 hashIds = set()
 userSpecificPreprocessedFolder = ""
@@ -14,7 +21,31 @@ userSpecificPreprocessedSubsetFolder = ""
 userSpecificFiles = ""
 userSpecificFilesWindows = ""
 actualEnvironment = "osx"
+fileStep = 500
+fileStepCount = 0
+def loadchunks():
+    global fileStepCount
+    global fileStep
+    indexCounter = 0
+    fileList = []
+    for fileName in glob.glob(userSpecificFiles + "*.imp"):
+        fileList.append(fileName)
+    print(str(fileStep) + ":" + str(fileStepCount))
+    start = fileStepCount * fileStep
+    end = (fileStepCount + 1) * fileStep
+    iter = islice(fileList, start, end, None)
+    # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
+    for a in iter:
+        mainCycle(a)
+        indexCounter = indexCounter + 1
+        print("Loaded file (" + str(indexCounter) + "):" + a)
+    return
 
+
+def mainCycle(fname):
+    #for fname in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
+    loadFile(fname)
+    return
 def removeFiles():
     global userSpecificPreprocessedFolder
     for fl in glob.glob(userSpecificPreprocessedFolder+"*.csv"):
@@ -28,6 +59,20 @@ def loadConfiguration():
     global userSpecificFiles
     global userSpecificFilesWindows
     global userSpecificPreprocessedSubsetFolder
+    global fileStepCount
+    parser = argparse.ArgumentParser()
+    parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
+    parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
+    args = parser.parse_args()
+    fileStepCount = args.chunk
+    #print("Actul step:" + "----" + str(fileStepCount))
+    if(args.opsystem == 2):
+        actualEnvironment = "osx"
+    if(args.opsystem == 0):
+        actualEnvironment = "benti"
+    if(args.opsystem == 1):
+        actualEnvironment = "linux" 
+    config = configparser.ConfigParser()    
     config = configparser.ConfigParser()
     config.read('importFileCreatorConfig.txt')
     if(actualEnvironment == "osx"):
@@ -258,10 +303,11 @@ loadConfiguration()
 print("Removing old files :" + "----" + str(datetime.datetime.now()))
 removeFiles()
 print("Loading files from:" + userSpecificFiles + "----" + str(datetime.datetime.now()))
+loadchunks()
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
-for fname in glob.glob(userSpecificFiles+"*.imp"):
-    print("Loading file:" + fname + "----" + str(datetime.datetime.now()))
-    loadFile(fname)
+#for fname in glob.glob(userSpecificFiles+"*.imp"):
+ #   print("Loading file:" + fname + "----" + str(datetime.datetime.now()))
+ #   loadFile(fname)
           
 
               
