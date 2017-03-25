@@ -8,7 +8,6 @@ import pandas as pd
 import numpy as np
 import argparse
 from itertools import islice
-import matplotlib.pyplot as plt
 import scipy.stats as sc
 import math
 import warnings
@@ -210,6 +209,7 @@ print("START")
 logArray = []
 for fileName in glob.glob("/home/bilickiv/data/raw_dataset/duplicateFree/*.csv"):
     mainCycle(fileName)
+    print("Processing file:" + fileNameS)
     head, tail = os.path.split(fileName)
     log = {"0Rows":total_rows,"1CHERR": charging_error, "2B" : break_after_new_order,"3BC" : big_changes, "4File": tail}
     logArray.append(log)
