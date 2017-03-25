@@ -189,7 +189,7 @@ def loadListOfFiles():
     print("Searching for files in:" + rawFiles)
     files = glob.glob(rawFiles+"*.csv")
     files.sort(key=os.path.getmtime)
-    for fname in : files:
+    for fname in files:
         previousFileCreationDate = fileCreationDate
         fileCreationDate = datetime.datetime.fromtimestamp(os.path.getmtime(fname))
         print("Processing file:" + fname + " : " +str(fileCreationDate))
