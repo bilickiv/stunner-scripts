@@ -105,7 +105,7 @@ def loadIndexFile(round):
             #print(line)
             csvData = line.split('\t')
             indexEntries[csvData[4]] = str(previousValidDate) + "\t" + line
-            if (previousValidDate > referenceLowerDate or previousValidDate < referenceUpperDate):
+            if (previousValidDate < referenceLowerDate or previousValidDate > referenceUpperDate):
                     print("Error:" + str(previousValidDate) + "\t" + line)
             dateString = csvData[2]
             dateStringParts = dateString.split('.')
