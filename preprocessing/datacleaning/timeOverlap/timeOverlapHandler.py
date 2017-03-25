@@ -11,7 +11,12 @@ from itertools import islice
 import scipy.stats as sc
 import math
 import warnings
-
+break_after_new_order = 0
+charging_error = 0
+big_changes = 0
+total_rows = 0
+chargingData = 0
+logArray = []
 def loadConfiguration():
     global userSpecificPreprocessedFolder
     global duplicateFree   
@@ -48,9 +53,14 @@ def loadchunks():
     global duplicateFree
     global fileStepCount
     global fileStep
+    global total_rows
+    global big_changes
+    global charging_error
+    global break_after_new_order
+    global logArray
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(duplicateFree + "*.csv"):
+    for fileName in glob.glob(duplicateFree + "a08yRVI1Y1pFbzRNRk0zUEZuNTlSWmRXZGFRTGhyRVdzVE5tdk5DQS9Ecz0.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -174,13 +184,37 @@ def selectOverloadedRows():
     for overloadedDate in overloadedDateSet:
         tmp = chargingData[chargingData['AndroidDate'] == overloadedDate]
         #print(len(tmp))
-        print("Before:" + str(len(chargingData)))
+       # print("Before:" + str(len(chargingData)))
         chargingData = chargingData[chargingData.AndroidDate != overloadedDate]
         overloadedRows = pd.concat([overloadedRows, tmp], ignore_index=True)
-        print("After:"+str(len(chargingData)))
-        print(len(overloadedRows))
+        #print("After:"+str(len(chargingData)))
+        #print(len(overloadedRows))
     return overloadedRows
-
+def validate(data):
+        data['chargingStateGroup'] = data['chargingState'].apply(group_creator_by_val)
+        #create a group for each server side day
+        data['serverDateStateGroup'] = data['uploadDate'].apply(date_group_creator_by_val)
+        #print(dataToBeCorrected.head(100))
+        #chargingData['wrongPercentage'] = chargingData.groupby('chargingStateGroup')['percentage'].transform(charging_lambda)
+        #it defines the discharging boolean based on the chargingstategroup  the date and the trend detected with percentage change
+        data['dischargingTrend'] = data.groupby(['serverDateStateGroup','chargingStateGroup'])['percentage'].transform(discharging_lambda).astype('bool')
+        #it defines the charging boolean based on the chargingstategroup  the date and the trend detected with percentage change
+        data['chargingTrend'] = data.groupby(['serverDateStateGroup','chargingStateGroup'])['percentage'].transform(charging_lambda).astype('bool')
+        #C. csoport - törés a százalékban (lemerülés nagyobb mint 5 töltődés nagyobb mint 20)
+        data['percentageBreak'] = False
+        data['percentageBreak'] = data.groupby(['chargingStateGroup'])['percentage'].transform(percentage_break_charging_tmp).astype('bool')
+        data['chargingError']= 0
+        #if it is charging (it was detected that it is charging) and it is unplugged then this is an error
+        data.ix[((data['chargingTrend'] == True) &(data['pluggedState'] == -1)),'chargingError']= 100
+        #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100].head(100))
+        #print(dataToBeCorrected[['percentage','triggerCode','UploadTimestamp','chargingError','chargingStateGroup','serverDateStateGroup','chargingTrend','AndroidTimezone','percentage']].head(200))
+        #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100])
+        #print("Charging error:" + str())
+        charging_error = len(data[data['chargingError'] == 100])
+        break_after_new_order = len(data[data.percentageBreak == True])
+        print("Charging error:" + str(charging_error))
+        print("Break after new order:" +str(break_after_new_order))
+        return
 def mainCycle(val):
     global break_after_new_order
     global charging_error
@@ -227,41 +261,31 @@ def mainCycle(val):
         big_changes = len(s)
         #Creates a set with date objects
         overloadedDateSet.update(s.index.date)
-        print(overloadedDateSet)
+        #print(overloadedDateSet)
         #print(selectOverloadedRows(chargingData))
         #SELECT ROWS BY Android DATE IN overloadedDateSet
         dataToBeCorrected = selectOverloadedRows()
-        print("After return:" + str(len(chargingData)))
+        #print("After return:" + str(len(chargingData)))
         #SORT the selected rows with the help of file name and db or file row
         dataToBeCorrected = dataToBeCorrected.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
         correctdData = merge(chargingData,dataToBeCorrected)
 
-        print(chargingData[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
-        print(dataToBeCorrected[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
+        #print(chargingData[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
+        #print(dataToBeCorrected[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
+        print("original")
+        validate(chargingData)
+        print("ordered by serve side original")
+        chargingData = chargingData.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
+        validate(chargingData)        
+        print("removed")
+        validate(dataToBeCorrected)
+        print("removed by time")
+        dataToBeCorrected = dataToBeCorrected.sort_values(by=['AndroidTime', 'globalIndex', 'ServerSideRow'], ascending=[True,True,True])
+        validate(dataToBeCorrected)
         #print(s.index.date)
         #print(chargingData.head(100))
         #create group by the new order and the cahrging state (each statechange increases an index which will be the group)
-        correctdData['chargingStateGroup'] = correctdData['chargingState'].apply(group_creator_by_val)
-        #create a group for each server side day
-        correctdData['serverDateStateGroup'] = correctdData['uploadDate'].apply(date_group_creator_by_val)
-        #print(dataToBeCorrected.head(100))
-        #chargingData['wrongPercentage'] = chargingData.groupby('chargingStateGroup')['percentage'].transform(charging_lambda)
-        #it defines the discharging boolean based on the chargingstategroup  the date and the trend detected with percentage change
-        correctdData['dischargingTrend'] = correctdData.groupby(['serverDateStateGroup','chargingStateGroup'])['percentage'].transform(discharging_lambda).astype('bool')
-        #it defines the charging boolean based on the chargingstategroup  the date and the trend detected with percentage change
-        correctdData['chargingTrend'] = correctdData.groupby(['serverDateStateGroup','chargingStateGroup'])['percentage'].transform(charging_lambda).astype('bool')
-        #C. csoport - törés a százalékban (lemerülés nagyobb mint 5 töltődés nagyobb mint 20)
-        correctdData['percentageBreak'] = False
-        correctdData['percentageBreak'] = correctdData.groupby(['chargingStateGroup'])['percentage'].transform(percentage_break_charging_tmp).astype('bool')
-        correctdData['chargingError']= 0
-        #if it is charging (it was detected that it is charging) and it is unplugged then this is an error
-        correctdData.ix[((correctdData['chargingTrend'] == True) &(correctdData['pluggedState'] == -1)),'chargingError']= 100
-        #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100].head(100))
-        #print(dataToBeCorrected[['percentage','triggerCode','UploadTimestamp','chargingError','chargingStateGroup','serverDateStateGroup','chargingTrend','AndroidTimezone','percentage']].head(200))
-        #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100])
-        #print("Charging error:" + str())
-        charging_error = len(correctdData[correctdData['chargingError'] == 100])
-        break_after_new_order = len(correctdData[correctdData.percentageBreak == True])
+        return
         #chargingData['wrongPercentage'] = chargingData.groupby('chargingStateGroup')['wrongPercentage'].transform(lambda x: x.max())
         #intNumber = chargingData.groupby('chargingStateGroup')
     #chargingData[['percentage']].plot()
@@ -293,11 +317,7 @@ overloadedDateSet = set()
 pd.options.display.max_columns = None
 pd.options.display.width = 120
 pd.set_option('display.max_rows', 500)
-break_after_new_order = 0
-charging_error = 0
-big_changes = 0
-total_rows = 0
-chargingData = 0
+
 
 print("START")
 
