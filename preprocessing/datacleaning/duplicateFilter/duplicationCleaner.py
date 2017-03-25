@@ -252,7 +252,7 @@ def loadConfiguration():
 
 #path = "/Volumes/Backup/research/data/*.csv"
 loadConfiguration()
-removeFiles()
+#removeFiles()
 loadchunks()
 #removeFiles()
 #loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
