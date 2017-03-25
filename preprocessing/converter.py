@@ -24,7 +24,7 @@ def timeToTimeStamp(val):
         return val
     return val
 
-for fileName in glob.glob("/home/bilickiv/data/raw_dataset/duplicateFree/*.csv"):
+for fileName in glob.glob("/home/bilickiv/data/raw_dataset/duplicateFree/b1BHRXdNOFVUVXBiWGZWVjJ6SmNHWlZUeXhqMzRaU1paNGc0SG9tQ3BkQT0.csv"):
     data = pd.read_csv(fileName, header=0, sep=';')
     print("processing:" + fileName)
     data['0'] =  data['0'].apply(timeToTimeStamp)
