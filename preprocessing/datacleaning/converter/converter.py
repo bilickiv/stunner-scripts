@@ -93,8 +93,9 @@ def mainCycle(fname):
     data['9'] =  data['9'].apply(timeToTimeStamp)
     data['uploadDate'] =  data['uploadDate'].apply(timeToTimeStamp)
     head, tail = os.path.split(fname)
-    data.to_csv(duplicateFreetimestamp+str(tail), sep='\t', encoding='utf-8')
+    data.to_csv(duplicateFreetimestamp+str(tail), sep=';', encoding='utf-8')
     return
+print("START")
 loadConfiguration()
 loadchunks()
 

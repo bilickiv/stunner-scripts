@@ -11,7 +11,69 @@ from itertools import islice
 import scipy.stats as sc
 import math
 import warnings
-warnings.filterwarnings('ignore')
+
+def loadConfiguration():
+    global userSpecificPreprocessedFolder
+    global duplicateFree   
+    global duplicateFreetimestamp   
+    global userSpecificFiles
+    global fileStepCount
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("opsystem", help="runntime, 0=benti, 1=linux, 2=osx",type=int)
+    parser.add_argument("chunk", help="chunk number, 0-12",type=int)                    
+    args = parser.parse_args()
+    fileStepCount = args.chunk
+    print("Actual step:" + "----" + str(fileStepCount))
+    if(args.opsystem == 2):
+        actualEnvironment = "osx"
+    if(args.opsystem == 0):
+        actualEnvironment = "benti"
+    if(args.opsystem == 1):
+        actualEnvironment = "linux" 
+    config = configparser.ConfigParser()
+    config.read('converter.txt')
+    if(actualEnvironment == "osx"):
+        duplicateFreetimestamp = config['osx']['duplicateFree-timestamp']              
+        duplicateFree = config['osx']['duplicateFree']
+    if(actualEnvironment == "benti"):
+        duplicateFreetimestamp = config['benti']['duplicateFree-timestamp']              
+        duplicateFree = config['benti']['duplicateFree']                        
+    if(actualEnvironment == "linux"):
+        duplicateFreetimestamp = config['fict']['duplicateFree-timestamp']            
+        duplicateFree = config['fict']['duplicateFree']            
+    return;
+
+def loadchunks():
+    global duplicateFree
+    global fileStepCount
+    global fileStep
+    indexCounter = 0
+    fileList = []
+    for fileName in glob.glob(duplicateFree + "*.csv"):
+        fileList.append(fileName)
+    print(str(fileStep) + ":" + str(fileStepCount))
+    start = fileStepCount * fileStep
+    end = (fileStepCount + 1) * fileStep
+    iter = islice(fileList, start, end, None)
+    # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
+    for a in iter:
+        mainCycle(a)
+        print("Processing file:"  + a)
+        head, tail = os.path.split(a)
+        log = {"0Rows":total_rows,"1CHERR": charging_error, "2B" : break_after_new_order,"3BC" : big_changes, "4File": tail}
+        logArray.append(log)
+        #print(log)
+        break_after_new_order = 0
+        charging_error = 0
+        big_changes = 0
+        total_rows = 0
+        output = pd.DataFrame(logArray)    
+        print(output)
+        indexCounter = indexCounter + 1
+        print("Loaded file (" + str(indexCounter) + "):" + a)
+    return
+
 def merge(old, new):
     
     return old
@@ -118,28 +180,7 @@ def selectOverloadedRows():
         print("After:"+str(len(chargingData)))
         print(len(overloadedRows))
     return overloadedRows
-delta = 6
-charging_delta = 20
-discharging_delta = 4
-percentage_break_charging.previous = None
-estimateSpeed.previousDate = None
-estimateSpeed.previousPercentage = None
-charging_trend.previous = 1000
-charging_trend.error = 0
-group_creator_by_val.count = 0 
-group_creator_by_val.previous = None
-date_group_creator_by_val.previous = None
-date_group_creator_by_val.count = 0
-overloadedDateSet = set()
-#pd.set_option('display.max_columns', 10)
-pd.options.display.max_columns = None
-pd.options.display.width = 120
-pd.set_option('display.max_rows', 500)
-break_after_new_order = 0
-charging_error = 0
-big_changes = 0
-total_rows = 0
-chargingData = 0
+
 def mainCycle(val):
     global break_after_new_order
     global charging_error
@@ -226,21 +267,43 @@ def mainCycle(val):
     #chargingData[['percentage']].plot()
 #for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/UGx3clFsMEsyNFRtZWh2bnozdWJ2dTRVS3hkM0pNZWVJaGNiZENjMEdpMD0.csv"):
 #for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/a05TTkJkQThjNWd5SFVYd0pEV1NKUHRsZ3c4TUE2NUdlOVJaVU1XamUrdz0.csv"):
+
+warnings.filterwarnings('ignore')
+fileStep = 500
+fileStepCount = 0
+fileList = []
+indexEntries = {}
+hashIds = set()
+userSpecificPreprocessedFolder = ""
+duplicateFreetimestamp = ""
+delta = 6
+charging_delta = 20
+discharging_delta = 4
+percentage_break_charging.previous = None
+estimateSpeed.previousDate = None
+estimateSpeed.previousPercentage = None
+charging_trend.previous = 1000
+charging_trend.error = 0
+group_creator_by_val.count = 0 
+group_creator_by_val.previous = None
+date_group_creator_by_val.previous = None
+date_group_creator_by_val.count = 0
+overloadedDateSet = set()
+#pd.set_option('display.max_columns', 10)
+pd.options.display.max_columns = None
+pd.options.display.width = 120
+pd.set_option('display.max_rows', 500)
+break_after_new_order = 0
+charging_error = 0
+big_changes = 0
+total_rows = 0
+chargingData = 0
+
 print("START")
-logArray = []
-for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/aDJtWDlLMVBWTFBwTTRpREo3VkVWdFB3THh5eWFoUFRWbW*.csv"):
-    mainCycle(fileName)
-    print("Processing file:"  + fileName)
-    head, tail = os.path.split(fileName)
-    log = {"0Rows":total_rows,"1CHERR": charging_error, "2B" : break_after_new_order,"3BC" : big_changes, "4File": tail}
-    logArray.append(log)
-    #print(log)
-    break_after_new_order = 0
-    charging_error = 0
-    big_changes = 0
-    total_rows = 0
-    output = pd.DataFrame(logArray)    
-    print(output)
+
+loadConfiguration()
+loadchunks()
+
 print("END")
 #output.to_csv("/Users/bilickiv/tmpdata/stat.csv")
 #print(output)

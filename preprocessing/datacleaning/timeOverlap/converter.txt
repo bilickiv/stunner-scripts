@@ -1,0 +1,13 @@
+[osx]
+duplicateFree-timestamp = /Users/bilickiv/tmpdata/duplicateFree-timestamp/
+duplicateFree = /Users/bilickiv/tmpdata/duplicateFree/
+
+[benti]
+duplicateFree-timestamp = /Users/Vilmos/tmpdata/duplicateFree-timestamp/
+duplicateFree = /Users/Vilmos/tmpdata/duplicateFree/
+
+[fict]
+duplicateFree-timestamp = /home/bilickiv/data/raw_dataset/duplicateFree-timestamp/
+duplicateFree = /home/bilickiv/data/raw_dataset/duplicateFree/
+
+
