@@ -111,7 +111,7 @@ def loadIndexFile(round):
             dateStringParts = dateString.split('.')
             dateString = dateStringParts[0]
             dateObject = datetime.datetime.strptime(dateString, "%Y-%m-%d %H:%S:%M").date()
-            if (dateObject > referenceLowerDate or dateObject < referenceUpperDate):
+            if (dateObject > referenceLowerDate and dateObject < referenceUpperDate):
                 previousValidDate = dateObject
             index = index + 1
             if(index % 100000 == 0):
