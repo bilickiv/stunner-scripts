@@ -14,7 +14,9 @@ import warnings
 warnings.filterwarnings('ignore')
 def timeToTimeStamp(val):
     try:
-        int(val)
+        x = float(val)
+        if math.isnan(x):
+            return val
     except ValueError:
         val = pd.to_datetime(val)
         val = time.mktime(val.timetuple())
