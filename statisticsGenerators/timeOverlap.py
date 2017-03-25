@@ -209,7 +209,7 @@ print("START")
 logArray = []
 for fileName in glob.glob("/home/bilickiv/data/raw_dataset/duplicateFree/*.csv"):
     mainCycle(fileName)
-    print("Processing file:" + fileNameS)
+    print("Processing file:" + fileName)
     head, tail = os.path.split(fileName)
     log = {"0Rows":total_rows,"1CHERR": charging_error, "2B" : break_after_new_order,"3BC" : big_changes, "4File": tail}
     logArray.append(log)
