@@ -86,7 +86,7 @@ def removeDuplicates(data, filename):
     #print(len(data))
     #print(len(tmp))
     tmp['fileName'] = filename
-    tmp['uploadDate'] = tmp[2].map(correctUploadDate)
+    tmp['uploadDate'] = tmp[4].map(correctUploadDate)
     #print(tmp.tail(100))
     tmp.to_csv(duplicateFree+filename+".csv", sep=';', encoding='utf-8')
     return    
