@@ -98,19 +98,21 @@ def loadIndexFile(round):
         indexFile = indexFile2
     index = 0
     startTime = datetime.datetime.now()
-    refernceLowerDate = datetime.datetime.strptime("2013-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
-    refernceUpperDate = datetime.datetime.strptime("2016-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
+    referenceLowerDate = datetime.datetime.strptime("2013-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
+    referenceUpperDate = datetime.datetime.strptime("2016-01-01 01:01:01.01", "%Y-%m-%d %H:%S:%M.%f").date()
     with open(indexFile, "r", encoding="utf-8") as ins:
         for line in ins:
             #print(line)
             csvData = line.split('\t')
             indexEntries[csvData[4]] = str(previousValidDate) + "\t" + line
+            if (previousValidDate > referenceLowerDate or previousValidDate < referenceUpperDate):
+                    print("Error:" + str(previousValidDate) + "\t" + line)
             dateString = csvData[2]
             dateStringParts = dateString.split('.')
             dateString = dateStringParts[0]
             dateObject = datetime.datetime.strptime(dateString, "%Y-%m-%d %H:%S:%M").date()
-            if dateObject > refernceLowerDate or dateObject < refernceUpperDate:
-                previousValidDate = dateString
+            if (dateObject > referenceLowerDate or dateObject < referenceUpperDate):
+                previousValidDate = dateObject
             index = index + 1
             if(index % 100000 == 0):
                 print(index)
