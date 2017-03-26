@@ -72,9 +72,9 @@ def loadchunks():
     # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
     for a in iter:
         print("Processing file:"  + a)
-        mainCycle(a)
+        log = mainCycle(a)
         head, tail = os.path.split(a)
-        log = {"0Rows":total_rows,"1CHERR": charging_error_unplugged, "2B" : break_after_new_order,"3BC" : big_changes, "4CD": charging_error_discharging, "5File": tail}
+        #log = {"0Rows":total_rows,"1CHERR": charging_error_unplugged, "2B" : break_after_new_order,"3BC" : big_changes, "4CD": charging_error_discharging, "5File": tail}
         logArray.append(log)
         #print(log)
         break_after_new_order = 0
@@ -83,7 +83,7 @@ def loadchunks():
         big_changes = 0
         total_rows = 0
         output = pd.DataFrame(logArray)    
-        #print(output)
+       # print(output)
         indexCounter = indexCounter + 1
         print("Loaded file (" + str(indexCounter) + "):" + a)
     output.to_csv(statFolder+str(start)+".csv")
@@ -199,9 +199,6 @@ def selectOverloadedRows(overloadedDateSet):
         #print(len(overloadedRows))
     return overloadedRows
 def detectChargingRuleErrors(data):
-        global charging_error_unplugged
-        global charging_error_discharging
-        global break_after_new_order
         #print(data.head())
         if(len(data) == 0):
             return
@@ -230,16 +227,17 @@ def detectChargingRuleErrors(data):
         charging_error_discharging = len(data[data['chargingErrorDischarging'] == 100])
         charging_error_unplugged = len(data[data['chargingErrorUnplugged'] == 100])
         break_after_new_order = len(data[data.percentageBreak == True])
+        log = {"1CHERR": charging_error_unplugged, "2B" : break_after_new_order,"4CD": charging_error_discharging}
+
         #print("Charging error:" + str(charging_error_unplugged
         #))
         #print("Break after new order:" +str(break_after_new_order))
-        return
+        return log
 
 def detectChangeSpeedErrors(data):
     global break_after_new_order
     global charging_error_unplugged
 
-    global big_changes
     global total_rows
     global chargingData
     global overloadedDateSet
@@ -278,12 +276,31 @@ def detectChangeSpeedErrors(data):
         #print("removed by time")
         #dataToBeCorrected = dataToBeCorrected.sort_values(by=['AndroidTime', 'globalIndex', 'ServerSideRow'], ascending=[True,True,True])
         #detectChargingRuleErrors(dataToBeCorrected)
-    return
+    return big_changes
 def evaluate():
     global chargingData
-    detectChangeSpeedErrors(chargingData)
-    detectChargingRuleErrors(chargingData)
-    return            
+    global break_after_new_order
+    global charging_error_unplugged
+    global charging_error_discharging
+    global big_changes
+    global total_rows
+
+    chargingData = chargingData.sort_values(by=['localizedDate','globalIndex', 'ServerSideRow'], ascending=[True,True,True])        
+    big_changes_a = detectChangeSpeedErrors(chargingData)
+    log_a = detectChargingRuleErrors(chargingData)
+    charging_error_unplugged_a = log_a['1CHERR']
+    break_after_new_order_a = log_a['2B']
+    charging_error_discharging_a = log_a['4CD']
+
+
+    chargingData = chargingData.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
+    big_changes_s = detectChangeSpeedErrors(chargingData)
+    log_s = detectChargingRuleErrors(chargingData)
+    charging_error_unplugged_s = log_s['1CHERR']
+    break_after_new_order_s = log_s['2B']
+    charging_error_discharging_s = log_s['4CD']
+    summaryLog = {"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a, "4SCED":charging_error_discharging_a,"5ACED":charging_error_discharging_s, "6SCEU":charging_error_unplugged_s,"7AP":break_after_new_order_a,"8SP":break_after_new_order_s }            
+    return summaryLog           
 def mainCycle(val):
     global break_after_new_order
     global charging_error_unplugged
@@ -322,7 +339,7 @@ def mainCycle(val):
     chargingData.index = chargingData['localizedDate']
     #print(chargingData.head())
     chargingData.sort_index(inplace=True)
-    evaluate()
+    log = evaluate()
     #print(break_after_new_order)
     #print(charging_error_unplugged
     #)
@@ -334,7 +351,7 @@ def mainCycle(val):
         #print(s.index.date)
         #print(chargingData.head(100))
         #create group by the new order and the cahrging state (each statechange increases an index which will be the group)
-    return
+    return log
         #chargingData['wrongPercentage'] = chargingData.groupby('chargingStateGroup')['wrongPercentage'].transform(lambda x: x.max())
         #intNumber = chargingData.groupby('chargingStateGroup')
     #chargingData[['percentage']].plot()
