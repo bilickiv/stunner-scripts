@@ -105,7 +105,7 @@ def estimateSpeed(data):
         percentageDelta = 0
         if estimateSpeed.previousDate == None:
             estimateSpeed.previousDate = timestamp
-            estimateSpeed.previouqsPercentage = percentage
+            estimateSpeed.previousPercentage = percentage
         else:
             timeDelta = (timestamp - estimateSpeed.previousDate).seconds
             if(timeDelta == 0):
@@ -233,6 +233,7 @@ def detectChangeSpeedErrors(data):
     global total_rows
     global chargingData
     global overloadedDateSet
+    print(len(data))
     s = data.apply(estimateSpeed, axis=1)
     s = s[s > 10]
     big_changes = len(s)
