@@ -83,7 +83,7 @@ def loadchunks():
         print(output)
         indexCounter = indexCounter + 1
         print("Loaded file (" + str(indexCounter) + "):" + a)
-    output.to_csv(statFolder+str(fileStep)+".csv")
+    output.to_csv(statFolder+str(start)+".csv")
     return
 
 def merge(old, new):
@@ -105,7 +105,7 @@ def estimateSpeed(data):
         percentageDelta = 0
         if estimateSpeed.previousDate == None:
             estimateSpeed.previousDate = timestamp
-            estimateSpeed.previousPercentage = percentage
+            estimateSpeed.previouqsPercentage = percentage
         else:
             timeDelta = (timestamp - estimateSpeed.previousDate).seconds
             if(timeDelta == 0):
