@@ -12,7 +12,8 @@ import scipy.stats as sc
 import math
 import warnings
 break_after_new_order = 0
-charging_error = 0
+charging_error_unplugged = 0
+charging_error_discharging = 0
 big_changes = 0
 total_rows = 0
 chargingData = 0
@@ -55,7 +56,8 @@ def loadchunks():
     global fileStep
     global total_rows
     global big_changes
-    global charging_error
+    global charging_error_unplugged
+    global charging_error_discharging
     global break_after_new_order
     global logArray
     global statFolder
@@ -72,15 +74,16 @@ def loadchunks():
         print("Processing file:"  + a)
         mainCycle(a)
         head, tail = os.path.split(a)
-        log = {"0Rows":total_rows,"1CHERR": charging_error, "2B" : break_after_new_order,"3BC" : big_changes, "4File": tail}
+        log = {"0Rows":total_rows,"1CHERR": charging_error_unplugged, "2B" : break_after_new_order,"3BC" : big_changes, "4CD": charging_error_discharging, "5File": tail}
         logArray.append(log)
         #print(log)
         break_after_new_order = 0
-        charging_error = 0
+        charging_error_discharging = 0        
+        charging_error_unplugged = 0
         big_changes = 0
         total_rows = 0
         output = pd.DataFrame(logArray)    
-        print(output)
+        #print(output)
         indexCounter = indexCounter + 1
         print("Loaded file (" + str(indexCounter) + "):" + a)
     output.to_csv(statFolder+str(start)+".csv")
@@ -139,7 +142,7 @@ def discharging_trend(val):
     return tmp
 def charging_trend(val):
     tmp = ""
-    if val - charging_trend.previous > delta:
+    if val - charging_trend.previous >= charging_delta:
         tmp = True
     else:
         charging_trend.error  +=1
@@ -196,11 +199,13 @@ def selectOverloadedRows(overloadedDateSet):
         #print(len(overloadedRows))
     return overloadedRows
 def detectChargingRuleErrors(data):
-        global charging_error
+        global charging_error_unplugged
+        global charging_error_discharging
         global break_after_new_order
         #print(data.head())
         if(len(data) == 0):
             return
+        #create groups of consecutive charging states, it increases the index for each group    
         data['chargingStateGroup'] = data['chargingState'].apply(group_creator_by_val)
         #create a group for each server side day
         data['serverDateStateGroup'] = data['uploadDate'].apply(date_group_creator_by_val)
@@ -213,22 +218,27 @@ def detectChargingRuleErrors(data):
         #C. csoport - törés a százalékban (lemerülés nagyobb mint 5 töltődés nagyobb mint 20)
         data['percentageBreak'] = False
         data['percentageBreak'] = data.groupby(['chargingStateGroup'])['percentage'].transform(percentage_break_charging_tmp).astype('bool')
-        data['chargingError']= 0
+        data['chargingErrorUnplugged']= 0
+        data['chargingErrorDischarging']= 0
         #if it is charging (it was detected that it is charging) and it is unplugged then this is an error
-        data.ix[((data['chargingTrend'] == True) &(data['pluggedState'] == -1)),'chargingError']= 100
+        data.ix[((data['chargingTrend'] == True) &(data['chargingState'] != 2)),'chargingErrorUnplugged']= 100
+        data.ix[((data['chargingTrend'] == True) &(data['pluggedState'] == -1)),'chargingErrorDischarging']= 100        
         #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100].head(100))
         #print(dataToBeCorrected[['percentage','triggerCode','UploadTimestamp','chargingError','chargingStateGroup','serverDateStateGroup','chargingTrend','AndroidTimezone','percentage']].head(200))
         #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100])
         #print("Charging error:" + str())
-        charging_error = len(data[data['chargingError'] == 100])
+        charging_error_discharging = len(data[data['chargingErrorDischarging'] == 100])
+        charging_error_unplugged = len(data[data['chargingErrorUnplugged'] == 100])
         break_after_new_order = len(data[data.percentageBreak == True])
-        #print("Charging error:" + str(charging_error))
+        #print("Charging error:" + str(charging_error_unplugged
+        #))
         #print("Break after new order:" +str(break_after_new_order))
         return
 
 def detectChangeSpeedErrors(data):
     global break_after_new_order
-    global charging_error
+    global charging_error_unplugged
+
     global big_changes
     global total_rows
     global chargingData
@@ -276,7 +286,8 @@ def evaluate():
     return            
 def mainCycle(val):
     global break_after_new_order
-    global charging_error
+    global charging_error_unplugged
+
     global big_changes
     global total_rows
     global chargingData
@@ -313,7 +324,8 @@ def mainCycle(val):
     chargingData.sort_index(inplace=True)
     evaluate()
     #print(break_after_new_order)
-    #print(charging_error)
+    #print(charging_error_unplugged
+    #)
     #print(big_changes)
     #print(total_rows)
 
