@@ -166,6 +166,9 @@ def percentage_break_charging(val):
     percentage_break_charging.previous = val
     return tmp
 def group_creator_by_val(val):
+    x = float(val)
+    if math.isnan(x):
+        return group_creator_by_val.count
     if val == group_creator_by_val.previous:
         tmp = ""
     else:
@@ -195,6 +198,9 @@ def selectOverloadedRows(overloadedDateSet):
 def detectChargingRuleErrors(data):
         global charging_error
         global break_after_new_order
+        #print(data.head())
+        if(len(data) == 0):
+            return
         data['chargingStateGroup'] = data['chargingState'].apply(group_creator_by_val)
         #create a group for each server side day
         data['serverDateStateGroup'] = data['uploadDate'].apply(date_group_creator_by_val)
@@ -216,8 +222,8 @@ def detectChargingRuleErrors(data):
         #print("Charging error:" + str())
         charging_error = len(data[data['chargingError'] == 100])
         break_after_new_order = len(data[data.percentageBreak == True])
-        print("Charging error:" + str(charging_error))
-        print("Break after new order:" +str(break_after_new_order))
+        #print("Charging error:" + str(charging_error))
+        #print("Break after new order:" +str(break_after_new_order))
         return
 
 def detectChangeSpeedErrors(data):
@@ -234,11 +240,15 @@ def detectChangeSpeedErrors(data):
     if(len(s) > 0):
         big_changes = len(s)
         #Creates a set with date objects
-        overloadedDateSet.update(s.index.date)
+       
+       # overloadedDateSet.update(s.index.date)
+       
         #print(overloadedDateSet)
         #print(selectOverloadedRows(chargingData))
         #SELECT ROWS BY Android DATE IN overloadedDateSet
-        dataToBeCorrected = selectOverloadedRows(overloadedDateSet)
+       
+       # dataToBeCorrected = selectOverloadedRows(overloadedDateSet)
+       
         #print("After return:" + str(len(chargingData)))
         #SORT the selected rows with the help of file name and db or file row
         
