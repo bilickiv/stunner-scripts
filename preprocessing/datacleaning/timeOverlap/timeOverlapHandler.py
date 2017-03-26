@@ -20,7 +20,7 @@ logArray = []
 def loadConfiguration():
     global userSpecificPreprocessedFolder
     global duplicateFree   
-    global duplicateFreetimestamp   
+    global statFolder   
     global userSpecificFiles
     global fileStepCount
 
@@ -37,15 +37,15 @@ def loadConfiguration():
     if(args.opsystem == 1):
         actualEnvironment = "linux" 
     config = configparser.ConfigParser()
-    config.read('converter.txt')
+    config.read('timeOverlapHandler.txt')
     if(actualEnvironment == "osx"):
-        duplicateFreetimestamp = config['osx']['duplicateFree-timestamp']              
+        statFolder = config['osx']['statFolder']              
         duplicateFree = config['osx']['duplicateFree']
     if(actualEnvironment == "benti"):
-        duplicateFreetimestamp = config['benti']['duplicateFree-timestamp']              
+        statFolder = config['benti']['statFolder']              
         duplicateFree = config['benti']['duplicateFree']                        
     if(actualEnvironment == "linux"):
-        duplicateFreetimestamp = config['fict']['duplicateFree-timestamp']            
+        statFolder = config['fict']['statFolder']            
         duplicateFree = config['fict']['duplicateFree']            
     return;
 
@@ -58,9 +58,10 @@ def loadchunks():
     global charging_error
     global break_after_new_order
     global logArray
+    global statFolder
     indexCounter = 0
     fileList = []
-    for fileName in glob.glob(duplicateFree + "a08yRVI1Y1pFbzRNRk0zUEZuNTlSWmRXZGFRTGhyRVdzVE5tdk5DQS9Ecz0.csv"):
+    for fileName in glob.glob(duplicateFree + "*.csv"):
         fileList.append(fileName)
     print(str(fileStep) + ":" + str(fileStepCount))
     start = fileStepCount * fileStep
@@ -82,6 +83,7 @@ def loadchunks():
         print(output)
         indexCounter = indexCounter + 1
         print("Loaded file (" + str(indexCounter) + "):" + a)
+    output.to_csv(statFolder+str(fileStep)+".csv")
     return
 
 def merge(old, new):
@@ -178,7 +180,7 @@ def date_group_creator_by_val(val):
         date_group_creator_by_val.previous = val
         date_group_creator_by_val.count  +=1
     return date_group_creator_by_val.count
-def selectOverloadedRows():
+def selectOverloadedRows(overloadedDateSet):
     global chargingData
     overloadedRows = pd.DataFrame()
     for overloadedDate in overloadedDateSet:
@@ -190,7 +192,9 @@ def selectOverloadedRows():
         #print("After:"+str(len(chargingData)))
         #print(len(overloadedRows))
     return overloadedRows
-def validate(data):
+def detectChargingRuleErrors(data):
+        global charging_error
+        global break_after_new_order
         data['chargingStateGroup'] = data['chargingState'].apply(group_creator_by_val)
         #create a group for each server side day
         data['serverDateStateGroup'] = data['uploadDate'].apply(date_group_creator_by_val)
@@ -215,6 +219,50 @@ def validate(data):
         print("Charging error:" + str(charging_error))
         print("Break after new order:" +str(break_after_new_order))
         return
+
+def detectChangeSpeedErrors(data):
+    global break_after_new_order
+    global charging_error
+    global big_changes
+    global total_rows
+    global chargingData
+    global overloadedDateSet
+    s = data.apply(estimateSpeed, axis=1)
+    s = s[s > 10]
+    big_changes = len(s)
+    #print(s.head(40))
+    if(len(s) > 0):
+        big_changes = len(s)
+        #Creates a set with date objects
+        overloadedDateSet.update(s.index.date)
+        #print(overloadedDateSet)
+        #print(selectOverloadedRows(chargingData))
+        #SELECT ROWS BY Android DATE IN overloadedDateSet
+        dataToBeCorrected = selectOverloadedRows(overloadedDateSet)
+        #print("After return:" + str(len(chargingData)))
+        #SORT the selected rows with the help of file name and db or file row
+        
+        #dataToBeCorrected = dataToBeCorrected.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
+        #correctdData = merge(chargingData,dataToBeCorrected)
+        
+        #print(chargingData[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
+        #print(dataToBeCorrected[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
+        #print("original")
+        #detectChargingRuleErrors(chargingData)
+        #print("ordered by serverside original")
+        #chargingData = chargingData.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
+        #detectChargingRuleErrors(chargingData)        
+        #print("removed")
+        #detectChargingRuleErrors(dataToBeCorrected)
+        #print("removed by time")
+        #dataToBeCorrected = dataToBeCorrected.sort_values(by=['AndroidTime', 'globalIndex', 'ServerSideRow'], ascending=[True,True,True])
+        #detectChargingRuleErrors(dataToBeCorrected)
+    return
+def evaluate():
+    global chargingData
+    detectChangeSpeedErrors(chargingData)
+    detectChargingRuleErrors(chargingData)
+    return            
 def mainCycle(val):
     global break_after_new_order
     global charging_error
@@ -252,40 +300,18 @@ def mainCycle(val):
     chargingData.index = chargingData['localizedDate']
     #print(chargingData.head())
     chargingData.sort_index(inplace=True)
+    evaluate()
+    #print(break_after_new_order)
+    #print(charging_error)
+    #print(big_changes)
+    #print(total_rows)
 
     #gives a set with speed and Android date
-    s = chargingData.apply(estimateSpeed, axis=1)
-    s = s[s > 10]
-    #print(s.head(40))
-    if(len(s) > 0):
-        big_changes = len(s)
-        #Creates a set with date objects
-        overloadedDateSet.update(s.index.date)
-        #print(overloadedDateSet)
-        #print(selectOverloadedRows(chargingData))
-        #SELECT ROWS BY Android DATE IN overloadedDateSet
-        dataToBeCorrected = selectOverloadedRows()
-        #print("After return:" + str(len(chargingData)))
-        #SORT the selected rows with the help of file name and db or file row
-        dataToBeCorrected = dataToBeCorrected.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
-        correctdData = merge(chargingData,dataToBeCorrected)
-
-        #print(chargingData[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
-        #print(dataToBeCorrected[['localizedDate', 'AndroidDate', 'percentage', 'ServerSideRow']])        
-        print("original")
-        validate(chargingData)
-        print("ordered by serve side original")
-        chargingData = chargingData.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
-        validate(chargingData)        
-        print("removed")
-        validate(dataToBeCorrected)
-        print("removed by time")
-        dataToBeCorrected = dataToBeCorrected.sort_values(by=['AndroidTime', 'globalIndex', 'ServerSideRow'], ascending=[True,True,True])
-        validate(dataToBeCorrected)
+   
         #print(s.index.date)
         #print(chargingData.head(100))
         #create group by the new order and the cahrging state (each statechange increases an index which will be the group)
-        return
+    return
         #chargingData['wrongPercentage'] = chargingData.groupby('chargingStateGroup')['wrongPercentage'].transform(lambda x: x.max())
         #intNumber = chargingData.groupby('chargingStateGroup')
     #chargingData[['percentage']].plot()
@@ -293,13 +319,13 @@ def mainCycle(val):
 #for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/a05TTkJkQThjNWd5SFVYd0pEV1NKUHRsZ3c4TUE2NUdlOVJaVU1XamUrdz0.csv"):
 
 warnings.filterwarnings('ignore')
-fileStep = 500
+fileStep = 10
 fileStepCount = 0
 fileList = []
 indexEntries = {}
 hashIds = set()
 userSpecificPreprocessedFolder = ""
-duplicateFreetimestamp = ""
+statFolder = ""
 delta = 6
 charging_delta = 20
 discharging_delta = 4

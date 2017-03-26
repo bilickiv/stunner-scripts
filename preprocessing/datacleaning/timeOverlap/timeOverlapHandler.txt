@@ -1,0 +1,13 @@
+[osx]
+statFolder = /Users/bilickiv/tmpdata/statFolder/
+duplicateFree = /Users/bilickiv/tmpdata/duplicateFree/
+
+[benti]
+statFolder = /Users/Vilmos/tmpdata/statFolder/
+duplicateFree = /Users/Vilmos/tmpdata/duplicateFree/
+
+[fict]
+statFolder = /home/bilickiv/data/raw_dataset/statFolder/
+duplicateFree = /home/bilickiv/data/raw_dataset/duplicateFree/
+
+
