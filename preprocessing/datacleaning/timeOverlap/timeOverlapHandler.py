@@ -69,8 +69,8 @@ def loadchunks():
     iter = islice(fileList, start, end, None)
     # loadFile(userSpecificFiles+"a2hFd3IrTHpIVHZJb1NhaU45R0xIT0h6KzloSTA1VzV4dmJmYnRVaDFhVT0.imp")
     for a in iter:
-        mainCycle(a)
         print("Processing file:"  + a)
+        mainCycle(a)
         head, tail = os.path.split(a)
         log = {"0Rows":total_rows,"1CHERR": charging_error, "2B" : break_after_new_order,"3BC" : big_changes, "4File": tail}
         logArray.append(log)
