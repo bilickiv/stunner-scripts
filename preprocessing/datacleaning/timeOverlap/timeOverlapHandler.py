@@ -319,7 +319,7 @@ def mainCycle(val):
 #for fileName in glob.glob("/Users/bilickiv/tmpdata/duplicateFree/a05TTkJkQThjNWd5SFVYd0pEV1NKUHRsZ3c4TUE2NUdlOVJaVU1XamUrdz0.csv"):
 
 warnings.filterwarnings('ignore')
-fileStep = 10
+fileStep = 500
 fileStepCount = 0
 fileList = []
 indexEntries = {}
