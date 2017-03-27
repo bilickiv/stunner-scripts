@@ -278,7 +278,7 @@ def detectChangeSpeedErrors(data):
         #dataToBeCorrected = dataToBeCorrected.sort_values(by=['AndroidTime', 'globalIndex', 'ServerSideRow'], ascending=[True,True,True])
         #detectChargingRuleErrors(dataToBeCorrected)
     return big_changes
-def evaluate():
+def evaluate(fileName):
     global chargingData
     global break_after_new_order
     global charging_error_unplugged
@@ -300,7 +300,7 @@ def evaluate():
     charging_error_unplugged_s = log_s['1CHERR']
     break_after_new_order_s = log_s['2B']
     charging_error_discharging_s = log_s['4CD']
-    summaryLog = {"0TR":total_rows,"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a, "4SCED":charging_error_discharging_a,"5ACED":charging_error_discharging_s, "6SCEU":charging_error_unplugged_s,"7AP":break_after_new_order_a,"8SP":break_after_new_order_s }            
+    summaryLog = {"0TR":total_rows,"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a, "4SCED":charging_error_discharging_a,"5ACED":charging_error_discharging_s, "6SCEU":charging_error_unplugged_s,"7AP":break_after_new_order_a,"8SP":break_after_new_order_s, "9F": fileName}            
     return summaryLog           
 def mainCycle(val):
     global break_after_new_order
@@ -340,7 +340,7 @@ def mainCycle(val):
     chargingData.index = chargingData['localizedDate']
     #print(chargingData.head())
     chargingData.sort_index(inplace=True)
-    log = evaluate()
+    log = evaluate(val)
     #print(break_after_new_order)
     #print(charging_error_unplugged
     #)
