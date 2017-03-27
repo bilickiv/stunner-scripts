@@ -300,7 +300,7 @@ def evaluate(fileName):
     charging_error_unplugged_s = log_s['1CHERR']
     break_after_new_order_s = log_s['2B']
     charging_error_discharging_s = log_s['4CD']
-    summaryLog = {"0TR":total_rows,"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a, "4SCED":charging_error_discharging_a,"5ACED":charging_error_discharging_s, "6SCEU":charging_error_unplugged_s,"7AP":break_after_new_order_a,"8SP":break_after_new_order_s, "9F": fileName}            
+    summaryLog = {"0TR":total_rows,"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a,"4SCEU":charging_error_unplugged_s, "5SCED":charging_error_discharging_a,"6ACED":charging_error_discharging_s, "7AP":break_after_new_order_a,"8SP":break_after_new_order_s, "9F": fileName}            
     return summaryLog           
 def mainCycle(val):
     global break_after_new_order
