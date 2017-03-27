@@ -93,6 +93,7 @@ def mainCycle(fname):
     data['9'] =  data['9'].apply(timeToTimeStamp)
     data['uploadDate'] =  data['uploadDate'].apply(timeToTimeStamp)
     head, tail = os.path.split(fname)
+    data = data.sort_values(by=['globalIndex', '3'], ascending=[True,True])
     data.to_csv(duplicateFreetimestamp+str(tail), sep=';', encoding='utf-8')
     return
 print("START")
