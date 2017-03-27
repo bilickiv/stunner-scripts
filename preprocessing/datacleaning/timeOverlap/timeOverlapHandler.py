@@ -88,6 +88,7 @@ def loadchunks():
         indexCounter = indexCounter + 1
         print("Loaded file (" + str(indexCounter) + "):" + a)
     output.to_csv(statFolder+str(start)+".csv")
+    #print(output)
     return
 
 def merge(old, new):
@@ -219,16 +220,19 @@ def detectChargingRuleErrors(data):
         data['chargingErrorUnplugged']= 0
         data['chargingErrorDischarging']= 0
         #if it is charging (it was detected that it is charging) and it is unplugged then this is an error
-        data.ix[((data['chargingTrend'] == True) &(data['chargingState'] != 2)),'chargingErrorUnplugged']= 100
-        data.ix[((data['chargingTrend'] == True) &(data['pluggedState'] == -1)),'chargingErrorDischarging']= 100        
+        data.ix[((data['chargingTrend'] == True) & (data['chargingState'] != 2)),'chargingErrorUnplugged']= 100
+        data.ix[((data['chargingTrend'] == True) &( data['pluggedState'] == -1)),'chargingErrorDischarging']= 100
+        data.ix[((data['chargingTrend'] == True) & ( (data['pluggedState'] == -1) & (data['chargingState'] == 3) )),'chargingErrorStrictDischarging']= 100             
         #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100].head(100))
         #print(dataToBeCorrected[['percentage','triggerCode','UploadTimestamp','chargingError','chargingStateGroup','serverDateStateGroup','chargingTrend','AndroidTimezone','percentage']].head(200))
         #print(dataToBeCorrected[dataToBeCorrected['chargingError'] == 100])
         #print("Charging error:" + str())
         charging_error_discharging = len(data[data['chargingErrorDischarging'] == 100])
         charging_error_unplugged = len(data[data['chargingErrorUnplugged'] == 100])
+        charging_error_strict = len(data[data['chargingErrorStrictDischarging'] == 100])
+
         break_after_new_order = len(data[data.percentageBreak == True])
-        log = {"1CHERR": charging_error_unplugged, "2B" : break_after_new_order,"4CD": charging_error_discharging}
+        log = {"1CHERR": charging_error_unplugged, "2B" : break_after_new_order,"4CD": charging_error_discharging, "5SC": charging_error_strict}
 
         #print("Charging error:" + str(charging_error_unplugged
         #))
@@ -292,7 +296,7 @@ def evaluate(fileName):
     charging_error_unplugged_a = log_a['1CHERR']
     break_after_new_order_a = log_a['2B']
     charging_error_discharging_a = log_a['4CD']
-
+    charging_error_strict_a = log_a['5SC']
 
     chargingData = chargingData.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
     big_changes_s = detectChangeSpeedErrors(chargingData)
@@ -300,7 +304,9 @@ def evaluate(fileName):
     charging_error_unplugged_s = log_s['1CHERR']
     break_after_new_order_s = log_s['2B']
     charging_error_discharging_s = log_s['4CD']
-    summaryLog = {"0TR":total_rows,"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a,"4SCEU":charging_error_unplugged_s, "5SCED":charging_error_discharging_a,"6ACED":charging_error_discharging_s, "7AP":break_after_new_order_a,"8SP":break_after_new_order_s, "9F": fileName}            
+    charging_error_strict_s = log_s['5SC']
+
+    summaryLog = {"0TR":total_rows,"1ABC":big_changes_a,"2SBC":big_changes_s, "3ACEU":charging_error_unplugged_a,"4SCEU":charging_error_unplugged_s, "5SCED":charging_error_discharging_a,"6ACED":charging_error_discharging_s, "7AP":break_after_new_order_a,"8SP":break_after_new_order_s,"9ASC":charging_error_strict_a,"10SSC":charging_error_strict_s,  "11F": fileName}            
     return summaryLog           
 def mainCycle(val):
     global break_after_new_order
