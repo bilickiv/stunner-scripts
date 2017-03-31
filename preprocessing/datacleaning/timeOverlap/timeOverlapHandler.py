@@ -290,7 +290,7 @@ def evaluate(fileName):
     global big_changes
     global total_rows
 
-    chargingData = chargingData.sort_values(by=['localizedDate','globalIndex', 'ServerSideRow'], ascending=[True,True,True])        
+    chargingData = chargingData.sort_values(by=['localizedDate','globalIndex', 'row1', 'row2', 'row3'], ascending=[True,True,True,True,True])        
     big_changes_a = detectChangeSpeedErrors(chargingData)
     log_a = detectChargingRuleErrors(chargingData)
     charging_error_unplugged_a = log_a['1CHERR']
@@ -298,7 +298,7 @@ def evaluate(fileName):
     charging_error_discharging_a = log_a['4CD']
     charging_error_strict_a = log_a['5SC']
 
-    # chargingData = chargingData.sort_values(by=['globalIndex', 'ServerSideRow'], ascending=[True,True])
+    chargingData = chargingData.sort_values(by=['globalIndex', 'globalIndex', 'row1', 'row2', 'row3'], ascending=[True,True, True, True, True])
     big_changes_s = detectChangeSpeedErrors(chargingData)
     log_s = detectChargingRuleErrors(chargingData)
     charging_error_unplugged_s = log_s['1CHERR']
@@ -322,7 +322,7 @@ def mainCycle(val):
     if 'globalIndex' not in data.columns:
         print("Not present globalIndex")
         return
-    #print(data.head(10))
+    print(data.head(10))
     #CREATE DATE FROM STRING
     data['AndroidDate'] = pd.to_datetime(data['9'])
     #Server date to date
@@ -330,8 +330,8 @@ def mainCycle(val):
     #ORDER BY ANDROID DATE AND SERVERSIDE ROW
     data = data.sort_values(by=['AndroidDate', '3'], ascending=[True,True])
     #SELECT SUBSET:'pluggedState', 'voltage', 'temperature', 'percentage', 'health', 'chargingState','AndroidTime', 'ServerSideRow','AndroidTimezone'
-    chargingData = data[['17','18','19','20','21','22','AndroidDate', '3','36','globalIndex','uploadDate','34','4']]
-    chargingData.columns = ['pluggedState', 'voltage', 'temperature', 'percentage', 'health', 'chargingState','AndroidTime', 'ServerSideRow','AndroidTimezone','globalIndex','uploadDate','triggerCode','UploadTimestamp']
+    chargingData = data[['17','18','19','20','21','22','AndroidDate', '3','36','globalIndex','uploadDate','34','4','row1','row2','row3']]
+    chargingData.columns = ['pluggedState', 'voltage', 'temperature', 'percentage', 'health', 'chargingState','AndroidTime', 'ServerSideRow','AndroidTimezone','globalIndex','uploadDate','triggerCode','UploadTimestamp','row1','row2','row3']
     #print(chargingData.head(10))
 
 
