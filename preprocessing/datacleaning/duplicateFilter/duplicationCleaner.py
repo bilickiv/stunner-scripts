@@ -81,9 +81,7 @@ def removeDuplicates(data, filename):
     data['duplicated'] = data.duplicated(subset=[5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36] , keep='first')
     tmp = data.loc[data['duplicated'] == False]
     print(tmp.head())
-    tmp['row1'] = tmp[3].apply(lambda x: (x.split("-")[0] if "-"  in str(x) else x))
-    tmp['row2'] = tmp[3].apply(lambda x: (x.split("-")[1] if "-"  in str(x) else x))
-    tmp['row3'] = tmp[3].apply(lambda x: (x.split("-")[2] if "-"  in str(x) else x))
+ 
     c = data.loc[data['duplicated'] == True]
     #print(tmp.head())
 
@@ -93,6 +91,9 @@ def removeDuplicates(data, filename):
     #print(len(tmp))
     tmp['fileName'] = filename
     tmp['uploadDate'] = tmp[4].map(correctUploadDate)
+    tmp['row1'] = tmp[3].apply(lambda x: (x.split("-")[0] if "-"  in str(x) else x))
+    tmp['row2'] = tmp[3].apply(lambda x: (x.split("-")[1] if "-"  in str(x) else x))
+    tmp['row3'] = tmp[3].apply(lambda x: (x.split("-")[2] if "-"  in str(x) else x))
     #print(tmp.tail(100))
     tmp.to_csv(duplicateFree+filename+".csv", sep=';', encoding='utf-8')
     return    
